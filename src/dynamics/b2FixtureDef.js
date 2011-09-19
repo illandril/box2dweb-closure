@@ -40,7 +40,6 @@ goog.require('Box2D.Dynamics.b2FilterData');
 Box2D.Dynamics.b2FixtureDef = function () {
     this.filter = new Box2D.Dynamics.b2FilterData();
     this.shape = null;
-    this.userData = null;
     this.friction = 0.2;
     this.restitution = 0.0;
     this.density = 0.0;

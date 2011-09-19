@@ -39,7 +39,6 @@ goog.require('Box2D.Dynamics.Joints.b2Joint');
  */
 Box2D.Dynamics.Joints.b2JointDef = function () {
     this.type = Box2D.Dynamics.Joints.b2Joint.e_unknownJoint;
-    this.userData = null;
     this.bodyA = null;
     this.bodyB = null;
     this.collideConnected = false;

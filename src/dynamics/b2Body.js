@@ -47,10 +47,30 @@ goog.require('Box2D.Dynamics.b2FixtureDef');
  * @constructor
  */
 Box2D.Dynamics.b2Body = function(bd, world) {
+    /** @type {!Box2D.Common.Math.b2Transform} */
     this.m_xf = new Box2D.Common.Math.b2Transform();
+    this.m_xf.position.SetV(bd.position);
+    this.m_xf.R.Set(bd.angle);
+
+    /** @type {!Box2D.Common.Math.b2Sweep} */
     this.m_sweep = new Box2D.Common.Math.b2Sweep();
-    this.m_linearVelocity = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_sweep.localCenter.SetZero();
+    this.m_sweep.t0 = 1.0;
+    this.m_sweep.a0 = this.m_sweep.a = bd.angle;
+    this.m_sweep.c.x = (this.m_xf.R.col1.x * this.m_sweep.localCenter.x + this.m_xf.R.col2.x * this.m_sweep.localCenter.y);
+    this.m_sweep.c.y = (this.m_xf.R.col1.y * this.m_sweep.localCenter.x + this.m_xf.R.col2.y * this.m_sweep.localCenter.y);
+    this.m_sweep.c.x += this.m_xf.position.x;
+    this.m_sweep.c.y += this.m_xf.position.y;
+    this.m_sweep.c0.SetV(this.m_sweep.c);
+    
+    /** @type {!Box2D.Common.Math.b2Vec2} */
+    this.m_linearVelocity = bd.linearVelocity.Copy();
+    
+    /** @type {!Box2D.Common.Math.b2Vec2} */
     this.m_force = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_force.SetZero();
+    
+    /** @type {number} */
     this.m_flags = 0;
     if (bd.bullet) {
         this.m_flags |= Box2D.Dynamics.b2Body.e_bulletFlag;
@@ -58,52 +78,85 @@ Box2D.Dynamics.b2Body = function(bd, world) {
     if (bd.fixedRotation) {
         this.m_flags |= Box2D.Dynamics.b2Body.e_fixedRotationFlag;
     }
+
+    /** @type {boolean} */
     this.m_allowSleep = bd.allowSleep;
+    
+    /** @type {boolean} */
     this.m_awake = bd.awake;
+    
     if (bd.active) {
         this.m_flags |= Box2D.Dynamics.b2Body.e_activeFlag;
     }
+    
+    /** @type {!Box2D.Dynamics.b2World} */
     this.m_world = world;
-    this.m_xf.position.SetV(bd.position);
-    this.m_xf.R.Set(bd.angle);
-    this.m_sweep.localCenter.SetZero();
-    this.m_sweep.t0 = 1.0;
-    this.m_sweep.a0 = this.m_sweep.a = bd.angle;
-    var tMat = this.m_xf.R;
-    var tVec = this.m_sweep.localCenter;
-    this.m_sweep.c.x = (tMat.col1.x * tVec.x + tMat.col2.x * tVec.y);
-    this.m_sweep.c.y = (tMat.col1.y * tVec.x + tMat.col2.y * tVec.y);
-    this.m_sweep.c.x += this.m_xf.position.x;
-    this.m_sweep.c.y += this.m_xf.position.y;
-    this.m_sweep.c0.SetV(this.m_sweep.c);
+    
+    /** @type {Box2D.Dynamics.Joints.b2Joint} */
     this.m_jointList = null;
+    
+    /** @type {Box2D.Dynamics.Controllers.b2Controller} */
     this.m_controllerList = null;
+    
+    /** @type {Box2D.Dynamics.Contacts.b2Contact} */
     this.m_contactList = null;
+    
+    /** @type {number} */
     this.m_controllerCount = 0;
+    
+    /** @type {Box2D.Dynamics.b2Body} */
     this.m_prev = null;
+    
+    /** @type {Box2D.Dynamics.b2Body} */
     this.m_next = null;
-    this.m_linearVelocity.SetV(bd.linearVelocity);
+    
+    /** @type {number} */
     this.m_angularVelocity = bd.angularVelocity;
+    
+    /** @type {number} */
     this.m_linearDamping = bd.linearDamping;
+    
+    /** @type {number} */
     this.m_angularDamping = bd.angularDamping;
-    this.m_force.SetZero();
-    this.m_torque = 0.0;
-    this.m_sleepTime = 0.0;
+    
+    /** @type {number} */
+    this.m_torque = 0;
+    
+    /** @type {number} */
+    this.m_sleepTime = 0;
+    
+    /** @type {number} */
     this.m_type = bd.type;
     if (this.m_type == Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
-        this.m_mass = 1.0;
-        this.m_invMass = 1.0;
+        /** @type {number} */
+        this.m_mass = 1;
+        /** @type {number} */
+        this.m_invMass = 1;
     } else {
-        this.m_mass = 0.0;
-        this.m_invMass = 0.0;
+        /** @type {number} */
+        this.m_mass = 0;
+        /** @type {number} */
+        this.m_invMass = 0;
     }
-    this.m_I = 0.0;
-    this.m_invI = 0.0;
+    /** @type {number} */
+    this.m_I = 0;
+    
+    /** @type {number} */
+    this.m_invI = 0;
+    
+    /** @type {number} */
     this.m_inertiaScale = bd.inertiaScale;
+    
+    /** @type {Box2D.Dynamics.b2Fixture} */
     this.m_fixtureList = null;
+    
+    /** @type {number} */
     this.m_fixtureCount = 0;
 };
 
+/**
+ * @param {!Box2D.Dynamics.b2FixtureDef} bd
+ */
 Box2D.Dynamics.b2Body.prototype.CreateFixture = function(def) {
     Box2D.Common.b2Settings.b2Assert(!this.m_world.IsLocked());
     var fixture = new Box2D.Dynamics.b2Fixture();

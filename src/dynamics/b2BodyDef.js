@@ -38,21 +38,43 @@ goog.require('Box2D.Common.Math.b2Vec2');
  * @constructor
  */
 Box2D.Dynamics.b2BodyDef = function() {
+    /** @type {!Box2D.Common.Math.b2Vec2} */
     this.position = new Box2D.Common.Math.b2Vec2(0, 0);
+    
+    /** @type {!Box2D.Common.Math.b2Vec2} */
     this.linearVelocity = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.userData = null;
-    this.position.SetZero();
+    
+    /** @type {number} */
     this.angle = 0.0;
-    this.linearVelocity.SetZero();
+    
+    /** @type {number} */
     this.angularVelocity = 0.0;
+    
+    /** @type {number} */
     this.linearDamping = 0.0;
+    
+    /** @type {number} */
     this.angularDamping = 0.0;
+    
+    /** @type {boolean} */
     this.allowSleep = true;
+    
+    /** @type {boolean} */
     this.awake = true;
+    
+    /** @type {boolean} */
     this.fixedRotation = false;
+    
+    /** @type {boolean} */
     this.bullet = false;
+    
+    /** @type {number} */
     this.type = Box2D.Dynamics.b2BodyDef.b2_staticBody;
+    
+    /** @type {boolean} */
     this.active = true;
+    
+    /** @type {number} */
     this.inertiaScale = 1.0;
 };
 

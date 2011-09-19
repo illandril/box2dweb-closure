@@ -193,7 +193,7 @@ Box2D.Dynamics.b2World.prototype.CreateBody = function(def) {
 };
 
 /**
- * @param {!Box2D.Dynamics.b2Body}
+ * @param {!Box2D.Dynamics.b2Body} b
  */
 Box2D.Dynamics.b2World.prototype.DestroyBody = function(b) {
     Box2D.Common.b2Settings.b2Assert(!this.IsLocked());
@@ -244,7 +244,7 @@ Box2D.Dynamics.b2World.prototype.DestroyBody = function(b) {
 };
 
 /**
- * @param {!Box2D.Dynamics.Joints.b2JointDef}
+ * @param {!Box2D.Dynamics.Joints.b2JointDef} def
  * @return {!Box2D.Dynamics.Joints.b2Joint}
  */
 Box2D.Dynamics.b2World.prototype.CreateJoint = function(def) {
@@ -287,7 +287,7 @@ Box2D.Dynamics.b2World.prototype.CreateJoint = function(def) {
 };
 
 /**
- * @param {!Box2D.Dynamics.Joints.b2Joint}
+ * @param {!Box2D.Dynamics.Joints.b2Joint} j
  */
 Box2D.Dynamics.b2World.prototype.DestroyJoint = function(j) {
     var collideConnected = j.m_collideConnected;
