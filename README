@@ -1,0 +1,14 @@
+Original Box2D created by Erin Catto
+http://www.gphysics.com
+http://box2d.org/
+
+Box2D was converted to Flash by Boris the Brave, Matt Bush, and John Nesky as Box2DFlash
+http://www.box2dflash.org/
+
+Box2DFlash was converted from Flash to Javascript by Uli Hecht as box2Dweb
+http://code.google.com/p/box2dweb/
+
+box2Dweb was modified to utilize Google Closure, as well as other bug fixes, optimizations, and tweaks by Illandril
+https://github.com/illandril/box2dweb-closure
+
+Requires Google Closure: http://code.google.com/closure/
