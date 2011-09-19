@@ -128,28 +128,28 @@ Box2D.Dynamics.b2World = function(gravity, doSleep) { /** @type {!Box2D.Dynamics
 Box2D.Dynamics.b2World.MAX_TOI = 1.0 - 100.0 * Number.MIN_VALUE;
 
 /**
- * @param {!Box2D.Dynamics.b2DestructionListener}
+ * @param {!Box2D.Dynamics.b2DestructionListener} listener
  */
 Box2D.Dynamics.b2World.prototype.SetDestructionListener = function(listener) {
     this.m_destructionListener = listener;
 };
 
 /**
- * @param {!Box2D.Dynamics.b2ContactFilter}
+ * @param {!Box2D.Dynamics.b2ContactFilter} filter
  */
 Box2D.Dynamics.b2World.prototype.SetContactFilter = function(filter) {
     this.m_contactManager.m_contactFilter = filter;
 };
 
 /**
- * @param {!Box2D.Dynamics.b22ContactListener}
+ * @param {!Box2D.Dynamics.b22ContactListener} listener
  */
 Box2D.Dynamics.b2World.prototype.SetContactListener = function(listener) {
     this.m_contactManager.m_contactListener = listener;
 };
 
 /**
- * @param {!Box2D.Dynamics.b2DebugDraw}
+ * @param {!Box2D.Dynamics.b2DebugDraw} debugDraw
  */
 Box2D.Dynamics.b2World.prototype.SetDebugDraw = function(debugDraw) {
     this.m_debugDraw = debugDraw;
@@ -168,10 +168,17 @@ Box2D.Dynamics.b2World.prototype.SetBroadPhase = function(broadPhase) {
     }
 };
 
+/**
+ * @return {number}
+ */
 Box2D.Dynamics.b2World.prototype.GetProxyCount = function() {
     return this.m_contactManager.m_broadPhase.GetProxyCount();
 };
 
+/**
+ * @param {!Box2D.Dynamics.b2BodyDef} def
+ * @return {!Box2D.Dynamics.b2Body}
+ */
 Box2D.Dynamics.b2World.prototype.CreateBody = function(def) {
     Box2D.Common.b2Settings.b2Assert(!this.IsLocked());
     var b = new Box2D.Dynamics.b2Body(def, this);
@@ -185,6 +192,9 @@ Box2D.Dynamics.b2World.prototype.CreateBody = function(def) {
     return b;
 };
 
+/**
+ * @param {!Box2D.Dynamics.b2Body}
+ */
 Box2D.Dynamics.b2World.prototype.DestroyBody = function(b) {
     Box2D.Common.b2Settings.b2Assert(!this.IsLocked());
     var jn = b.m_jointList;
@@ -233,6 +243,10 @@ Box2D.Dynamics.b2World.prototype.DestroyBody = function(b) {
     this.m_bodyCount--;
 };
 
+/**
+ * @param {!Box2D.Dynamics.Joints.b2JointDef}
+ * @return {!Box2D.Dynamics.Joints.b2Joint}
+ */
 Box2D.Dynamics.b2World.prototype.CreateJoint = function(def) {
     var j = Box2D.Dynamics.Joints.b2Joint.Create(def);
     j.m_prev = null;
@@ -272,6 +286,9 @@ Box2D.Dynamics.b2World.prototype.CreateJoint = function(def) {
     return j;
 };
 
+/**
+ * @param {!Box2D.Dynamics.Joints.b2Joint}
+ */
 Box2D.Dynamics.b2World.prototype.DestroyJoint = function(j) {
     var collideConnected = j.m_collideConnected;
     if (j.m_prev) {
@@ -334,6 +351,9 @@ Box2D.Dynamics.b2World.prototype.AddController = function(c) {
     return c;
 };
 
+/**
+ * @param {!Box2D.Dynamics.Controllers.b2Controller} c
+ */
 Box2D.Dynamics.b2World.prototype.RemoveController = function(c) {
     if (c.m_prev) c.m_prev.m_next = c.m_next;
     if (c.m_next) c.m_next.m_prev = c.m_prev;
@@ -341,6 +361,10 @@ Box2D.Dynamics.b2World.prototype.RemoveController = function(c) {
     this.m_controllerCount--;
 };
 
+/**
+ * @param {!Box2D.Dynamics.Controllers.b2Controller} controller
+ * @return {!Box2D.Dynamics.Controllers.b2Controller}
+ */
 Box2D.Dynamics.b2World.prototype.CreateController = function(controller) {
     if (controller.m_world != this) {
         throw new Error("Controller can only be a member of one world");
@@ -356,6 +380,9 @@ Box2D.Dynamics.b2World.prototype.CreateController = function(controller) {
     return controller;
 };
 
+/**
+ * @param {!Box2D.Dynamics.Controllers.b2Controller} controller
+ */
 Box2D.Dynamics.b2World.prototype.DestroyController = function(controller) {
     controller.Clear();
     if (controller.m_next) {
@@ -370,34 +397,58 @@ Box2D.Dynamics.b2World.prototype.DestroyController = function(controller) {
     this.m_controllerCount--;
 };
 
+/**
+ * @param {boolean} flag
+ */
 Box2D.Dynamics.b2World.prototype.SetWarmStarting = function(flag) {
     this.m_warmStarting = flag;
 };
 
+/**
+ * @param {boolean} flag
+ */
 Box2D.Dynamics.b2World.prototype.SetContinuousPhysics = function(flag) {
     this.m_continuousPhysics = flag;
 };
 
+/**
+ * @return {number}
+ */
 Box2D.Dynamics.b2World.prototype.GetBodyCount = function() {
     return this.m_bodyCount;
 };
 
+/**
+ * @return {number}
+ */
 Box2D.Dynamics.b2World.prototype.GetJointCount = function() {
     return this.m_jointCount;
 };
 
+/**
+ * @return {number}
+ */
 Box2D.Dynamics.b2World.prototype.GetContactCount = function() {
     return this.m_contactCount;
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} gravity
+ */
 Box2D.Dynamics.b2World.prototype.SetGravity = function(gravity) {
     this.m_gravity = gravity;
 };
 
+/**
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
 Box2D.Dynamics.b2World.prototype.GetGravity = function() {
     return this.m_gravity;
 };
 
+/**
+ * @return {!Box2D.Dynamics.b2Body}
+ */
 Box2D.Dynamics.b2World.prototype.GetGroundBody = function() {
     return this.m_groundBody;
 };
@@ -518,6 +569,10 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
     }
 };
 
+/**
+ * @param {function(!Box2D.Dynamics.b2Fixture):boolean} callback
+ * @param {!Box2D.Collision.b2AABB} aabb
+ */
 Box2D.Dynamics.b2World.prototype.QueryAABB = function(callback, aabb) {
     var broadPhase = this.m_contactManager.m_broadPhase;
 
@@ -527,8 +582,13 @@ Box2D.Dynamics.b2World.prototype.QueryAABB = function(callback, aabb) {
     broadPhase.Query(WorldQueryWrapper, aabb);
 };
 
+/**
+ * @param {function(!Box2D.Dynamics.b2Fixture):boolean} callback
+ * @param {!Box2D.Collision.Shapes.b2Shape} shape
+ * @param {!Box2D.Common.Math.b2Transform=} transform
+ */
 Box2D.Dynamics.b2World.prototype.QueryShape = function(callback, shape, transform) {
-    if (transform === undefined || transform === null) {
+    if (typeof(transform) == "undefined") {
         transform = new Box2D.Common.Math.b2Transform();
         transform.SetIdentity();
     }
@@ -651,7 +711,7 @@ Box2D.Dynamics.b2World.prototype.IsLocked = function() {
 };
 
 /**
- * @param {!Box2D.Dynamics.b2TimeStep}
+ * @param {!Box2D.Dynamics.b2TimeStep} step
  */
 Box2D.Dynamics.b2World.prototype.Solve = function(step) {
     for (var controller = this.m_controllerList; controller; controller = controller.m_next) {
@@ -732,7 +792,7 @@ Box2D.Dynamics.b2World.prototype.Solve = function(step) {
 };
 
 /**
- * @param {!Box2D.Dynamics.b2TimeStep}
+ * @param {!Box2D.Dynamics.b2TimeStep} step
  */
 Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
     var m_island = new Box2D.Dynamics.b2Island(this.m_contactManager.m_contactListener, this.m_contactSolver);

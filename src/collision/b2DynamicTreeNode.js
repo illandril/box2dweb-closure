@@ -52,7 +52,9 @@ Box2D.Collision.b2DynamicTreeNode = function(fixture) {
     this.parent = null;
     
     /** @type {Box2D.Dynamics.b2Fixture} */
-    this.fixture = fixture;
+    if (typeof(fixture) != "undefined") {
+        this.fixture = fixture;
+    }
 };
 
 /**

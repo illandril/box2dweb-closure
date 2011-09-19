@@ -61,7 +61,7 @@ Box2D.Collision.b2DynamicTreeBroadPhase.prototype.CreateProxy = function(aabb, f
 };
 
 /**
- * @param {!Box2D.Collision.b2DynamicTreeNode}
+ * @param {!Box2D.Collision.b2DynamicTreeNode} proxy
  */
 Box2D.Collision.b2DynamicTreeBroadPhase.prototype.DestroyProxy = function(proxy) {
     this.UnBufferMove(proxy);
@@ -150,7 +150,7 @@ Box2D.Collision.b2DynamicTreeBroadPhase.prototype.Query = function(callback, aab
 };
 
 /**
- * @param {function(!Box2D.Collision.b2RayCastInput, !Box2D.Collision.b2Fixture): number} callback
+ * @param {function(!Box2D.Collision.b2RayCastInput, !Box2D.Dynamics.b2Fixture): number} callback
  * @param {!Box2D.Collision.b2RayCastInput} input
  */
 Box2D.Collision.b2DynamicTreeBroadPhase.prototype.RayCast = function(callback, input) {

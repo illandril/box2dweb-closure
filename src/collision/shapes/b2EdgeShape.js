@@ -46,10 +46,10 @@ goog.require('Box2D.Common.Math.b2Vec2');
 Box2D.Collision.Shapes.b2EdgeShape = function(v1, v2) {
     Box2D.Collision.Shapes.b2Shape.call(this);
     
-    /** @type {!Box2D.Collision.Shapes.b2EdgeShape} */
+    /** @type {Box2D.Collision.Shapes.b2EdgeShape} */
     this.m_prevEdge = null;
     
-    /** @type {!Box2D.Collision.Shapes.b2EdgeShape} */
+    /** @type {Box2D.Collision.Shapes.b2EdgeShape} */
     this.m_nextEdge = null;
     
     /** @type {!Box2D.Common.Math.b2Vec2} */

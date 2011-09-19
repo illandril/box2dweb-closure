@@ -50,7 +50,7 @@ Box2D.Collision.b2ManifoldPoint.prototype.Reset = function() {
     this.m_localPoint.SetZero();
     this.m_normalImpulse = 0.0;
     this.m_tangentImpulse = 0.0;
-    this.m_id.key = 0;
+    this.m_id.SetKey(0);
 };
 
 Box2D.Collision.b2ManifoldPoint.prototype.Set = function(m) {

@@ -66,7 +66,7 @@ Box2D.Collision.b2AABB.prototype.GetCenter = function() {
 
 
 /**
- * @param {!Box2D.Common.Math.b2Vec2}
+ * @param {!Box2D.Common.Math.b2Vec2} newCenter
  */
 Box2D.Collision.b2AABB.prototype.SetCenter = function(newCenter) {
     var oldCenter = this.GetCenter();

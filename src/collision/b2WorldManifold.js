@@ -56,7 +56,7 @@ Box2D.Collision.b2WorldManifold = function() {
 };
 
 /**
- * @param {!Box2D.Collision.b2WorldManifold} manifold
+ * @param {!Box2D.Collision.b2Manifold} manifold
  * @param {!Box2D.Common.Math.b2Transform} xfA
  * @param {number} radiusA
  * @param {!Box2D.Common.Math.b2Transform} xfB

@@ -168,7 +168,7 @@ Box2D.Dynamics.b2Body.prototype.DestroyFixture = function(fixture) {
 };
 
 /**
- * @param {!Box2D.Common.Math.b2Vec2) position
+ * @param {!Box2D.Common.Math.b2Vec2} position
  * @param {number} angle
  */
 Box2D.Dynamics.b2Body.prototype.SetPositionAndAngle = function(position, angle) {
@@ -190,28 +190,45 @@ Box2D.Dynamics.b2Body.prototype.SetPositionAndAngle = function(position, angle) 
     this.m_world.m_contactManager.FindNewContacts();
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Transform} xf
+ */
 Box2D.Dynamics.b2Body.prototype.SetTransform = function(xf) {
     this.SetPositionAndAngle(xf.position, xf.GetAngle());
 };
 
+/**
+ * @return {!Box2D.Common.Math.b2Transform}
+ */
 Box2D.Dynamics.b2Body.prototype.GetTransform = function() {
     return this.m_xf;
 };
 
+/**
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
 Box2D.Dynamics.b2Body.prototype.GetPosition = function() {
     return this.m_xf.position;
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} position
+ */
 Box2D.Dynamics.b2Body.prototype.SetPosition = function(position) {
     this.SetPositionAndAngle(position, this.GetAngle());
 };
 
+/**
+ * @return {number}
+ */
 Box2D.Dynamics.b2Body.prototype.GetAngle = function() {
     return this.m_sweep.a;
 };
 
+/**
+ * @param {number} angle
+ */
 Box2D.Dynamics.b2Body.prototype.SetAngle = function(angle) {
-    if (angle === undefined) angle = 0;
     this.SetPositionAndAngle(this.GetPosition(), angle);
 };
 

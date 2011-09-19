@@ -302,7 +302,7 @@ Box2D.Collision.b2Collision.CollideCircles = function(manifold, circle1, xf1, ci
     manifold.m_localPlaneNormal.SetZero();
     manifold.m_pointCount = 1;
     manifold.m_points[0].m_localPoint.SetV(circle2.m_p);
-    manifold.m_points[0].m_id.key = 0;
+    manifold.m_points[0].m_id.SetKey(0);
 };
 
 Box2D.Collision.b2Collision.CollidePolygonAndCircle = function(manifold, polygon, xf1, circle, xf2) {
@@ -337,7 +337,7 @@ Box2D.Collision.b2Collision.CollidePolygonAndCircle = function(manifold, polygon
         manifold.m_localPoint.x = 0.5 * (v1.x + v2.x);
         manifold.m_localPoint.y = 0.5 * (v1.y + v2.y);
         manifold.m_points[0].m_localPoint.SetV(circle.m_p);
-        manifold.m_points[0].m_id.key = 0;
+        manifold.m_points[0].m_id.SetKey(0);
     } else {
         var u1 = (cLocalX - v1.x) * (v2.x - v1.x) + (cLocalY - v1.y) * (v2.y - v1.y);
         if (u1 <= 0.0) {
@@ -349,7 +349,7 @@ Box2D.Collision.b2Collision.CollidePolygonAndCircle = function(manifold, polygon
             manifold.m_localPlaneNormal.Normalize();
             manifold.m_localPoint.SetV(v1);
             manifold.m_points[0].m_localPoint.SetV(circle.m_p);
-            manifold.m_points[0].m_id.key = 0;
+            manifold.m_points[0].m_id.SetKey(0);
         } else {
             var u2 = (cLocalX - v2.x) * (v1.x - v2.x) + (cLocalY - v2.y) * (v1.y - v2.y);
             if (u2 <= 0) {
@@ -361,7 +361,7 @@ Box2D.Collision.b2Collision.CollidePolygonAndCircle = function(manifold, polygon
                 manifold.m_localPlaneNormal.Normalize();
                 manifold.m_localPoint.SetV(v2);
                 manifold.m_points[0].m_localPoint.SetV(circle.m_p);
-                manifold.m_points[0].m_id.key = 0;
+                manifold.m_points[0].m_id.SetKey(0);
             } else {
                 var faceCenterX = 0.5 * (v1.x + v2.x);
                 var faceCenterY = 0.5 * (v1.y + v2.y);
@@ -374,7 +374,7 @@ Box2D.Collision.b2Collision.CollidePolygonAndCircle = function(manifold, polygon
                 manifold.m_localPlaneNormal.Normalize();
                 manifold.m_localPoint.Set(faceCenterX, faceCenterY);
                 manifold.m_points[0].m_localPoint.SetV(circle.m_p);
-                manifold.m_points[0].m_id.key = 0;
+                manifold.m_points[0].m_id.SetKey(0);
             }
         }
     }

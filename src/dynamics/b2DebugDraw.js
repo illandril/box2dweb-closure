@@ -118,7 +118,7 @@ Box2D.Dynamics.b2DebugDraw = function() {
       var s = this.m_ctx;
       var drawScale = this.m_drawScale;
       s.beginPath();
-      s.strokeStyle = this._color(color.color, this.m_alpha);
+      s.strokeStyle = this._color(color.GetColor(), this.m_alpha);
       s.moveTo(vertices[0].x * drawScale, vertices[0].y * drawScale);
       for (var i = 1; i < vertexCount; i++) {
          s.lineTo(vertices[i].x * drawScale, vertices[i].y * drawScale);
@@ -132,8 +132,8 @@ Box2D.Dynamics.b2DebugDraw = function() {
       var s = this.m_ctx;
       var drawScale = this.m_drawScale;
       s.beginPath();
-      s.strokeStyle = this._color(color.color, this.m_alpha);
-      s.fillStyle = this._color(color.color, this.m_fillAlpha);
+      s.strokeStyle = this._color(color.GetColor(), this.m_alpha);
+      s.fillStyle = this._color(color.GetColor(), this.m_fillAlpha);
       s.moveTo(vertices[0].x * drawScale, vertices[0].y * drawScale);
       for (var i = 1; i < vertexCount; i++) {
          s.lineTo(vertices[i].x * drawScale, vertices[i].y * drawScale);
@@ -148,7 +148,7 @@ Box2D.Dynamics.b2DebugDraw = function() {
       var s = this.m_ctx;
       var drawScale = this.m_drawScale;
       s.beginPath();
-      s.strokeStyle = this._color(color.color, this.m_alpha);
+      s.strokeStyle = this._color(color.GetColor(), this.m_alpha);
       s.arc(center.x * drawScale, center.y * drawScale, radius * drawScale, 0, Math.PI * 2, true);
       s.closePath();
       s.stroke();
@@ -161,8 +161,8 @@ Box2D.Dynamics.b2DebugDraw = function() {
          cy = center.y * drawScale;
       s.moveTo(0, 0);
       s.beginPath();
-      s.strokeStyle = this._color(color.color, this.m_alpha);
-      s.fillStyle = this._color(color.color, this.m_fillAlpha);
+      s.strokeStyle = this._color(color.GetColor(), this.m_alpha);
+      s.fillStyle = this._color(color.GetColor(), this.m_fillAlpha);
       s.arc(cx, cy, radius * drawScale, 0, Math.PI * 2, true);
       s.moveTo(cx, cy);
       s.lineTo((center.x + axis.x * radius) * drawScale, (center.y + axis.y * radius) * drawScale);
@@ -173,7 +173,7 @@ Box2D.Dynamics.b2DebugDraw = function() {
    b2DebugDraw.prototype.DrawSegment = function (p1, p2, color) {
       var s = this.m_ctx,
          drawScale = this.m_drawScale;
-      s.strokeStyle = this._color(color.color, this.m_alpha);
+      s.strokeStyle = this._color(color.GetColor(), this.m_alpha);
       s.beginPath();
       s.moveTo(p1.x * drawScale, p1.y * drawScale);
       s.lineTo(p2.x * drawScale, p2.y * drawScale);

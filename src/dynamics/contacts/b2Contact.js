@@ -176,7 +176,7 @@ Box2D.Dynamics.Contacts.b2Contact.prototype.Update = function (listener) {
            mp2.m_tangentImpulse = 0.0;
            for (var j = 0; j < this.m_oldManifold.m_pointCount; j++) {
               var mp1 = this.m_oldManifold.m_points[j];
-              if (mp1.m_id.key == mp2.m_id.key) {
+              if (mp1.m_id.GetKey() == mp2.m_id.GetKey()) {
                  mp2.m_normalImpulse = mp1.m_normalImpulse;
                  mp2.m_tangentImpulse = mp1.m_tangentImpulse;
                  break;
