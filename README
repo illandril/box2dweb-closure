@@ -12,3 +12,12 @@ box2Dweb was modified to utilize Google Closure, as well as other bug fixes, opt
 https://github.com/illandril/box2dweb-closure
 
 Requires Google Closure: http://code.google.com/closure/
+
+
+Important changes from Box2DWeb:
+ * b2Body types are now in b2BodyDef
+ * b2Shape types are now in each specific Shape
+ * most integer parameters now assume non-null, non-undefined values (like the b2Vec2 and b2Vec3 constructors)
+
+Notice anything else that doesn't work that did work using box2dweb?
+E-mail box2dweb@illandril.net
