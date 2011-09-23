@@ -9,17 +9,17 @@ svn:wc:ra_dav:version-url
 V 75
 /svn/!svn/ver/850/trunk/closure/goog/editor/plugins/undoredostate_test.html
 END
-blockquote.js
-K 25
-svn:wc:ra_dav:version-url
-V 65
-/svn/!svn/ver/850/trunk/closure/goog/editor/plugins/blockquote.js
-END
 equationeditorbubble.js
 K 25
 svn:wc:ra_dav:version-url
 V 76
 /svn/!svn/ver/1236/trunk/closure/goog/editor/plugins/equationeditorbubble.js
+END
+blockquote.js
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/850/trunk/closure/goog/editor/plugins/blockquote.js
 END
 basictextformatter.js
 K 25
@@ -159,17 +159,17 @@ svn:wc:ra_dav:version-url
 V 70
 /svn/!svn/ver/850/trunk/closure/goog/editor/plugins/headerformatter.js
 END
-removeformatting_test.html
-K 25
-svn:wc:ra_dav:version-url
-V 78
-/svn/!svn/ver/991/trunk/closure/goog/editor/plugins/removeformatting_test.html
-END
 abstracttabhandler_test.html
 K 25
 svn:wc:ra_dav:version-url
 V 80
 /svn/!svn/ver/850/trunk/closure/goog/editor/plugins/abstracttabhandler_test.html
+END
+removeformatting_test.html
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/991/trunk/closure/goog/editor/plugins/removeformatting_test.html
 END
 loremipsum_test.html
 K 25
@@ -189,17 +189,17 @@ svn:wc:ra_dav:version-url
 V 71
 /svn/!svn/ver/850/trunk/closure/goog/editor/plugins/emoticons_test.html
 END
-abstracttabhandler.js
-K 25
-svn:wc:ra_dav:version-url
-V 73
-/svn/!svn/ver/850/trunk/closure/goog/editor/plugins/abstracttabhandler.js
-END
 removeformatting.js
 K 25
 svn:wc:ra_dav:version-url
 V 71
 /svn/!svn/ver/850/trunk/closure/goog/editor/plugins/removeformatting.js
+END
+abstracttabhandler.js
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/850/trunk/closure/goog/editor/plugins/abstracttabhandler.js
 END
 loremipsum.js
 K 25
@@ -219,17 +219,17 @@ svn:wc:ra_dav:version-url
 V 72
 /svn/!svn/ver/850/trunk/closure/goog/editor/plugins/blockquote_test.html
 END
-emoticons.js
-K 25
-svn:wc:ra_dav:version-url
-V 64
-/svn/!svn/ver/850/trunk/closure/goog/editor/plugins/emoticons.js
-END
 linkbubble_test.html
 K 25
 svn:wc:ra_dav:version-url
 V 72
 /svn/!svn/ver/850/trunk/closure/goog/editor/plugins/linkbubble_test.html
+END
+emoticons.js
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/850/trunk/closure/goog/editor/plugins/emoticons.js
 END
 basictextformatter_test.html
 K 25

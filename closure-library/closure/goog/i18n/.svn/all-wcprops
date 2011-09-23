@@ -1,13 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 42
-/svn/!svn/ver/1144/trunk/closure/goog/i18n
+/svn/!svn/ver/1288/trunk/closure/goog/i18n
 END
 datetimesymbols.js
 K 25
 svn:wc:ra_dav:version-url
-V 60
-/svn/!svn/ver/850/trunk/closure/goog/i18n/datetimesymbols.js
+V 61
+/svn/!svn/ver/1280/trunk/closure/goog/i18n/datetimesymbols.js
 END
 charpickerdata.js
 K 25
@@ -42,8 +42,8 @@ END
 messageformat_test.html
 K 25
 svn:wc:ra_dav:version-url
-V 65
-/svn/!svn/ver/850/trunk/closure/goog/i18n/messageformat_test.html
+V 66
+/svn/!svn/ver/1288/trunk/closure/goog/i18n/messageformat_test.html
 END
 graphemebreak_test.html
 K 25
@@ -57,17 +57,17 @@ svn:wc:ra_dav:version-url
 V 64
 /svn/!svn/ver/850/trunk/closure/goog/i18n/numberformat_test.html
 END
-bidiformatter.js
-K 25
-svn:wc:ra_dav:version-url
-V 58
-/svn/!svn/ver/850/trunk/closure/goog/i18n/bidiformatter.js
-END
 numberformatsymbolsext.js
 K 25
 svn:wc:ra_dav:version-url
 V 67
 /svn/!svn/ver/850/trunk/closure/goog/i18n/numberformatsymbolsext.js
+END
+bidiformatter.js
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/850/trunk/closure/goog/i18n/bidiformatter.js
 END
 charlistdecompressor.js
 K 25
@@ -93,17 +93,17 @@ svn:wc:ra_dav:version-url
 V 56
 /svn/!svn/ver/850/trunk/closure/goog/i18n/pluralrules.js
 END
-timezone_test.html
-K 25
-svn:wc:ra_dav:version-url
-V 60
-/svn/!svn/ver/850/trunk/closure/goog/i18n/timezone_test.html
-END
 currency_test.html
 K 25
 svn:wc:ra_dav:version-url
 V 60
 /svn/!svn/ver/850/trunk/closure/goog/i18n/currency_test.html
+END
+timezone_test.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/850/trunk/closure/goog/i18n/timezone_test.html
 END
 bidiformatter_test.html
 K 25
@@ -120,8 +120,8 @@ END
 datetimesymbolsext.js
 K 25
 svn:wc:ra_dav:version-url
-V 63
-/svn/!svn/ver/850/trunk/closure/goog/i18n/datetimesymbolsext.js
+V 64
+/svn/!svn/ver/1280/trunk/closure/goog/i18n/datetimesymbolsext.js
 END
 charlistdecompressor_test.html
 K 25
@@ -168,8 +168,8 @@ END
 messageformat.js
 K 25
 svn:wc:ra_dav:version-url
-V 58
-/svn/!svn/ver/984/trunk/closure/goog/i18n/messageformat.js
+V 59
+/svn/!svn/ver/1288/trunk/closure/goog/i18n/messageformat.js
 END
 graphemebreak.js
 K 25

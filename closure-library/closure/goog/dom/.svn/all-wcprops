@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 41
-/svn/!svn/ver/1209/trunk/closure/goog/dom
+/svn/!svn/ver/1286/trunk/closure/goog/dom
 END
 dom_test.html
 K 25
@@ -201,23 +201,23 @@ svn:wc:ra_dav:version-url
 V 61
 /svn/!svn/ver/850/trunk/closure/goog/dom/textrangeiterator.js
 END
-tagiterator_test.html
-K 25
-svn:wc:ra_dav:version-url
-V 62
-/svn/!svn/ver/850/trunk/closure/goog/dom/tagiterator_test.html
-END
 dataset_test.html
 K 25
 svn:wc:ra_dav:version-url
 V 58
 /svn/!svn/ver/850/trunk/closure/goog/dom/dataset_test.html
 END
+tagiterator_test.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/850/trunk/closure/goog/dom/tagiterator_test.html
+END
 dom.js
 K 25
 svn:wc:ra_dav:version-url
 V 48
-/svn/!svn/ver/1209/trunk/closure/goog/dom/dom.js
+/svn/!svn/ver/1286/trunk/closure/goog/dom/dom.js
 END
 abstractrange.js
 K 25

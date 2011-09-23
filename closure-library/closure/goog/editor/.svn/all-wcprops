@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 44
-/svn/!svn/ver/1276/trunk/closure/goog/editor
+/svn/!svn/ver/1286/trunk/closure/goog/editor
 END
 seamlessfield_quirks_test.html
 K 25
@@ -21,17 +21,17 @@ svn:wc:ra_dav:version-url
 V 67
 /svn/!svn/ver/850/trunk/closure/goog/editor/seamlessfield_test.html
 END
-field_test.html
-K 25
-svn:wc:ra_dav:version-url
-V 59
-/svn/!svn/ver/850/trunk/closure/goog/editor/field_test.html
-END
 icontent_test.html
 K 25
 svn:wc:ra_dav:version-url
 V 62
 /svn/!svn/ver/850/trunk/closure/goog/editor/icontent_test.html
+END
+field_test.html
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/850/trunk/closure/goog/editor/field_test.html
 END
 node_test.html
 K 25
@@ -45,23 +45,17 @@ svn:wc:ra_dav:version-url
 V 54
 /svn/!svn/ver/850/trunk/closure/goog/editor/defines.js
 END
-table_test.html
-K 25
-svn:wc:ra_dav:version-url
-V 59
-/svn/!svn/ver/850/trunk/closure/goog/editor/table_test.html
-END
 command.js
 K 25
 svn:wc:ra_dav:version-url
 V 55
 /svn/!svn/ver/1143/trunk/closure/goog/editor/command.js
 END
-seamlessfield_test.js
+table_test.html
 K 25
 svn:wc:ra_dav:version-url
-V 65
-/svn/!svn/ver/850/trunk/closure/goog/editor/seamlessfield_test.js
+V 59
+/svn/!svn/ver/850/trunk/closure/goog/editor/table_test.html
 END
 focus.js
 K 25
@@ -69,17 +63,23 @@ svn:wc:ra_dav:version-url
 V 52
 /svn/!svn/ver/850/trunk/closure/goog/editor/focus.js
 END
+seamlessfield_test.js
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/850/trunk/closure/goog/editor/seamlessfield_test.js
+END
 seamlessfield.js
 K 25
 svn:wc:ra_dav:version-url
 V 60
 /svn/!svn/ver/850/trunk/closure/goog/editor/seamlessfield.js
 END
-range_test.html
+field.js
 K 25
 svn:wc:ra_dav:version-url
-V 59
-/svn/!svn/ver/850/trunk/closure/goog/editor/range_test.html
+V 53
+/svn/!svn/ver/1024/trunk/closure/goog/editor/field.js
 END
 icontent.js
 K 25
@@ -87,11 +87,11 @@ svn:wc:ra_dav:version-url
 V 55
 /svn/!svn/ver/850/trunk/closure/goog/editor/icontent.js
 END
-field.js
+range_test.html
 K 25
 svn:wc:ra_dav:version-url
-V 53
-/svn/!svn/ver/1024/trunk/closure/goog/editor/field.js
+V 59
+/svn/!svn/ver/850/trunk/closure/goog/editor/range_test.html
 END
 link_test.html
 K 25
@@ -163,7 +163,7 @@ clicktoeditwrapper.js
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/!svn/ver/1024/trunk/closure/goog/editor/clicktoeditwrapper.js
+/svn/!svn/ver/1286/trunk/closure/goog/editor/clicktoeditwrapper.js
 END
 style.js
 K 25

@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 49
-/svn/!svn/ver/1236/trunk/closure/goog/ui/equation
+/svn/!svn/ver/1286/trunk/closure/goog/ui/equation
 END
 texpane.js
 K 25
@@ -25,7 +25,7 @@ imagerenderer.js
 K 25
 svn:wc:ra_dav:version-url
 V 66
-/svn/!svn/ver/1236/trunk/closure/goog/ui/equation/imagerenderer.js
+/svn/!svn/ver/1286/trunk/closure/goog/ui/equation/imagerenderer.js
 END
 arrowpalette.js
 K 25

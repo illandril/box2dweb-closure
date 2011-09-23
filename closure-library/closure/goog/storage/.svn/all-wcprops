@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 45
-/svn/!svn/ver/1047/trunk/closure/goog/storage
+/svn/!svn/ver/1282/trunk/closure/goog/storage
 END
 errorcode.js
 K 25
@@ -18,14 +18,14 @@ END
 collectablestorage_test.html
 K 25
 svn:wc:ra_dav:version-url
-V 73
-/svn/!svn/ver/937/trunk/closure/goog/storage/collectablestorage_test.html
+V 74
+/svn/!svn/ver/1282/trunk/closure/goog/storage/collectablestorage_test.html
 END
 encryptedstorage_test.html
 K 25
 svn:wc:ra_dav:version-url
-V 71
-/svn/!svn/ver/954/trunk/closure/goog/storage/encryptedstorage_test.html
+V 72
+/svn/!svn/ver/1282/trunk/closure/goog/storage/encryptedstorage_test.html
 END
 richstorage.js
 K 25
@@ -42,8 +42,8 @@ END
 storage_test.html
 K 25
 svn:wc:ra_dav:version-url
-V 62
-/svn/!svn/ver/911/trunk/closure/goog/storage/storage_test.html
+V 63
+/svn/!svn/ver/1282/trunk/closure/goog/storage/storage_test.html
 END
 collectablestorage.js
 K 25
@@ -54,14 +54,14 @@ END
 richstorage_test.html
 K 25
 svn:wc:ra_dav:version-url
-V 66
-/svn/!svn/ver/937/trunk/closure/goog/storage/richstorage_test.html
+V 67
+/svn/!svn/ver/1282/trunk/closure/goog/storage/richstorage_test.html
 END
 expiringstorage_test.html
 K 25
 svn:wc:ra_dav:version-url
-V 70
-/svn/!svn/ver/937/trunk/closure/goog/storage/expiringstorage_test.html
+V 71
+/svn/!svn/ver/1282/trunk/closure/goog/storage/expiringstorage_test.html
 END
 encryptedstorage.js
 K 25

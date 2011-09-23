@@ -63,17 +63,17 @@ svn:wc:ra_dav:version-url
 V 55
 /svn/!svn/ver/1175/trunk/closure/goog/vec/quaternion.js
 END
-vec3_test.html
-K 25
-svn:wc:ra_dav:version-url
-V 55
-/svn/!svn/ver/850/trunk/closure/goog/vec/vec3_test.html
-END
 matrix3.js
 K 25
 svn:wc:ra_dav:version-url
 V 51
 /svn/!svn/ver/981/trunk/closure/goog/vec/matrix3.js
+END
+vec3_test.html
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/850/trunk/closure/goog/vec/vec3_test.html
 END
 matrix4.js
 K 25
@@ -87,17 +87,17 @@ svn:wc:ra_dav:version-url
 V 55
 /svn/!svn/ver/850/trunk/closure/goog/vec/vec4_test.html
 END
-ray.js
-K 25
-svn:wc:ra_dav:version-url
-V 48
-/svn/!svn/ver/1074/trunk/closure/goog/vec/ray.js
-END
 mat3_test.html
 K 25
 svn:wc:ra_dav:version-url
 V 55
 /svn/!svn/ver/979/trunk/closure/goog/vec/mat3_test.html
+END
+ray.js
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/1074/trunk/closure/goog/vec/ray.js
 END
 mat4_test.html
 K 25

@@ -27,17 +27,17 @@ svn:wc:ra_dav:version-url
 V 67
 /svn/!svn/ver/850/trunk/closure/goog/ui/media/flashobject_test.html
 END
-vimeo.js
-K 25
-svn:wc:ra_dav:version-url
-V 54
-/svn/!svn/ver/850/trunk/closure/goog/ui/media/vimeo.js
-END
 media.js
 K 25
 svn:wc:ra_dav:version-url
 V 54
 /svn/!svn/ver/850/trunk/closure/goog/ui/media/media.js
+END
+vimeo.js
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/850/trunk/closure/goog/ui/media/vimeo.js
 END
 photo_test.html
 K 25
@@ -93,17 +93,17 @@ svn:wc:ra_dav:version-url
 V 53
 /svn/!svn/ver/1184/trunk/closure/goog/ui/media/mp3.js
 END
-picasa.js
-K 25
-svn:wc:ra_dav:version-url
-V 56
-/svn/!svn/ver/1184/trunk/closure/goog/ui/media/picasa.js
-END
 mediamodel.js
 K 25
 svn:wc:ra_dav:version-url
 V 59
 /svn/!svn/ver/850/trunk/closure/goog/ui/media/mediamodel.js
+END
+picasa.js
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/1184/trunk/closure/goog/ui/media/picasa.js
 END
 flickr_test.html
 K 25

@@ -27,17 +27,17 @@ svn:wc:ra_dav:version-url
 V 55
 /svn/!svn/ver/850/trunk/closure/goog/structs/structs.js
 END
-queue_test.html
-K 25
-svn:wc:ra_dav:version-url
-V 60
-/svn/!svn/ver/850/trunk/closure/goog/structs/queue_test.html
-END
 prioritypool.js
 K 25
 svn:wc:ra_dav:version-url
 V 61
 /svn/!svn/ver/1024/trunk/closure/goog/structs/prioritypool.js
+END
+queue_test.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/850/trunk/closure/goog/structs/queue_test.html
 END
 heap.js
 K 25
@@ -105,29 +105,29 @@ svn:wc:ra_dav:version-url
 V 59
 /svn/!svn/ver/850/trunk/closure/goog/structs/heap_test.html
 END
-pool.js
-K 25
-svn:wc:ra_dav:version-url
-V 53
-/svn/!svn/ver/1024/trunk/closure/goog/structs/pool.js
-END
 stringset_test.html
 K 25
 svn:wc:ra_dav:version-url
 V 64
 /svn/!svn/ver/850/trunk/closure/goog/structs/stringset_test.html
 END
-inversionmap.js
+pool.js
 K 25
 svn:wc:ra_dav:version-url
-V 60
-/svn/!svn/ver/850/trunk/closure/goog/structs/inversionmap.js
+V 53
+/svn/!svn/ver/1024/trunk/closure/goog/structs/pool.js
 END
 quadtree.js
 K 25
 svn:wc:ra_dav:version-url
 V 56
 /svn/!svn/ver/850/trunk/closure/goog/structs/quadtree.js
+END
+inversionmap.js
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/850/trunk/closure/goog/structs/inversionmap.js
 END
 priorityqueue_test.html
 K 25
@@ -141,17 +141,17 @@ svn:wc:ra_dav:version-url
 V 51
 /svn/!svn/ver/850/trunk/closure/goog/structs/map.js
 END
-stringset.js
-K 25
-svn:wc:ra_dav:version-url
-V 57
-/svn/!svn/ver/850/trunk/closure/goog/structs/stringset.js
-END
 collection_test.html
 K 25
 svn:wc:ra_dav:version-url
 V 65
 /svn/!svn/ver/894/trunk/closure/goog/structs/collection_test.html
+END
+stringset.js
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/850/trunk/closure/goog/structs/stringset.js
 END
 simplepool.js
 K 25
@@ -159,17 +159,17 @@ svn:wc:ra_dav:version-url
 V 59
 /svn/!svn/ver/1024/trunk/closure/goog/structs/simplepool.js
 END
-circularbuffer_test.html
-K 25
-svn:wc:ra_dav:version-url
-V 69
-/svn/!svn/ver/850/trunk/closure/goog/structs/circularbuffer_test.html
-END
 node.js
 K 25
 svn:wc:ra_dav:version-url
 V 52
 /svn/!svn/ver/850/trunk/closure/goog/structs/node.js
+END
+circularbuffer_test.html
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/850/trunk/closure/goog/structs/circularbuffer_test.html
 END
 priorityqueue.js
 K 25

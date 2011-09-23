@@ -87,23 +87,23 @@ svn:wc:ra_dav:version-url
 V 59
 /svn/!svn/ver/158/trunk/closure/goog/images/ratingstars.gif
 END
-plus.png
-K 25
-svn:wc:ra_dav:version-url
-V 52
-/svn/!svn/ver/158/trunk/closure/goog/images/plus.png
-END
 gears_paused.gif
 K 25
 svn:wc:ra_dav:version-url
 V 60
 /svn/!svn/ver/850/trunk/closure/goog/images/gears_paused.gif
 END
-gears_offline.gif
+plus.png
 K 25
 svn:wc:ra_dav:version-url
-V 61
-/svn/!svn/ver/850/trunk/closure/goog/images/gears_offline.gif
+V 52
+/svn/!svn/ver/158/trunk/closure/goog/images/plus.png
+END
+no_anchor_bubble_top.gif
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/139/trunk/closure/goog/images/no_anchor_bubble_top.gif
 END
 left_anchor_bubble_bot.gif
 K 25
@@ -111,11 +111,11 @@ svn:wc:ra_dav:version-url
 V 70
 /svn/!svn/ver/139/trunk/closure/goog/images/left_anchor_bubble_bot.gif
 END
-no_anchor_bubble_top.gif
+gears_offline.gif
 K 25
 svn:wc:ra_dav:version-url
-V 68
-/svn/!svn/ver/139/trunk/closure/goog/images/no_anchor_bubble_top.gif
+V 61
+/svn/!svn/ver/850/trunk/closure/goog/images/gears_offline.gif
 END
 hsva-sprite.gif
 K 25
@@ -135,11 +135,11 @@ svn:wc:ra_dav:version-url
 V 59
 /svn/!svn/ver/850/trunk/closure/goog/images/ui_controls.jpg
 END
-dropdn_disabled.gif
+check.gif
 K 25
 svn:wc:ra_dav:version-url
-V 63
-/svn/!svn/ver/850/trunk/closure/goog/images/dropdn_disabled.gif
+V 53
+/svn/!svn/ver/850/trunk/closure/goog/images/check.gif
 END
 close_box.gif
 K 25
@@ -147,11 +147,11 @@ svn:wc:ra_dav:version-url
 V 57
 /svn/!svn/ver/139/trunk/closure/goog/images/close_box.gif
 END
-check.gif
+dropdn_disabled.gif
 K 25
 svn:wc:ra_dav:version-url
-V 53
-/svn/!svn/ver/850/trunk/closure/goog/images/check.gif
+V 63
+/svn/!svn/ver/850/trunk/closure/goog/images/dropdn_disabled.gif
 END
 gears_bluedot.gif
 K 25
@@ -177,17 +177,17 @@ svn:wc:ra_dav:version-url
 V 58
 /svn/!svn/ver/850/trunk/closure/goog/images/hsv-sprite.png
 END
-right_anchor_bubble_bot.gif
-K 25
-svn:wc:ra_dav:version-url
-V 71
-/svn/!svn/ver/139/trunk/closure/goog/images/right_anchor_bubble_bot.gif
-END
 dropdn.gif
 K 25
 svn:wc:ra_dav:version-url
 V 54
 /svn/!svn/ver/850/trunk/closure/goog/images/dropdn.gif
+END
+right_anchor_bubble_bot.gif
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/139/trunk/closure/goog/images/right_anchor_bubble_bot.gif
 END
 bubble_right.gif
 K 25

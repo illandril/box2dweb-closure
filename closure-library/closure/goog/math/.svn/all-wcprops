@@ -75,17 +75,17 @@ svn:wc:ra_dav:version-url
 V 48
 /svn/!svn/ver/850/trunk/closure/goog/math/box.js
 END
-exponentialbackoff_test.html
-K 25
-svn:wc:ra_dav:version-url
-V 71
-/svn/!svn/ver/1136/trunk/closure/goog/math/exponentialbackoff_test.html
-END
 math.js
 K 25
 svn:wc:ra_dav:version-url
 V 49
 /svn/!svn/ver/850/trunk/closure/goog/math/math.js
+END
+exponentialbackoff_test.html
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/1136/trunk/closure/goog/math/exponentialbackoff_test.html
 END
 rect.js
 K 25
@@ -129,11 +129,11 @@ svn:wc:ra_dav:version-url
 V 56
 /svn/!svn/ver/850/trunk/closure/goog/math/vec2_test.html
 END
-line.js
+coordinate.js
 K 25
 svn:wc:ra_dav:version-url
-V 49
-/svn/!svn/ver/850/trunk/closure/goog/math/line.js
+V 55
+/svn/!svn/ver/850/trunk/closure/goog/math/coordinate.js
 END
 vec3_test.html
 K 25
@@ -141,11 +141,11 @@ svn:wc:ra_dav:version-url
 V 56
 /svn/!svn/ver/850/trunk/closure/goog/math/vec3_test.html
 END
-coordinate.js
+line.js
 K 25
 svn:wc:ra_dav:version-url
-V 55
-/svn/!svn/ver/850/trunk/closure/goog/math/coordinate.js
+V 49
+/svn/!svn/ver/850/trunk/closure/goog/math/line.js
 END
 matrix_test.html
 K 25
@@ -165,17 +165,17 @@ svn:wc:ra_dav:version-url
 V 52
 /svn/!svn/ver/850/trunk/closure/goog/math/integer.js
 END
-long.js
-K 25
-svn:wc:ra_dav:version-url
-V 49
-/svn/!svn/ver/850/trunk/closure/goog/math/long.js
-END
 rangeset_test.html
 K 25
 svn:wc:ra_dav:version-url
 V 60
 /svn/!svn/ver/850/trunk/closure/goog/math/rangeset_test.html
+END
+long.js
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/850/trunk/closure/goog/math/long.js
 END
 vec3.js
 K 25
@@ -183,15 +183,15 @@ svn:wc:ra_dav:version-url
 V 50
 /svn/!svn/ver/1177/trunk/closure/goog/math/vec3.js
 END
-coordinate3_test.html
-K 25
-svn:wc:ra_dav:version-url
-V 63
-/svn/!svn/ver/850/trunk/closure/goog/math/coordinate3_test.html
-END
 size_test.html
 K 25
 svn:wc:ra_dav:version-url
 V 56
 /svn/!svn/ver/850/trunk/closure/goog/math/size_test.html
+END
+coordinate3_test.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/850/trunk/closure/goog/math/coordinate3_test.html
 END

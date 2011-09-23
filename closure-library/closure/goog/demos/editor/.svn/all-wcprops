@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 50
-/svn/!svn/ver/1276/trunk/closure/goog/demos/editor
+/svn/!svn/ver/1289/trunk/closure/goog/demos/editor
 END
 equationeditor.html
 K 25
@@ -43,7 +43,7 @@ deps.js
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/svn/!svn/ver/1143/trunk/closure/goog/demos/editor/deps.js
+/svn/!svn/ver/1289/trunk/closure/goog/demos/editor/deps.js
 END
 field_basic.html
 K 25
