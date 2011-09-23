@@ -44,10 +44,38 @@ goog.require('Box2D.Common.b2Settings');
  * @constructor
  */
 Box2D.Dynamics.Contacts.b2Contact = function() {
+    /** @type {!Box2D.Dynamics.Contacts.b2ContactEdge} */
     this.m_nodeA = new Box2D.Dynamics.Contacts.b2ContactEdge();
+    
+    /** @type {!Box2D.Dynamics.Contacts.b2ContactEdge} */
     this.m_nodeB = new Box2D.Dynamics.Contacts.b2ContactEdge();
+
+    /** @type {!Box2D.Collision.b2Manifold} */
     this.m_manifold = new Box2D.Collision.b2Manifold();
+    
+    /** @type {!Box2D.Collision.b2Manifold} */
     this.m_oldManifold = new Box2D.Collision.b2Manifold();
+    
+    /** @type {boolean} */
+    this.touching = false;
+
+    /** @type {boolean} */
+    this.continuous = false;
+    
+    /** @type {boolean} */
+    this.sensor = false;
+    
+    /** @type {boolean} */
+    this.filtering = false;
+    
+    /** @type {Box2D.Dynamics.Contacts.b2Contact} */
+    this.m_next = null;
+    
+    /** @type {Box2D.Dynamics.b2Fixture} */
+    this.m_fixtureA = null;
+    
+    /** @type {Box2D.Dynamics.b2Fixture} */
+    this.m_fixtureB = null;
 };
 
 Box2D.Dynamics.Contacts.b2Contact.prototype.GetManifold = function () {

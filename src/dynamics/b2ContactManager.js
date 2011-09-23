@@ -104,7 +104,7 @@ Box2D.Dynamics.b2ContactManager.prototype.AddPair = function (fixtureA, fixtureB
      bodyB.m_contactList.prev = c.m_nodeB;
   }
   bodyB.m_contactList = c.m_nodeB;
-  this.m_world.m_contactCount++;
+  this.m_contactCount++;
   return;
 };
 

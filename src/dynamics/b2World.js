@@ -94,9 +94,6 @@ Box2D.Dynamics.b2World = function(gravity, doSleep) { /** @type {!Box2D.Dynamics
     this.m_bodyCount = 0;
 
     /** @type {number} */
-    this.m_contactCount = 0;
-
-    /** @type {number} */
     this.m_jointCount = 0;
 
     /** @type {number} */
@@ -429,7 +426,7 @@ Box2D.Dynamics.b2World.prototype.GetJointCount = function() {
  * @return {number}
  */
 Box2D.Dynamics.b2World.prototype.GetContactCount = function() {
-    return this.m_contactCount;
+    return this.m_contactManager.m_contactCount;
 };
 
 /**
