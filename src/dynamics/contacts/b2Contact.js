@@ -41,9 +41,11 @@ goog.require('Box2D.Collision.Shapes.b2Shape');
 goog.require('Box2D.Common.b2Settings');
 
 /**
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureA
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureB
  * @constructor
  */
-Box2D.Dynamics.Contacts.b2Contact = function() {
+Box2D.Dynamics.Contacts.b2Contact = function(fixtureA, fixtureB) {
     /** @type {!Box2D.Dynamics.Contacts.b2ContactEdge} */
     this.m_nodeA = new Box2D.Dynamics.Contacts.b2ContactEdge();
     
@@ -61,9 +63,17 @@ Box2D.Dynamics.Contacts.b2Contact = function() {
 
     /** @type {boolean} */
     this.continuous = false;
+    var bodyA = fixtureA.GetBody();
+    var bodyB = fixtureB.GetBody();
+    if (bodyA.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody || bodyA.IsBullet() || bodyB.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody || bodyB.IsBullet()) {
+        this.continuous = true;
+    }
     
     /** @type {boolean} */
     this.sensor = false;
+    if (fixtureA.IsSensor() || fixtureB.IsSensor()) {
+        this.sensor = true;
+    }
     
     /** @type {boolean} */
     this.filtering = false;
@@ -71,11 +81,17 @@ Box2D.Dynamics.Contacts.b2Contact = function() {
     /** @type {Box2D.Dynamics.Contacts.b2Contact} */
     this.m_next = null;
     
-    /** @type {Box2D.Dynamics.b2Fixture} */
-    this.m_fixtureA = null;
+    /** @type {Box2D.Dynamics.Contacts.b2Contact} */
+    this.m_prev = null;
     
-    /** @type {Box2D.Dynamics.b2Fixture} */
-    this.m_fixtureB = null;
+    /** @type {!Box2D.Dynamics.b2Fixture} */
+    this.m_fixtureA = fixtureA;
+    
+    /** @type {!Box2D.Dynamics.b2Fixture} */
+    this.m_fixtureB = fixtureB;
+    
+    /** @type {boolean} */
+    this.enabled = true;
 };
 
 Box2D.Dynamics.Contacts.b2Contact.prototype.GetManifold = function () {
@@ -83,11 +99,11 @@ Box2D.Dynamics.Contacts.b2Contact.prototype.GetManifold = function () {
 };
 
 Box2D.Dynamics.Contacts.b2Contact.prototype.GetWorldManifold = function (worldManifold) {
-  var bodyA = this.m_fixtureA.GetBody();
-  var bodyB = this.m_fixtureB.GetBody();
-  var shapeA = this.m_fixtureA.GetShape();
-  var shapeB = this.m_fixtureB.GetShape();
-  worldManifold.Initialize(this.m_manifold, bodyA.GetTransform(), shapeA.m_radius, bodyB.GetTransform(), shapeB.m_radius);
+    var bodyA = this.m_fixtureA.GetBody();
+    var bodyB = this.m_fixtureB.GetBody();
+    var shapeA = this.m_fixtureA.GetShape();
+    var shapeB = this.m_fixtureB.GetShape();
+    worldManifold.Initialize(this.m_manifold, bodyA.GetTransform(), shapeA.m_radius, bodyB.GetTransform(), shapeB.m_radius);
 };
 
 Box2D.Dynamics.Contacts.b2Contact.prototype.IsTouching = function () {
@@ -136,42 +152,6 @@ Box2D.Dynamics.Contacts.b2Contact.prototype.ClearFiltering = function () {
 
 Box2D.Dynamics.Contacts.b2Contact.prototype.IsFiltering = function () {
    return this.filtering;
-};
-
-Box2D.Dynamics.Contacts.b2Contact.prototype.Reset = function (fixtureA, fixtureB) {
-  if (fixtureA === undefined) fixtureA = null;
-  if (fixtureB === undefined) fixtureB = null;
-  this.enabled = true;
-  this.sensor = false;
-  this.continuous = false;
-  this.touching = false;
-  this.filtering = false;
-  if (!fixtureA || !fixtureB) {
-     this.m_fixtureA = null;
-     this.m_fixtureB = null;
-     return;
-  }
-  if (fixtureA.IsSensor() || fixtureB.IsSensor()) {
-      this.sensor = true;
-  }
-  var bodyA = fixtureA.GetBody();
-  var bodyB = fixtureB.GetBody();
-  if (bodyA.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody || bodyA.IsBullet() || bodyB.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody || bodyB.IsBullet()) {
-      this.continuous = true;
-  }
-  this.m_fixtureA = fixtureA;
-  this.m_fixtureB = fixtureB;
-  this.m_manifold.m_pointCount = 0;
-  this.m_prev = null;
-  this.m_next = null;
-  this.m_nodeA.contact = null;
-  this.m_nodeA.prev = null;
-  this.m_nodeA.next = null;
-  this.m_nodeA.other = null;
-  this.m_nodeB.contact = null;
-  this.m_nodeB.prev = null;
-  this.m_nodeB.next = null;
-  this.m_nodeB.other = null;
 };
 
 Box2D.Dynamics.Contacts.b2Contact.prototype.Update = function (listener) {

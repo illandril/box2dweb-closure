@@ -1,4 +1,4 @@
-document.write('<div id="fps">60</div>');
+document.write('<div id="fps">?? FPS</div>');
 var lastTick = new Date();
 var rollingFPS = 60;
 updateCalls.push(function() {

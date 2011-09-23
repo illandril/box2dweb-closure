@@ -36,21 +36,15 @@ goog.require('Box2D.Dynamics.Contacts.b2Contact');
 goog.require('Box2D.Collision.b2Collision');
 
 /**
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureA
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureB
  * @constructor
  * @extends {Box2D.Dynamics.Contacts.b2Contact}
  */
-Box2D.Dynamics.Contacts.b2EdgeAndCircleContact = function() {
-    Box2D.Dynamics.Contacts.b2Contact.call(this);
+Box2D.Dynamics.Contacts.b2EdgeAndCircleContact = function(fixtureA, fixtureB) {
+    Box2D.Dynamics.Contacts.b2Contact.call(this, fixtureA, fixtureB);
 };
 goog.inherits(Box2D.Dynamics.Contacts.b2EdgeAndCircleContact, Box2D.Dynamics.Contacts.b2Contact);
-
-Box2D.Dynamics.Contacts.b2EdgeAndCircleContact.Create = function() {
-    return new Box2D.Dynamics.Contacts.b2EdgeAndCircleContact();
-};
-
-Box2D.Dynamics.Contacts.b2EdgeAndCircleContact.prototype.Reset = function(fixtureA, fixtureB) {
-    Box2D.Dynamics.Contacts.b2Contact.prototype.Reset.call(this, fixtureA, fixtureB);
-};
 
 Box2D.Dynamics.Contacts.b2EdgeAndCircleContact.prototype.Evaluate = function() {
     var bA = this.m_fixtureA.GetBody();
