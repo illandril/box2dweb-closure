@@ -63,15 +63,15 @@
     
     for(var i = 0; i < 10; ++i) {
         if(i % 2 === 0) {
-           fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
-           fixDef.shape.SetAsBox(Math.random() + 0.1, Math.random() + 0.1);
+            createSpinner(getRandomPos(), new Box2D.Common.Math.b2Vec2(2, 2));
+            fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
+            fixDef.shape.SetAsBox(Math.random() + 0.1, Math.random() + 0.1);
         } else {
-           fixDef.shape = new Box2D.Collision.Shapes.b2CircleShape(Math.random() + 0.1);
+            createSnake(getRandomPos(), new Box2D.Common.Math.b2Vec2(2.5, 0.5));
+            fixDef.shape = new Box2D.Collision.Shapes.b2CircleShape(Math.random() + 0.1);
         }
         bodyDef.position = getRandomPos();
         world.CreateBody(bodyDef).CreateFixture(fixDef);
-        createSpinner(getRandomPos(), new Box2D.Common.Math.b2Vec2(2, 2));
-        createSnake(getRandomPos(), new Box2D.Common.Math.b2Vec2(2.5, 0.5));
     }
     
     

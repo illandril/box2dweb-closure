@@ -46,6 +46,9 @@ Box2D.Collision.Shapes.b2CircleShape = function(radius) {
     /** @type {number} */
     this.m_radius = radius;
     
+    /** @type {number} */
+    this.m_radiusSquared = radius * radius;
+    
     /** @type {!Box2D.Common.Math.b2Vec2} */
     this.m_p = new Box2D.Common.Math.b2Vec2(0, 0);
 };
@@ -84,11 +87,9 @@ Box2D.Collision.Shapes.b2CircleShape.prototype.Set = function(other) {
  */
 Box2D.Collision.Shapes.b2CircleShape.prototype.TestPoint = function(transform, p) {
     var tMat = transform.R;
-    var dX = transform.position.x + (tMat.col1.x * this.m_p.x + tMat.col2.x * this.m_p.y);
-    var dY = transform.position.y + (tMat.col1.y * this.m_p.x + tMat.col2.y * this.m_p.y);
-    dX = p.x - dX;
-    dY = p.y - dY;
-    return (dX * dX + dY * dY) <= this.m_radius * this.m_radius;
+    var dX = p.x - (transform.position.x + (transform.R.col1.x * this.m_p.x + transform.R.col2.x * this.m_p.y));
+    var dY = p.y - (transform.position.y + (transform.R.col1.y * this.m_p.x + transform.R.col2.y * this.m_p.y));
+    return (dX * dX + dY * dY) <= this.m_radiusSquared;
 };
 
 /**
@@ -103,7 +104,7 @@ Box2D.Collision.Shapes.b2CircleShape.prototype.RayCast = function(output, input,
     var positionY = transform.position.y + (tMat.col1.y * this.m_p.x + tMat.col2.y * this.m_p.y);
     var sX = input.p1.x - positionX;
     var sY = input.p1.y - positionY;
-    var b = (sX * sX + sY * sY) - this.m_radius * this.m_radius;
+    var b = (sX * sX + sY * sY) - this.m_radiusSquared;
     var rX = input.p2.x - input.p1.x;
     var rY = input.p2.y - input.p1.y;
     var c = (sX * rX + sY * rY);
@@ -141,9 +142,9 @@ Box2D.Collision.Shapes.b2CircleShape.prototype.ComputeAABB = function(aabb, tran
  * @param {number} density
  */
 Box2D.Collision.Shapes.b2CircleShape.prototype.ComputeMass = function(massData, density) {
-    massData.mass = density * Math.PI * this.m_radius * this.m_radius;
+    massData.mass = density * Math.PI * this.m_radiusSquared;
     massData.center.SetV(this.m_p);
-    massData.I = massData.mass * (0.5 * this.m_radius * this.m_radius + (this.m_p.x * this.m_p.x + this.m_p.y * this.m_p.y));
+    massData.I = massData.mass * (0.5 * this.m_radiusSquared + (this.m_p.x * this.m_p.x + this.m_p.y * this.m_p.y));
 };
 
 /**
@@ -154,7 +155,6 @@ Box2D.Collision.Shapes.b2CircleShape.prototype.ComputeMass = function(massData, 
  * @return {number}
  */
 Box2D.Collision.Shapes.b2CircleShape.prototype.ComputeSubmergedArea = function(normal, offset, xf, c) {
-    if (offset === undefined) offset = 0;
     var p = Box2D.Common.Math.b2Math.MulX(xf, this.m_p);
     var l = (-(Box2D.Common.Math.b2Math.Dot(normal, p) - offset));
     if (l < (-this.m_radius) + Number.MIN_VALUE) {
@@ -162,17 +162,19 @@ Box2D.Collision.Shapes.b2CircleShape.prototype.ComputeSubmergedArea = function(n
     }
     if (l > this.m_radius) {
         c.SetV(p);
-        return Math.PI * this.m_radius * this.m_radius;
+        return Math.PI * this.m_radiusSquared;
     }
-    var r2 = this.m_radius * this.m_radius;
     var l2 = l * l;
-    var area = r2 * (Math.asin(l / this.m_radius) + Math.PI / 2) + l * Math.sqrt(r2 - l2);
-    var com = (-2 / 3 * Math.pow(r2 - l2, 1.5) / area);
+    var area = this.m_radiusSquared * (Math.asin(l / this.m_radius) + Math.PI / 2) + l * Math.sqrt(this.m_radiusSquared - l2);
+    var com = (-2 / 3 * Math.pow(this.m_radiusSquared - l2, 1.5) / area);
     c.x = p.x + normal.x * com;
     c.y = p.y + normal.y * com;
     return area;
 };
 
+/**
+ * @param {!Box2D.Collision.b2DistanceProxy} proxy
+ */
 Box2D.Collision.Shapes.b2CircleShape.prototype.SetDistanceProxy = function(proxy) {
     proxy.m_vertices = [this.m_p];
     proxy.m_count = 1;
@@ -205,6 +207,7 @@ Box2D.Collision.Shapes.b2CircleShape.prototype.GetRadius = function() {
  */
 Box2D.Collision.Shapes.b2CircleShape.prototype.SetRadius = function(radius) {
     this.m_radius = radius;
+    this.m_radiusSquared = radius * radius;
 };
 
 /**
