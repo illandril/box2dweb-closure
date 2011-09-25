@@ -66,13 +66,17 @@ Box2D.Dynamics.Joints.b2DistanceJoint.prototype.GetAnchorB = function() {
     return this.m_bodyB.GetWorldPoint(this.m_localAnchor2);
 };
 
+/**
+ * @param {number} inv_dt
+ */
 Box2D.Dynamics.Joints.b2DistanceJoint.prototype.GetReactionForce = function(inv_dt) {
-    if (inv_dt === undefined) inv_dt = 0;
     return new Box2D.Common.Math.b2Vec2(inv_dt * this.m_impulse * this.m_u.x, inv_dt * this.m_impulse * this.m_u.y);
 };
 
+/**
+ * @param {number} inv_dt
+ */
 Box2D.Dynamics.Joints.b2DistanceJoint.prototype.GetReactionTorque = function(inv_dt) {
-    if (inv_dt === undefined) inv_dt = 0;
     return 0.0;
 };
 
@@ -80,8 +84,10 @@ Box2D.Dynamics.Joints.b2DistanceJoint.prototype.GetLength = function() {
     return this.m_length;
 };
 
+/**
+ * @param {number} length
+ */
 Box2D.Dynamics.Joints.b2DistanceJoint.prototype.SetLength = function(length) {
-    if (length === undefined) length = 0;
     this.m_length = length;
 };
 
@@ -89,8 +95,10 @@ Box2D.Dynamics.Joints.b2DistanceJoint.prototype.GetFrequency = function() {
     return this.m_frequencyHz;
 };
 
+/**
+ * @param {number} hz
+ */
 Box2D.Dynamics.Joints.b2DistanceJoint.prototype.SetFrequency = function(hz) {
-    if (hz === undefined) hz = 0;
     this.m_frequencyHz = hz;
 };
 
@@ -98,8 +106,10 @@ Box2D.Dynamics.Joints.b2DistanceJoint.prototype.GetDampingRatio = function() {
     return this.m_dampingRatio;
 };
 
+/**
+ * @param {number} ratio
+ */
 Box2D.Dynamics.Joints.b2DistanceJoint.prototype.SetDampingRatio = function(ratio) {
-    if (ratio === undefined) ratio = 0;
     this.m_dampingRatio = ratio;
 };
 
@@ -159,76 +169,67 @@ Box2D.Dynamics.Joints.b2DistanceJoint.prototype.InitVelocityConstraints = functi
 };
 
 Box2D.Dynamics.Joints.b2DistanceJoint.prototype.SolveVelocityConstraints = function(step) {
-    var tMat;
-    var bA = this.m_bodyA;
-    var bB = this.m_bodyB;
-    tMat = bA.m_xf.R;
-    var r1X = this.m_localAnchor1.x - bA.m_sweep.localCenter.x;
-    var r1Y = this.m_localAnchor1.y - bA.m_sweep.localCenter.y;
-    var tX = (tMat.col1.x * r1X + tMat.col2.x * r1Y);
-    r1Y = (tMat.col1.y * r1X + tMat.col2.y * r1Y);
+    var r1X = this.m_localAnchor1.x - this.m_bodyA.m_sweep.localCenter.x;
+    var r1Y = this.m_localAnchor1.y - this.m_bodyA.m_sweep.localCenter.y;
+    var tX = (this.m_bodyA.m_xf.R.col1.x * r1X + this.m_bodyA.m_xf.R.col2.x * r1Y);
+    r1Y = (this.m_bodyA.m_xf.R.col1.y * r1X + this.m_bodyA.m_xf.R.col2.y * r1Y);
     r1X = tX;
-    tMat = bB.m_xf.R;
-    var r2X = this.m_localAnchor2.x - bB.m_sweep.localCenter.x;
-    var r2Y = this.m_localAnchor2.y - bB.m_sweep.localCenter.y;
-    tX = (tMat.col1.x * r2X + tMat.col2.x * r2Y);
-    r2Y = (tMat.col1.y * r2X + tMat.col2.y * r2Y);
+    var r2X = this.m_localAnchor2.x - this.m_bodyB.m_sweep.localCenter.x;
+    var r2Y = this.m_localAnchor2.y - this.m_bodyB.m_sweep.localCenter.y;
+    tX = (this.m_bodyB.m_xf.R.col1.x * r2X + this.m_bodyB.m_xf.R.col2.x * r2Y);
+    r2Y = (this.m_bodyB.m_xf.R.col1.y * r2X + this.m_bodyB.m_xf.R.col2.y * r2Y);
     r2X = tX;
-    var v1X = bA.m_linearVelocity.x + ((-bA.m_angularVelocity * r1Y));
-    var v1Y = bA.m_linearVelocity.y + (bA.m_angularVelocity * r1X);
-    var v2X = bB.m_linearVelocity.x + ((-bB.m_angularVelocity * r2Y));
-    var v2Y = bB.m_linearVelocity.y + (bB.m_angularVelocity * r2X);
+    var v1X = this.m_bodyA.m_linearVelocity.x - this.m_bodyA.m_angularVelocity * r1Y;
+    var v1Y = this.m_bodyA.m_linearVelocity.y + this.m_bodyA.m_angularVelocity * r1X;
+    var v2X = this.m_bodyB.m_linearVelocity.x - this.m_bodyB.m_angularVelocity * r2Y;
+    var v2Y = this.m_bodyB.m_linearVelocity.y + this.m_bodyB.m_angularVelocity * r2X;
     var Cdot = (this.m_u.x * (v2X - v1X) + this.m_u.y * (v2Y - v1Y));
-    var impulse = (-this.m_mass * (Cdot + this.m_bias + this.m_gamma * this.m_impulse));
+    var impulse = -this.m_mass * (Cdot + this.m_bias + this.m_gamma * this.m_impulse);
     this.m_impulse += impulse;
     var PX = impulse * this.m_u.x;
     var PY = impulse * this.m_u.y;
-    bA.m_linearVelocity.x -= bA.m_invMass * PX;
-    bA.m_linearVelocity.y -= bA.m_invMass * PY;
-    bA.m_angularVelocity -= bA.m_invI * (r1X * PY - r1Y * PX);
-    bB.m_linearVelocity.x += bB.m_invMass * PX;
-    bB.m_linearVelocity.y += bB.m_invMass * PY;
-    bB.m_angularVelocity += bB.m_invI * (r2X * PY - r2Y * PX);
+    this.m_bodyA.m_linearVelocity.x -= this.m_bodyA.m_invMass * PX;
+    this.m_bodyA.m_linearVelocity.y -= this.m_bodyA.m_invMass * PY;
+    this.m_bodyA.m_angularVelocity -= this.m_bodyA.m_invI * (r1X * PY - r1Y * PX);
+    this.m_bodyB.m_linearVelocity.x += this.m_bodyB.m_invMass * PX;
+    this.m_bodyB.m_linearVelocity.y += this.m_bodyB.m_invMass * PY;
+    this.m_bodyB.m_angularVelocity += this.m_bodyB.m_invI * (r2X * PY - r2Y * PX);
 };
 
+/**
+ * @param {number} baumgarte
+ */
 Box2D.Dynamics.Joints.b2DistanceJoint.prototype.SolvePositionConstraints = function(baumgarte) {
-    if (baumgarte === undefined) baumgarte = 0;
-    var tMat;
     if (this.m_frequencyHz > 0.0) {
         return true;
     }
-    var bA = this.m_bodyA;
-    var bB = this.m_bodyB;
-    tMat = bA.m_xf.R;
-    var r1X = this.m_localAnchor1.x - bA.m_sweep.localCenter.x;
-    var r1Y = this.m_localAnchor1.y - bA.m_sweep.localCenter.y;
-    var tX = (tMat.col1.x * r1X + tMat.col2.x * r1Y);
-    r1Y = (tMat.col1.y * r1X + tMat.col2.y * r1Y);
+    var r1X = this.m_localAnchor1.x - this.m_bodyA.m_sweep.localCenter.x;
+    var r1Y = this.m_localAnchor1.y - this.m_bodyA.m_sweep.localCenter.y;
+    var tX = (this.m_bodyA.m_xf.R.col1.x * r1X + this.m_bodyA.m_xf.R.col2.x * r1Y);
+    r1Y = (this.m_bodyA.m_xf.R.col1.y * r1X + this.m_bodyA.m_xf.R.col2.y * r1Y);
     r1X = tX;
-    tMat = bB.m_xf.R;
-    var r2X = this.m_localAnchor2.x - bB.m_sweep.localCenter.x;
-    var r2Y = this.m_localAnchor2.y - bB.m_sweep.localCenter.y;
-    tX = (tMat.col1.x * r2X + tMat.col2.x * r2Y);
-    r2Y = (tMat.col1.y * r2X + tMat.col2.y * r2Y);
+    var r2X = this.m_localAnchor2.x - this.m_bodyB.m_sweep.localCenter.x;
+    var r2Y = this.m_localAnchor2.y - this.m_bodyB.m_sweep.localCenter.y;
+    tX = (this.m_bodyB.m_xf.R.col1.x * r2X + this.m_bodyB.m_xf.R.col2.x * r2Y);
+    r2Y = (this.m_bodyB.m_xf.R.col1.y * r2X + this.m_bodyB.m_xf.R.col2.y * r2Y);
     r2X = tX;
-    var dX = bB.m_sweep.c.x + r2X - bA.m_sweep.c.x - r1X;
-    var dY = bB.m_sweep.c.y + r2Y - bA.m_sweep.c.y - r1Y;
+    var dX = this.m_bodyB.m_sweep.c.x + r2X - this.m_bodyA.m_sweep.c.x - r1X;
+    var dY = this.m_bodyB.m_sweep.c.y + r2Y - this.m_bodyA.m_sweep.c.y - r1Y;
     var length = Math.sqrt(dX * dX + dY * dY);
     dX /= length;
     dY /= length;
-    var C = length - this.m_length;
-    C = Box2D.Common.Math.b2Math.Clamp(C, (-Box2D.Common.b2Settings.b2_maxLinearCorrection), Box2D.Common.b2Settings.b2_maxLinearCorrection);
-    var impulse = (-this.m_mass * C);
+    var C = Box2D.Common.Math.b2Math.Clamp(length - this.m_length, -Box2D.Common.b2Settings.b2_maxLinearCorrection, Box2D.Common.b2Settings.b2_maxLinearCorrection);
+    var impulse = -this.m_mass * C;
     this.m_u.Set(dX, dY);
     var PX = impulse * this.m_u.x;
     var PY = impulse * this.m_u.y;
-    bA.m_sweep.c.x -= bA.m_invMass * PX;
-    bA.m_sweep.c.y -= bA.m_invMass * PY;
-    bA.m_sweep.a -= bA.m_invI * (r1X * PY - r1Y * PX);
-    bB.m_sweep.c.x += bB.m_invMass * PX;
-    bB.m_sweep.c.y += bB.m_invMass * PY;
-    bB.m_sweep.a += bB.m_invI * (r2X * PY - r2Y * PX);
-    bA.SynchronizeTransform();
-    bB.SynchronizeTransform();
+    this.m_bodyA.m_sweep.c.x -= this.m_bodyA.m_invMass * PX;
+    this.m_bodyA.m_sweep.c.y -= this.m_bodyA.m_invMass * PY;
+    this.m_bodyA.m_sweep.a -= this.m_bodyA.m_invI * (r1X * PY - r1Y * PX);
+    this.m_bodyB.m_sweep.c.x += this.m_bodyB.m_invMass * PX;
+    this.m_bodyB.m_sweep.c.y += this.m_bodyB.m_invMass * PY;
+    this.m_bodyB.m_sweep.a += this.m_bodyB.m_invI * (r2X * PY - r2Y * PX);
+    this.m_bodyA.SynchronizeTransform();
+    this.m_bodyB.SynchronizeTransform();
     return Math.abs(C) < Box2D.Common.b2Settings.b2_linearSlop;
 };

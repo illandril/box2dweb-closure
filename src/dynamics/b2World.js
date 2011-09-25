@@ -892,7 +892,7 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
         subStep.positionIterations = step.positionIterations;
         m_island.SolveTOI(subStep);
 
-        for (var i = 0; i < m_island.m_bodyCount; i++) {
+        for (var i = 0; i < m_island.m_bodies.length; i++) {
             m_island.m_bodies[i].m_islandFlag = false;
             if (!m_island.m_bodies[i].IsAwake() || m_island.m_bodies[i].GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
                 continue;

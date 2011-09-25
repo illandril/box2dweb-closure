@@ -56,7 +56,7 @@ Box2D.Common.b2Settings.b2Assert = function (a) {
   }
 };
 
-Box2D.Common.b2Settings.VERSION = "2.1alpha";
+Box2D.Common.b2Settings.VERSION = "2.1alpha-illandril";
 Box2D.Common.b2Settings.USHRT_MAX = 0x0000ffff;
 Box2D.Common.b2Settings.b2_maxManifoldPoints = 2;
 Box2D.Common.b2Settings.b2_aabbExtension = 0.1;
@@ -77,4 +77,6 @@ Box2D.Common.b2Settings.b2_maxRotationSquared = Box2D.Common.b2Settings.b2_maxRo
 Box2D.Common.b2Settings.b2_contactBaumgarte = 0.2;
 Box2D.Common.b2Settings.b2_timeToSleep = 0.5;
 Box2D.Common.b2Settings.b2_linearSleepTolerance = 0.01;
+Box2D.Common.b2Settings.b2_linearSleepToleranceSquared = Box2D.Common.b2Settings.b2_linearSleepTolerance * Box2D.Common.b2Settings.b2_linearSleepTolerance;
 Box2D.Common.b2Settings.b2_angularSleepTolerance = 2.0 / 180.0 * Math.PI;
+Box2D.Common.b2Settings.b2_angularSleepToleranceSquared = Box2D.Common.b2Settings.b2_angularSleepTolerance * Box2D.Common.b2Settings.b2_angularSleepTolerance;

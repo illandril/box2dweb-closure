@@ -61,7 +61,7 @@
         return new Box2D.Common.Math.b2Vec2(Math.random() * 58 + 1, Math.random() * 38 + 1);
     };
     
-    for(var i = 0; i < 50; ++i) {
+    for(var i = 0; i < 10; ++i) {
         if(i % 2 === 0) {
            fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
            fixDef.shape.SetAsBox(Math.random() + 0.1, Math.random() + 0.1);

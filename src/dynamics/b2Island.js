@@ -49,10 +49,11 @@ Box2D.Dynamics.b2Island = function(listener, contactSolver) {
 };
 
 Box2D.Dynamics.b2Island.prototype.Clear = function() {
-    this.m_bodyCount = 0;
     this.m_contactCount = 0;
     this.m_jointCount = 0;
     this.m_bodies = [];
+    this.m_dynamicBodies = [];
+    this.m_nonStaticBodies = [];
     this.m_contacts = [];
     this.m_joints = [];
 };
@@ -60,11 +61,9 @@ Box2D.Dynamics.b2Island.prototype.Clear = function() {
 Box2D.Dynamics.b2Island.prototype.Solve = function(step, gravity, allowSleep) {
     var i = 0;
     var j = 0;
-    var b;
     var joint;
-    for (i = 0; i < this.m_bodyCount; ++i) {
-        b = this.m_bodies[i];
-        if (b.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) continue;
+    for (i = 0; i < this.m_dynamicBodies.length; ++i) {
+        var b = this.m_dynamicBodies[i];
         b.m_linearVelocity.x += step.dt * (gravity.x + b.m_invMass * b.m_force.x);
         b.m_linearVelocity.y += step.dt * (gravity.y + b.m_invMass * b.m_force.y);
         b.m_angularVelocity += step.dt * b.m_invI * b.m_torque;
@@ -75,24 +74,20 @@ Box2D.Dynamics.b2Island.prototype.Solve = function(step, gravity, allowSleep) {
     var contactSolver = this.m_contactSolver;
     contactSolver.InitVelocityConstraints(step);
     for (i = 0; i < this.m_jointCount; ++i) {
-        joint = this.m_joints[i];
-        joint.InitVelocityConstraints(step);
+        this.m_joints[i].InitVelocityConstraints(step);
     }
     for (i = 0; i < step.velocityIterations; ++i) {
         for (j = 0; j < this.m_jointCount; ++j) {
-            joint = this.m_joints[j];
-            joint.SolveVelocityConstraints(step);
+            this.m_joints[j].SolveVelocityConstraints(step);
         }
         contactSolver.SolveVelocityConstraints();
     }
     for (i = 0; i < this.m_jointCount; ++i) {
-        joint = this.m_joints[i];
-        joint.FinalizeVelocityConstraints();
+        this.m_joints[i].FinalizeVelocityConstraints();
     }
     contactSolver.FinalizeVelocityConstraints();
-    for (i = 0; i < this.m_bodyCount; ++i) {
-        b = this.m_bodies[i];
-        if (b.GetType() == Box2D.Dynamics.b2BodyDef.b2_staticBody) continue;
+    for (i = 0; i < this.m_nonStaticBodies.length; ++i) {
+        var b = this.m_nonStaticBodies[i];
         var translationX = step.dt * b.m_linearVelocity.x;
         var translationY = step.dt * b.m_linearVelocity.y;
         if ((translationX * translationX + translationY * translationY) > Box2D.Common.b2Settings.b2_maxTranslationSquared) {
@@ -104,8 +99,7 @@ Box2D.Dynamics.b2Island.prototype.Solve = function(step, gravity, allowSleep) {
         if (rotation * rotation > Box2D.Common.b2Settings.b2_maxRotationSquared) {
             if (b.m_angularVelocity < 0.0) {
                 b.m_angularVelocity = (-Box2D.Common.b2Settings.b2_maxRotation * step.inv_dt);
-            }
-            else {
+            } else {
                 b.m_angularVelocity = Box2D.Common.b2Settings.b2_maxRotation * step.inv_dt;
             }
         }
@@ -116,41 +110,42 @@ Box2D.Dynamics.b2Island.prototype.Solve = function(step, gravity, allowSleep) {
         b.m_sweep.a += step.dt * b.m_angularVelocity;
         b.SynchronizeTransform();
     }
-    for (i = 0; i < step.positionIterations; ++i) {
-        var contactsOkay = contactSolver.SolvePositionConstraints(Box2D.Common.b2Settings.b2_contactBaumgarte);
+    this.SolveContactsAndJoints(step);
+    this.Report(contactSolver.m_constraints);
+    if (allowSleep) {
+        this.SleepIfTired(step);
+    }
+};
+
+Box2D.Dynamics.b2Island.prototype.SolveContactsAndJoints = function(step) {
+    for (var i = 0; i < step.positionIterations; i++) {
+        var contactsOkay = this.m_contactSolver.SolvePositionConstraints(Box2D.Common.b2Settings.b2_contactBaumgarte);
         var jointsOkay = true;
-        for (j = 0; j < this.m_jointCount; ++j) {
-            joint = this.m_joints[j];
-            var jointOkay = joint.SolvePositionConstraints(Box2D.Common.b2Settings.b2_contactBaumgarte);
+        for (var j = 0; j < this.m_jointCount; j++) {
+            var jointOkay = this.m_joints[j].SolvePositionConstraints(Box2D.Common.b2Settings.b2_contactBaumgarte);
             jointsOkay = jointsOkay && jointOkay;
         }
         if (contactsOkay && jointsOkay) {
             break;
         }
     }
-    this.Report(contactSolver.m_constraints);
-    if (allowSleep) {
-        var minSleepTime = Number.MAX_VALUE;
-        var linTolSqr = Box2D.Common.b2Settings.b2_linearSleepTolerance * Box2D.Common.b2Settings.b2_linearSleepTolerance;
-        var angTolSqr = Box2D.Common.b2Settings.b2_angularSleepTolerance * Box2D.Common.b2Settings.b2_angularSleepTolerance;
-        for (i = 0; i < this.m_bodyCount; ++i) {
-            b = this.m_bodies[i];
-            if (b.GetType() == Box2D.Dynamics.b2BodyDef.b2_staticBody) {
-                continue;
-            }
-            if (!b.m_allowSleep || b.m_angularVelocity * b.m_angularVelocity > angTolSqr || Box2D.Common.Math.b2Math.Dot(b.m_linearVelocity, b.m_linearVelocity) > linTolSqr) {
-                b.m_sleepTime = 0.0;
-                minSleepTime = 0.0;
-            } else {
-                b.m_sleepTime += step.dt;
-                minSleepTime = Math.min(minSleepTime, b.m_sleepTime);
-            }
+};
+
+Box2D.Dynamics.b2Island.prototype.SleepIfTired = function(step) {
+    var minSleepTime = Number.MAX_VALUE;
+    for (var i = 0; i < this.m_nonStaticBodies.length; i++) {
+        var b = this.m_nonStaticBodies[i];
+        if (!b.m_allowSleep || Math.abs(b.m_angularVelocity) > Box2D.Common.b2Settings.b2_angularSleepTolerance || Box2D.Common.Math.b2Math.Dot(b.m_linearVelocity, b.m_linearVelocity) > Box2D.Common.b2Settings.b2_linearSleepToleranceSquared) {
+            b.m_sleepTime = 0.0;
+            minSleepTime = 0.0;
+        } else {
+            b.m_sleepTime += step.dt;
+            minSleepTime = Math.min(minSleepTime, b.m_sleepTime);
         }
-        if (minSleepTime >= Box2D.Common.b2Settings.b2_timeToSleep) {
-            for (i = 0; i < this.m_bodyCount; ++i) {
-                b = this.m_bodies[i];
-                b.SetAwake(false);
-            }
+    }
+    if (minSleepTime >= Box2D.Common.b2Settings.b2_timeToSleep) {
+        for (var i = 0; i < this.m_bodies.length; i++) {
+            this.m_bodies[i].SetAwake(false);
         }
     }
 };
@@ -170,9 +165,8 @@ Box2D.Dynamics.b2Island.prototype.SolveTOI = function(subStep) {
             this.m_joints[j].SolveVelocityConstraints(subStep);
         }
     }
-    for (i = 0; i < this.m_bodyCount; ++i) {
-        var b = this.m_bodies[i];
-        if (b.GetType() == Box2D.Dynamics.b2BodyDef.b2_staticBody) continue;
+    for (i = 0; i < this.m_nonStaticBodies.length; ++i) {
+        var b = this.m_nonStaticBodies[i];
         var translationX = subStep.dt * b.m_linearVelocity.x;
         var translationY = subStep.dt * b.m_linearVelocity.y;
         if ((translationX * translationX + translationY * translationY) > Box2D.Common.b2Settings.b2_maxTranslationSquared) {
@@ -227,8 +221,13 @@ Box2D.Dynamics.b2Island.prototype.Report = function(constraints) {
 };
 
 Box2D.Dynamics.b2Island.prototype.AddBody = function(body) {
-    body.m_islandIndex = this.m_bodyCount;
-    this.m_bodies[this.m_bodyCount++] = body;
+    this.m_bodies.push(body);
+    if (body.GetType() != Box2D.Dynamics.b2BodyDef.b2_staticBody) {
+        this.m_nonStaticBodies.push(body);
+        if (body.GetType() == Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
+            this.m_dynamicBodies.push(body);
+        }
+    }
 };
 
 Box2D.Dynamics.b2Island.prototype.AddContact = function(contact) {

@@ -19,9 +19,9 @@ var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8) /* g
     world.CreateBody(bodyDef).CreateFixture(fixDef);
     bodyDef.position.Set(60 + 1.8, 20);
     world.CreateBody(bodyDef).CreateFixture(fixDef);
-    
+    var debugCanvas = document.getElementById("canvas");
     var debugDraw = new Box2D.Dynamics.b2DebugDraw();
-    debugDraw.SetSprite(document.getElementById("canvas").getContext("2d"));
+    debugDraw.SetSprite(debugCanvas.getContext("2d"));
     debugDraw.SetDrawScale(10.0);
     debugDraw.SetFillAlpha(0.5);
     debugDraw.SetLineThickness(1.0);
