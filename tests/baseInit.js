@@ -25,7 +25,7 @@ var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8) /* g
     debugDraw.SetDrawScale(10.0);
     debugDraw.SetFillAlpha(0.5);
     debugDraw.SetLineThickness(1.0);
-    debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit);
+    debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit | Box2D.Dynamics.b2DebugDraw.e_aabbBit);
     world.SetDebugDraw(debugDraw);
     
      var update = function() {
