@@ -68,7 +68,7 @@ Box2D.Collision.b2Distance.Distance = function(output, cache, input) {
             break;
         }
         var d = s_simplex.GetSearchDirection();
-        if (d.LengthSquared() < Box2D.Consts.MIN_VALUE_SQUARED) {
+        if (d.LengthSquared() < Box2D.Common.b2Settings.MIN_VALUE_SQUARED) {
             break;
         }
         s_simplex.m_vertices[s_simplex.m_count].indexA = input.proxyA.GetSupport(Box2D.Common.Math.b2Math.MulTMV(input.transformA.R, d.GetNegative()));

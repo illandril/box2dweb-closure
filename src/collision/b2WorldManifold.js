@@ -35,7 +35,6 @@ goog.provide('Box2D.Collision.b2WorldManifold');
 goog.require('Box2D.Collision.b2Manifold');
 goog.require('Box2D.Common.b2Settings');
 goog.require('Box2D.Common.Math.b2Vec2');
-goog.require('Box2D.Consts');
 
 /**
  * @constructor
@@ -88,7 +87,7 @@ Box2D.Collision.b2WorldManifold.prototype.Initialize = function(manifold, xfA, r
             var dX = pointBX - pointAX;
             var dY = pointBY - pointAY;
             var d2 = dX * dX + dY * dY;
-            if (d2 > Box2D.Consts.MIN_VALUE_SQUARED) {
+            if (d2 > Box2D.Common.b2Settings.MIN_VALUE_SQUARED) {
                 var d = Math.sqrt(d2);
                 this.m_normal.x = dX / d;
                 this.m_normal.y = dY / d;

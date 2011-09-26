@@ -1,13 +1,61 @@
 (function(){
     var bodyDef = new Box2D.Dynamics.b2BodyDef();
-    bodyDef.type = Box2D.Dynamics.b2BodyDef.b2_dynamicBody;
+    bodyDef.type = Box2D.Dynamics.b2BodyDef.b2_staticBody;
     
     var fixDef = new Box2D.Dynamics.b2FixtureDef();
+    var maxRestitution = 2;
+    
+    var radius = 2.5;
+    var step = radius * 5;
+    fixDef.shape = new Box2D.Collision.Shapes.b2CircleShape(radius);
+    for (var x = 0; x < 60; x += step) {
+        bodyDef.position.Set(x, 40 - radius * 1.5);
+        world.CreateBody(bodyDef).CreateFixture(fixDef);
+        bodyDef.position.Set(x + radius * 2, 25);
+        world.CreateBody(bodyDef).CreateFixture(fixDef);
+        bodyDef.position.Set(x + radius * 3, 25);
+        world.CreateBody(bodyDef).CreateFixture(fixDef);
+        bodyDef.position.Set(x, 15);
+        world.CreateBody(bodyDef).CreateFixture(fixDef);
+    }
+    var minKinSpeed = 5;
+    var maxKinSpeed = 5;
+    bodyDef.type = Box2D.Dynamics.b2BodyDef.b2_KinematicBody;
+    bodyDef.position.Set(0, 20);
+    fixDef.shape = new Box2D.Collision.Shapes.b2CircleShape(1);
+    var kBody1 = world.CreateBody(bodyDef);
+    kBody1.CreateFixture(fixDef);
+    updateCalls.push(function(){
+        if(kBody1.GetPosition().x < 5) {
+            kBody1.m_linearVelocity.x = minKinSpeed + Math.random() * maxKinSpeed;
+            kBody1.m_angularVelocity = Math.random() * maxKinSpeed - maxKinSpeed / 2;
+        }
+        if(kBody1.GetPosition().x > 55) {
+            kBody1.m_linearVelocity.x = -1 * (minKinSpeed + Math.random() * maxKinSpeed);
+            kBody1.m_angularVelocity = Math.random() * maxKinSpeed - maxKinSpeed / 2;
+        }
+    });
+    
+    bodyDef.position.Set(0, 10);
+    fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
+    fixDef.shape.SetAsBox(1, 1);
+    var kBody2 = world.CreateBody(bodyDef);
+    kBody2.CreateFixture(fixDef);
+    updateCalls.push(function(){
+        if(kBody2.GetPosition().x < 5) {
+            kBody2.m_linearVelocity.x = minKinSpeed + Math.random() * maxKinSpeed;
+            kBody2.m_angularVelocity = Math.random() * maxKinSpeed - maxKinSpeed / 2;
+        }
+        if(kBody2.GetPosition().x > 55) {
+            kBody2.m_linearVelocity.x = -1 * (minKinSpeed + Math.random() * maxKinSpeed);
+            kBody2.m_angularVelocity = Math.random() * maxKinSpeed - maxKinSpeed / 2;
+        }
+    });
+    
+    bodyDef.type = Box2D.Dynamics.b2BodyDef.b2_dynamicBody;
     fixDef.density = 1.0;
     fixDef.friction = 0.5;
-    fixDef.restitution = 2.0;
     fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
-    
     
     var createSpinner = function(center, size) {
         var halfSize = new Box2D.Common.Math.b2Vec2(size.x / 2, size.y / 2);
@@ -16,6 +64,7 @@
         var bodyDef = new Box2D.Dynamics.b2BodyDef();
         bodyDef.type = Box2D.Dynamics.b2BodyDef.b2_dynamicBody;
         
+        fixDef.restitution = Math.random() * maxRestitution;
         fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
         
         bodyDef.position.x = center.x;
@@ -40,6 +89,7 @@
         var bodyDef = new Box2D.Dynamics.b2BodyDef();
         bodyDef.type = Box2D.Dynamics.b2BodyDef.b2_dynamicBody;
         
+        fixDef.restitution = Math.random() * maxRestitution;
         fixDef.shape = new Box2D.Collision.Shapes.b2CircleShape(plankSize.y);
         
         bodyDef.position.y = center.y;
@@ -61,7 +111,7 @@
         return new Box2D.Common.Math.b2Vec2(Math.random() * 58 + 1, Math.random() * 38 + 1);
     };
     
-    for(var i = 0; i < 10; ++i) {
+    for(var i = 0; i < 5; ++i) {
         if(i % 2 === 0) {
             createSpinner(getRandomPos(), new Box2D.Common.Math.b2Vec2(2, 2));
             fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
@@ -71,6 +121,7 @@
             fixDef.shape = new Box2D.Collision.Shapes.b2CircleShape(Math.random() + 0.1);
         }
         bodyDef.position = getRandomPos();
+        fixDef.restitution = Math.random() * maxRestitution;
         world.CreateBody(bodyDef).CreateFixture(fixDef);
     }
     

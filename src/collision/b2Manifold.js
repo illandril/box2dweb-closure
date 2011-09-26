@@ -41,14 +41,12 @@ goog.require('Box2D.Collision.b2ManifoldPoint');
  */
 Box2D.Collision.b2Manifold = function() {
     this.m_pointCount = 0;
-    if (this.constructor === Box2D.Collision.b2Manifold) {
-        this.m_points = [];
-        for (var i = 0; i < Box2D.Common.b2Settings.b2_maxManifoldPoints; i++) {
-            this.m_points[i] = new Box2D.Collision.b2ManifoldPoint();
-        }
-        this.m_localPlaneNormal = new Box2D.Common.Math.b2Vec2(0, 0);
-        this.m_localPoint = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_points = [];
+    for (var i = 0; i < Box2D.Common.b2Settings.b2_maxManifoldPoints; i++) {
+        this.m_points[i] = new Box2D.Collision.b2ManifoldPoint();
     }
+    this.m_localPlaneNormal = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_localPoint = new Box2D.Common.Math.b2Vec2(0, 0);
 };
 
 Box2D.Collision.b2Manifold.prototype.Reset = function() {

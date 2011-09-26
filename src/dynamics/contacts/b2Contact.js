@@ -61,19 +61,17 @@ Box2D.Dynamics.Contacts.b2Contact = function(fixtureA, fixtureB) {
     /** @type {boolean} */
     this.touching = false;
 
-    /** @type {boolean} */
-    this.continuous = false;
     var bodyA = fixtureA.GetBody();
     var bodyB = fixtureB.GetBody();
-    if (bodyA.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody || bodyA.IsBullet() || bodyB.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody || bodyB.IsBullet()) {
-        this.continuous = true;
-    }
     
     /** @type {boolean} */
-    this.sensor = false;
-    if (fixtureA.IsSensor() || fixtureB.IsSensor()) {
-        this.sensor = true;
-    }
+    this.continuous = (bodyA.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) ||
+                      bodyA.IsBullet() ||
+                      (bodyB.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) ||
+                      bodyB.IsBullet();
+    
+    /** @type {boolean} */
+    this.sensor = fixtureA.IsSensor() || fixtureB.IsSensor();
     
     /** @type {boolean} */
     this.filtering = false;
@@ -94,10 +92,16 @@ Box2D.Dynamics.Contacts.b2Contact = function(fixtureA, fixtureB) {
     this.enabled = true;
 };
 
+/**
+ * @return {!Box2D.Collision.b2Manifold}
+ */
 Box2D.Dynamics.Contacts.b2Contact.prototype.GetManifold = function () {
   return this.m_manifold;
 };
 
+/**
+ * @param {!Box2D.Collision.b2WorldManifold} worldManifold
+ */
 Box2D.Dynamics.Contacts.b2Contact.prototype.GetWorldManifold = function (worldManifold) {
     var bodyA = this.m_fixtureA.GetBody();
     var bodyB = this.m_fixtureB.GetBody();
@@ -106,38 +110,65 @@ Box2D.Dynamics.Contacts.b2Contact.prototype.GetWorldManifold = function (worldMa
     worldManifold.Initialize(this.m_manifold, bodyA.GetTransform(), shapeA.m_radius, bodyB.GetTransform(), shapeB.m_radius);
 };
 
+/**
+ * @return {boolean}
+ */
 Box2D.Dynamics.Contacts.b2Contact.prototype.IsTouching = function () {
   return this.touching;
 };
 
+/**
+ * @return {boolean}
+ */
 Box2D.Dynamics.Contacts.b2Contact.prototype.IsContinuous = function () {
   return this.continuous;
 };
 
+/**
+ * @param {boolean} sensor
+ */
 Box2D.Dynamics.Contacts.b2Contact.prototype.SetSensor = function (sensor) {
    this.sensor = sensor;
 };
 
+/**
+ * @return {boolean}
+ */
 Box2D.Dynamics.Contacts.b2Contact.prototype.IsSensor = function () {
   return this.sensor;
 };
 
+/**
+ * @param {boolean} flag
+ */
 Box2D.Dynamics.Contacts.b2Contact.prototype.SetEnabled = function (flag) {
    this.enabled = flag;
 };
 
+/**
+ * @return {boolean}
+ */
 Box2D.Dynamics.Contacts.b2Contact.prototype.IsEnabled = function () {
    return this.enabled;
 };
 
+/**
+ * @return {Box2D.Dynamics.Contacts.b2Contact}
+ */
 Box2D.Dynamics.Contacts.b2Contact.prototype.GetNext = function () {
   return this.m_next;
 };
 
+/**
+ * @return {!Box2D.Dynamics.b2Fixture}
+ */
 Box2D.Dynamics.Contacts.b2Contact.prototype.GetFixtureA = function () {
   return this.m_fixtureA;
 };
 
+/**
+ * @return {!Box2D.Dynamics.b2Fixture}
+ */
 Box2D.Dynamics.Contacts.b2Contact.prototype.GetFixtureB = function () {
   return this.m_fixtureB;
 };
@@ -150,6 +181,9 @@ Box2D.Dynamics.Contacts.b2Contact.prototype.ClearFiltering = function () {
    this.filtering = false;
 };
 
+/**
+ * @return {boolean}
+ */
 Box2D.Dynamics.Contacts.b2Contact.prototype.IsFiltering = function () {
    return this.filtering;
 };

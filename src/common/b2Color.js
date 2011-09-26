@@ -32,7 +32,6 @@
  
 goog.provide('Box2D.Common.b2Color');
 
-goog.require('Box2D.defineProperty');
 goog.require('Box2D.Common.Math.b2Math');
 
 /**
@@ -72,6 +71,9 @@ Box2D.Common.b2Color.prototype.Set = function(rr, gg, bb) {
     this._b = 255 * Box2D.Common.Math.b2Math.Clamp(bb, 0.0, 1.0);
 };
 
+/**
+ * @return {number}
+ */
 Box2D.Common.b2Color.prototype.GetColor = function() {
     return (this._r << 16) | (this._g << 8) | (this._b);
 };

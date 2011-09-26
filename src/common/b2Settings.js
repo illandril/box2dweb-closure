@@ -39,21 +39,21 @@ Box2D.Common.b2Settings = {};
  * @param {number} friction2
  */
 Box2D.Common.b2Settings.b2MixFriction = function (friction1, friction2) {
-  if (friction1 === undefined) friction1 = 0;
-  if (friction2 === undefined) friction2 = 0;
-  return Math.sqrt(friction1 * friction2);
+    return Math.sqrt(friction1 * friction2);
 };
 
+/**
+ * @param {number} restitution1
+ * @param {number} restitution2
+ */
 Box2D.Common.b2Settings.b2MixRestitution = function (restitution1, restitution2) {
-  if (restitution1 === undefined) restitution1 = 0;
-  if (restitution2 === undefined) restitution2 = 0;
-  return restitution1 > restitution2 ? restitution1 : restitution2;
+    return restitution1 > restitution2 ? restitution1 : restitution2;
 };
 
 Box2D.Common.b2Settings.b2Assert = function (a) {
-  if (!a) {
-     throw "Assertion Failed";
-  }
+    if (!a) {
+        throw "Assertion Failed";
+    }
 };
 
 Box2D.Common.b2Settings.VERSION = "2.1alpha-illandril";
@@ -80,3 +80,4 @@ Box2D.Common.b2Settings.b2_linearSleepTolerance = 0.01;
 Box2D.Common.b2Settings.b2_linearSleepToleranceSquared = Box2D.Common.b2Settings.b2_linearSleepTolerance * Box2D.Common.b2Settings.b2_linearSleepTolerance;
 Box2D.Common.b2Settings.b2_angularSleepTolerance = 2.0 / 180.0 * Math.PI;
 Box2D.Common.b2Settings.b2_angularSleepToleranceSquared = Box2D.Common.b2Settings.b2_angularSleepTolerance * Box2D.Common.b2Settings.b2_angularSleepTolerance;
+Box2D.Common.b2Settings.MIN_VALUE_SQUARED = Number.MIN_VALUE * Number.MIN_VALUE;

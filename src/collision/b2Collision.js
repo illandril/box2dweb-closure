@@ -187,14 +187,14 @@ Box2D.Collision.b2Collision.FindIncidentEdge = function(c, poly1, xf1, edge1, po
     }
     c[0].v.x = xf2.position.x + (xf2.R.col1.x * poly2.m_vertices[i1].x + xf2.R.col2.x * poly2.m_vertices[i1].y);
     c[0].v.y = xf2.position.y + (xf2.R.col1.y * poly2.m_vertices[i1].x + xf2.R.col2.y * poly2.m_vertices[i1].y);
-    c[0].id.features.referenceEdge = edge1;
-    c[0].id.features.incidentEdge = i1;
-    c[0].id.features.incidentVertex = 0;
+    c[0].id.features.SetReferenceEdge(edge1);
+    c[0].id.features.SetIncidentEdge(i1);
+    c[0].id.features.SetIncidentVertex(0);
     c[1].v.x = xf2.position.x + (xf2.R.col1.x * poly2.m_vertices[i2].x + xf2.R.col2.x * poly2.m_vertices[i2].y);
     c[1].v.y = xf2.position.y + (xf2.R.col1.y * poly2.m_vertices[i2].x + xf2.R.col2.y * poly2.m_vertices[i2].y);
-    c[1].id.features.referenceEdge = edge1;
-    c[1].id.features.incidentEdge = i2;
-    c[1].id.features.incidentVertex = 1;
+    c[1].id.features.SetReferenceEdge(edge1);
+    c[1].id.features.SetIncidentEdge(i2);
+    c[1].id.features.SetIncidentVertex(1);
 };
 
 Box2D.Collision.b2Collision.MakeClipPointVector = function() {
@@ -277,7 +277,7 @@ Box2D.Collision.b2Collision.CollidePolygons = function(manifold, polyA, xfA, pol
             manifold.m_points[pointCount].m_localPoint.x = (tX * xf2.R.col1.x + tY * xf2.R.col1.y);
             manifold.m_points[pointCount].m_localPoint.y = (tX * xf2.R.col2.x + tY * xf2.R.col2.y);
             manifold.m_points[pointCount].m_id.Set(Box2D.Collision.b2Collision.s_clipPoints2[i].id);
-            manifold.m_points[pointCount].m_id.features.flip = flip;
+            manifold.m_points[pointCount].m_id.features.SetFlip(flip);
             pointCount++;
         }
     }

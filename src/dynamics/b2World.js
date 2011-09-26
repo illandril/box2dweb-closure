@@ -32,7 +32,8 @@
  
 goog.provide('Box2D.Dynamics.b2World');
 
-goog.require('Box2D.Queue');
+goog.require('goog.structs.Queue');
+
 goog.require('Box2D.Collision.b2AABB');
 goog.require('Box2D.Collision.b2RayCastInput');
 goog.require('Box2D.Collision.b2RayCastOutput');
@@ -832,7 +833,7 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
             seed = minContact.m_fixtureB.m_body;
         }
         m_island.Clear();
-        var queue = new Box2D.Queue();
+        var queue = new goog.structs.Queue();
         queue.enqueue(seed);
         seed.m_islandFlag = true;
         while (queue.size > 0) {

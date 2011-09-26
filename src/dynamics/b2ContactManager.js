@@ -43,14 +43,29 @@ goog.require('Box2D.Dynamics.Contacts.b2ContactFactory');
  * @constructor
  */
 Box2D.Dynamics.b2ContactManager = function(world) {
+    /** @type {!Box2D.Dynamics.b2World} */
     this.m_world = world;
+    
+    /** @type {number} */
     this.m_contactCount = 0;
+    
+    /** @type {!Box2D.Dynamics.b2ContactFilter} */
     this.m_contactFilter = Box2D.Dynamics.b2ContactFilter.b2_defaultFilter;
+    
+    /** @type {!Box2D.Dynamics.b2ContactListener} */
     this.m_contactListener = Box2D.Dynamics.b2ContactListener.b2_defaultListener;
+    
+    /** @type {!Box2D.Dynamics.Contacts.b2ContactFactory} */
     this.m_contactFactory = new Box2D.Dynamics.Contacts.b2ContactFactory();
+    
+    /** @type {!Box2D.Collision.b2DynamicTreeBroadPhase} */
     this.m_broadPhase = new Box2D.Collision.b2DynamicTreeBroadPhase();
 };
 
+/**
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureA
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureB
+ */
 Box2D.Dynamics.b2ContactManager.prototype.AddPair = function (fixtureA, fixtureB) {
   var bodyA = fixtureA.GetBody();
   var bodyB = fixtureB.GetBody();
@@ -109,7 +124,12 @@ Box2D.Dynamics.b2ContactManager.prototype.AddPair = function (fixtureA, fixtureB
 };
 
 Box2D.Dynamics.b2ContactManager.prototype.FindNewContacts = function () {
-  this.m_broadPhase.UpdatePairs(Box2D.generateCallback(this, this.AddPair));
+    var self = this;
+    /** @type {function(!Box2D.Dynamics.b2Fixture, !Box2D.Dynamics.b2Fixture)} */
+    var addPairCallback = function(fixtureA, fixtureB) {
+        self.AddPair(fixtureA, fixtureB)
+    };
+    this.m_broadPhase.UpdatePairs(addPairCallback);
 };
 
 Box2D.Dynamics.b2ContactManager.prototype.Destroy = function (c) {
