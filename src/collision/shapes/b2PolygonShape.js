@@ -108,7 +108,7 @@ Box2D.Collision.Shapes.b2PolygonShape.AsArray = function(vertices) {
 };
 
 /**
- * @param {Array.<Box2D.Common.Math.b2Vec2>} vertices
+ * @param {Array.<!Box2D.Common.Math.b2Vec2>} vertices
  */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.SetAsVector = function(vertices) {
     var vertexCount = vertices.length;
@@ -324,7 +324,7 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.RayCast = function(output, input
 
 /**
  * @param {!Box2D.Collision.b2AABB} aabb
- * @param {!Box2D.Common.Math.b2Transform} transform
+ * @param {!Box2D.Common.Math.b2Transform} xf
  */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeAABB = function(aabb, xf) {
     var tMat = xf.R;

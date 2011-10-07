@@ -581,30 +581,6 @@ Box2D.Dynamics.b2World.prototype.QueryAABB = function(callback, aabb) {
 };
 
 /**
- * @param {function(!Box2D.Dynamics.b2Fixture):boolean} callback
- * @param {!Box2D.Collision.Shapes.b2Shape} shape
- * @param {Box2D.Common.Math.b2Transform=} transform
- */
-Box2D.Dynamics.b2World.prototype.QueryShape = function(callback, shape, transform) {
-    if (!transform) {
-        transform = new Box2D.Common.Math.b2Transform();
-        transform.SetIdentity();
-    }
-    var broadPhase = this.m_contactManager.m_broadPhase;
-
-    var WorldQueryWrapper = function(fixture) {
-            if (Box2D.Collision.Shapes.b2Shape.TestOverlap(shape, transform, fixture.GetShape(), fixture.GetBody().GetTransform())) {
-                return callback(fixture);
-            } else {
-                return true;
-            }
-        };
-    var aabb = new Box2D.Collision.b2AABB();
-    shape.ComputeAABB(aabb, transform);
-    broadPhase.Query(WorldQueryWrapper, aabb);
-};
-
-/**
  * @param {function(!Box2D.Dynamics.b2Fixture): boolean} callback
  * @param {!Box2D.Common.Math.b2Vec2} p
  */

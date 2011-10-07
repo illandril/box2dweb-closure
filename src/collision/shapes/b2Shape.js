@@ -53,9 +53,7 @@ Box2D.Collision.Shapes.b2Shape.prototype.GetTypeName = goog.abstractMethod;
 /**
  * @return {!Box2D.Collision.Shapes.b2Shape}
  */
-Box2D.Collision.Shapes.b2Shape.prototype.Copy = function() {
-    return null;
-};
+Box2D.Collision.Shapes.b2Shape.prototype.Copy = goog.abstractMethod;
 
 /**
  * @param {!Box2D.Collision.Shapes.b2Shape} other
@@ -69,9 +67,7 @@ Box2D.Collision.Shapes.b2Shape.prototype.Set = function(other) {
  * @param {!Box2D.Common.Math.b2Vec2} p
  * @return {boolean}
  */
-Box2D.Collision.Shapes.b2Shape.prototype.TestPoint = function(xf, p) {
-    return false;
-};
+Box2D.Collision.Shapes.b2Shape.prototype.TestPoint = goog.abstractMethod;
 
 /**
  * @param {!Box2D.Collision.b2RayCastOutput} output
@@ -79,21 +75,19 @@ Box2D.Collision.Shapes.b2Shape.prototype.TestPoint = function(xf, p) {
  * @param {!Box2D.Common.Math.b2Transform} transform
  * @return {boolean}
  */
-Box2D.Collision.Shapes.b2Shape.prototype.RayCast = function(output, input, transform) {
-    return false;
-};
+Box2D.Collision.Shapes.b2Shape.prototype.RayCast = goog.abstractMethod;
 
 /**
  * @param {!Box2D.Collision.b2AABB} aabb
  * @param {!Box2D.Common.Math.b2Transform} transform
  */
-Box2D.Collision.Shapes.b2Shape.prototype.ComputeAABB = function(aabb, transform) {};
+Box2D.Collision.Shapes.b2Shape.prototype.ComputeAABB = goog.abstractMethod;
 
 /**
  * @param {!Box2D.Collision.Shapes.b2MassData} massData
  * @param {number} density
  */
-Box2D.Collision.Shapes.b2Shape.prototype.ComputeMass = function(massData, density) {};
+Box2D.Collision.Shapes.b2Shape.prototype.ComputeMass = goog.abstractMethod;
 
 /**
  * @param {!Box2D.Common.Math.b2Vec2} normal
@@ -102,21 +96,17 @@ Box2D.Collision.Shapes.b2Shape.prototype.ComputeMass = function(massData, densit
  * @param {!Box2D.Common.Math.b2Vec2} c
  * @return {number}
  */
-Box2D.Collision.Shapes.b2Shape.prototype.ComputeSubmergedArea = function(normal, offset, xf, c) {
-    return 0;
-};
+Box2D.Collision.Shapes.b2Shape.prototype.ComputeSubmergedArea = goog.abstractMethod;
 
 /**
  * @param {!Box2D.Collision.b2DistanceProxy} proxy
  */
-Box2D.Collision.Shapes.b2Shape.prototype.SetDistanceProxy = function(proxy) {
-    Box2D.Common.b2Settings.b2Assert(false);
-};
+Box2D.Collision.Shapes.b2Shape.prototype.SetDistanceProxy = goog.abstractMethod;
 
 /**
- * @param {!Box2D.Collision.Shapes.b2Shape1} shape1
+ * @param {!Box2D.Collision.Shapes.b2Shape} shape1
  * @param {!Box2D.Common.Math.b2Transform} transform1
- * @param {!Box2D.Collision.Shapes.b2Shape1} shape2
+ * @param {!Box2D.Collision.Shapes.b2Shape} shape2
  * @param {!Box2D.Common.Math.b2Transform} transform2
  * @return {boolean}
  */
