@@ -50,16 +50,22 @@ Box2D.Collision.Shapes.b2Shape = function() {
  */
 Box2D.Collision.Shapes.b2Shape.prototype.GetTypeName = goog.abstractMethod;
 
+/**
+ * @return {!Box2D.Collision.Shapes.b2Shape}
+ */
 Box2D.Collision.Shapes.b2Shape.prototype.Copy = function() {
     return null;
 };
 
+/**
+ * @param {!Box2D.Collision.Shapes.b2Shape} other
+ */
 Box2D.Collision.Shapes.b2Shape.prototype.Set = function(other) {
     this.m_radius = other.m_radius;
 };
 
 /**
- * @param {!Box2D.Common.Math.b2Transform} transform
+ * @param {!Box2D.Common.Math.b2Transform} xf
  * @param {!Box2D.Common.Math.b2Vec2} p
  * @return {boolean}
  */
@@ -67,25 +73,53 @@ Box2D.Collision.Shapes.b2Shape.prototype.TestPoint = function(xf, p) {
     return false;
 };
 
+/**
+ * @param {!Box2D.Collision.b2RayCastOutput} output
+ * @param {!Box2D.Collision.b2RayCastInput} input
+ * @param {!Box2D.Common.Math.b2Transform} transform
+ * @return {boolean}
+ */
 Box2D.Collision.Shapes.b2Shape.prototype.RayCast = function(output, input, transform) {
     return false;
 };
 
-Box2D.Collision.Shapes.b2Shape.prototype.ComputeAABB = function(aabb, xf) {};
+/**
+ * @param {!Box2D.Collision.b2AABB} aabb
+ * @param {!Box2D.Common.Math.b2Transform} transform
+ */
+Box2D.Collision.Shapes.b2Shape.prototype.ComputeAABB = function(aabb, transform) {};
 
-Box2D.Collision.Shapes.b2Shape.prototype.ComputeMass = function(massData, density) {
-    if (density === undefined) density = 0;
-};
+/**
+ * @param {!Box2D.Collision.Shapes.b2MassData} massData
+ * @param {number} density
+ */
+Box2D.Collision.Shapes.b2Shape.prototype.ComputeMass = function(massData, density) {};
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} normal
+ * @param {number} offset
+ * @param {!Box2D.Common.Math.b2Transform} xf
+ * @param {!Box2D.Common.Math.b2Vec2} c
+ * @return {number}
+ */
 Box2D.Collision.Shapes.b2Shape.prototype.ComputeSubmergedArea = function(normal, offset, xf, c) {
-    if (offset === undefined) offset = 0;
     return 0;
 };
 
+/**
+ * @param {!Box2D.Collision.b2DistanceProxy} proxy
+ */
 Box2D.Collision.Shapes.b2Shape.prototype.SetDistanceProxy = function(proxy) {
     Box2D.Common.b2Settings.b2Assert(false);
 };
 
+/**
+ * @param {!Box2D.Collision.Shapes.b2Shape1} shape1
+ * @param {!Box2D.Common.Math.b2Transform} transform1
+ * @param {!Box2D.Collision.Shapes.b2Shape1} shape2
+ * @param {!Box2D.Common.Math.b2Transform} transform2
+ * @return {boolean}
+ */
 Box2D.Collision.Shapes.b2Shape.TestOverlap = function(shape1, transform1, shape2, transform2) {
     var input = new Box2D.Collision.b2DistanceInput();
     input.proxyA = new Box2D.Collision.b2DistanceProxy();
@@ -102,6 +136,20 @@ Box2D.Collision.Shapes.b2Shape.TestOverlap = function(shape1, transform1, shape2
     return output.distance < 10.0 * Number.MIN_VALUE;
 };
 
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Collision.Shapes.b2Shape.e_startsInsideCollide = -1;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Collision.Shapes.b2Shape.e_missCollide = 0;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Collision.Shapes.b2Shape.e_hitCollide = 1;

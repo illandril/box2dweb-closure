@@ -318,13 +318,11 @@ Box2D.Collision.Shapes.b2EdgeShape.prototype.Support = function(xf, dX, dY) {
     var v1Y = xf.position.y + (tMat.col1.y * this.m_coreV1.x + tMat.col2.y * this.m_coreV1.y);
     var v2X = xf.position.x + (tMat.col1.x * this.m_coreV2.x + tMat.col2.x * this.m_coreV2.y);
     var v2Y = xf.position.y + (tMat.col1.y * this.m_coreV2.x + tMat.col2.y * this.m_coreV2.y);
-    var s_supportVec;
     if ((v1X * dX + v1Y * dY) > (v2X * dX + v2Y * dY)) {
-        s_supportVec = new Box2D.Common.Math.b2Vec2(v1X, v1Y)
+        return new Box2D.Common.Math.b2Vec2(v1X, v1Y);
     } else {
-        s_supportVec = new Box2D.Common.Math.b2Vec2(v2X, v2Y)
+        return new Box2D.Common.Math.b2Vec2(v2X, v2Y);
     }
-    return s_supportVec;
 };
 
 /**

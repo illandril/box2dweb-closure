@@ -46,8 +46,14 @@ goog.require('Box2D.Common.Math.b2Vec2');
  */
 Box2D.Collision.Shapes.b2PolygonShape = function() {
     Box2D.Collision.Shapes.b2Shape.call(this);
+    
+    /** @type {!Box2D.Common.Math.b2Vec2} */
     this.m_centroid = new Box2D.Common.Math.b2Vec2(0, 0);
+    
+    /** @type {Array.<!Box2D.Common.Math.b2Vec2>} */
     this.m_vertices = [];
+    
+    /** @type {Array.<!Box2D.Common.Math.b2Vec2>} */
     this.m_normals = [];
 };
 goog.inherits(Box2D.Collision.Shapes.b2PolygonShape, Box2D.Collision.Shapes.b2Shape);
@@ -59,12 +65,18 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.GetTypeName = function() {
     return Box2D.Collision.Shapes.b2PolygonShape.NAME;
 };
 
+/**
+ * @return {!Box2D.Collision.Shapes.b2PolygonShape}
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.Copy = function() {
     var s = new Box2D.Collision.Shapes.b2PolygonShape();
     s.Set(this);
     return s;
 };
 
+/**
+ * @param {!Box2D.Collision.Shapes.b2Shape} other
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.Set = function(other) {
     Box2D.Collision.Shapes.b2Shape.prototype.Set.call(this, other);
     if (other instanceof Box2D.Collision.Shapes.b2PolygonShape) {
@@ -184,16 +196,23 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.SetAsOrientedBox = function(hx, 
     }
 };
 
+/**
+ * @param {number} hx
+ * @param {number} hy
+ * @param {!Box2D.Common.Math.b2Vec2} center
+ * @param {number} angle
+ * @return {!Box2D.Collision.Shapes.b2PolygonShape}
+ */
 Box2D.Collision.Shapes.b2PolygonShape.AsOrientedBox = function(hx, hy, center, angle) {
-    if (hx === undefined) hx = 0;
-    if (hy === undefined) hy = 0;
-    if (center === undefined) center = null;
-    if (angle === undefined) angle = 0.0;
     var polygonShape = new Box2D.Collision.Shapes.b2PolygonShape();
     polygonShape.SetAsOrientedBox(hx, hy, center, angle);
     return polygonShape;
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} v1
+ * @param {!Box2D.Common.Math.b2Vec2} v2
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.SetAsEdge = function(v1, v2) {
     this.m_vertexCount = 2;
     this.Reserve(2);
@@ -207,12 +226,22 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.SetAsEdge = function(v1, v2) {
     this.m_normals[1].y = (-this.m_normals[0].y);
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} v1
+ * @param {!Box2D.Common.Math.b2Vec2} v2
+ * @return {!Box2D.Collision.Shapes.b2PolygonShape}
+ */
 Box2D.Collision.Shapes.b2PolygonShape.AsEdge = function(v1, v2) {
     var polygonShape = new Box2D.Collision.Shapes.b2PolygonShape();
     polygonShape.SetAsEdge(v1, v2);
     return polygonShape;
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Transform} xf
+ * @param {!Box2D.Common.Math.b2Vec2} p
+ * @return {boolean}
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.TestPoint = function(xf, p) {
     var tVec;
     var tMat = xf.R;
@@ -233,6 +262,12 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.TestPoint = function(xf, p) {
     return true;
 };
 
+/**
+ * @param {!Box2D.Collision.b2RayCastOutput} output
+ * @param {!Box2D.Collision.b2RayCastInput} input
+ * @param {!Box2D.Common.Math.b2Transform} transform
+ * @return {boolean}
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.RayCast = function(output, input, transform) {
     var lower = 0.0;
     var upper = input.maxFraction;
@@ -287,6 +322,10 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.RayCast = function(output, input
     return false;
 };
 
+/**
+ * @param {!Box2D.Collision.b2AABB} aabb
+ * @param {!Box2D.Common.Math.b2Transform} transform
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeAABB = function(aabb, xf) {
     var tMat = xf.R;
     var tVec = this.m_vertices[0];
@@ -309,8 +348,11 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeAABB = function(aabb, xf)
     aabb.upperBound.y = upperY + this.m_radius;
 };
 
+/**
+ * @param {!Box2D.Collision.Shapes.b2MassData} massData
+ * @param {number} density
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeMass = function(massData, density) {
-    if (density === undefined) density = 0;
     if (this.m_vertexCount == 2) {
         massData.center.x = 0.5 * (this.m_vertices[0].x + this.m_vertices[1].x);
         massData.center.y = 0.5 * (this.m_vertices[0].y + this.m_vertices[1].y);
@@ -354,8 +396,14 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeMass = function(massData,
     massData.I = density * I;
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} normal
+ * @param {number} offset
+ * @param {!Box2D.Common.Math.b2Transform} xf
+ * @param {!Box2D.Common.Math.b2Vec2} c
+ * @return {number}
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeSubmergedArea = function(normal, offset, xf, c) {
-    if (offset === undefined) offset = 0;
     var normalL = Box2D.Common.Math.b2Math.MulTMV(xf.R, normal);
     var offsetL = offset - Box2D.Common.Math.b2Math.Dot(normal, xf.position);
     var depths = [];
@@ -427,24 +475,40 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeSubmergedArea = function(
     return area;
 };
 
+/**
+ * @param {!Box2D.Collision.b2DistanceProxy} proxy
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.SetDistanceProxy = function(proxy) {
     proxy.m_vertices = this.m_vertices;
     proxy.m_count = this.m_vertexCount;
     proxy.m_radius = this.m_radius;
 };
 
+/**
+ * @return {number}
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.GetVertexCount = function() {
     return this.m_vertexCount;
 };
 
+/**
+ * @return {Array.<!Box2D.Common.Math.b2Vec2>}
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.GetVertices = function() {
     return this.m_vertices;
 };
 
+/**
+ * @return {Array.<!Box2D.Common.Math.b2Vec2>}
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.GetNormals = function() {
     return this.m_normals;
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} d
+ * return {number}
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.GetSupport = function(d) {
     var bestIndex = 0;
     var bestValue = this.m_vertices[0].x * d.x + this.m_vertices[0].y * d.y;
@@ -458,6 +522,10 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.GetSupport = function(d) {
     return bestIndex;
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} d
+ * return {!Box2D.Common.Math.b2Vec2}
+ */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.GetSupportVertex = function(d) {
     var bestIndex = 0;
     var bestValue = this.m_vertices[0].x * d.x + this.m_vertices[0].y * d.y;
@@ -483,8 +551,12 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.Reserve = function(count) {
     }
 };
 
+/**
+ * @param {Array.<!Box2D.Common.Math.b2Vec2>} vs
+ * @param {number} count
+ * return {!Box2D.Common.Math.b2Vec2}
+ */
 Box2D.Collision.Shapes.b2PolygonShape.ComputeCentroid = function(vs, count) {
-    if (count === undefined) count = 0;
     var c = new Box2D.Common.Math.b2Vec2(0, 0);
     var area = 0.0;
     var p1X = 0.0;
@@ -508,6 +580,7 @@ Box2D.Collision.Shapes.b2PolygonShape.ComputeCentroid = function(vs, count) {
     return c;
 };
 
+/** @type {!Box2D.Common.Math.b2Mat22} */
 Box2D.Collision.Shapes.b2PolygonShape.s_mat = new Box2D.Common.Math.b2Mat22();
 
 /**
