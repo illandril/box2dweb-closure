@@ -200,7 +200,7 @@ Box2D.Dynamics.b2Island.prototype._SleepIfTired = function(step) {
 };
 
 /**
- * @param {!Box2D.Dynamics.b2TimeStep} step
+ * @param {!Box2D.Dynamics.b2TimeStep} subStep
  */
 Box2D.Dynamics.b2Island.prototype.SolveTOI = function(subStep) {
     var i = 0;

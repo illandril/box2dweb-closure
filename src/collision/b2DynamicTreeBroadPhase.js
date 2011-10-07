@@ -107,7 +107,7 @@ Box2D.Collision.b2DynamicTreeBroadPhase.prototype.GetProxyCount = function() {
 };
 
 /**
- * @param {function(Box2D.Dynamics.b2Fixture, Box2D.Dynamics.b2Fixture)} callback
+ * @param {function(!Box2D.Dynamics.b2Fixture, !Box2D.Dynamics.b2Fixture)} callback
  */
 Box2D.Collision.b2DynamicTreeBroadPhase.prototype.UpdatePairs = function(callback) {
     var __this = this;

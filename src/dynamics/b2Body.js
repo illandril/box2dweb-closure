@@ -127,17 +127,13 @@ Box2D.Dynamics.b2Body = function(bd, world) {
     
     /** @type {number} */
     this.m_type = bd.type;
-    if (this.m_type == Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
-        /** @type {number} */
-        this.m_mass = 1;
-        /** @type {number} */
-        this.m_invMass = 1;
-    } else {
-        /** @type {number} */
-        this.m_mass = 0;
-        /** @type {number} */
-        this.m_invMass = 0;
-    }
+    
+    /** @type {number} */
+    this.m_mass = this.m_type == Box2D.Dynamics.b2BodyDef.b2_dynamicBody ? 1 : 0;
+    
+    /** @type {number} */
+    this.m_invMass = this.m_type == Box2D.Dynamics.b2BodyDef.b2_dynamicBody ? 1 : 0;
+    
     /** @type {number} */
     this.m_I = 0;
     
@@ -155,7 +151,7 @@ Box2D.Dynamics.b2Body = function(bd, world) {
 };
 
 /**
- * @param {!Box2D.Dynamics.b2FixtureDef} bd
+ * @param {!Box2D.Dynamics.b2FixtureDef} def
  */
 Box2D.Dynamics.b2Body.prototype.CreateFixture = function(def) {
     Box2D.Common.b2Settings.b2Assert(!this.m_world.IsLocked());
@@ -336,9 +332,8 @@ Box2D.Dynamics.b2Body.prototype.ApplyForce = function(force, point) {
     if (this.m_type != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
         return;
     }
-    if (this.IsAwake() == false) {
-        this.SetAwake(true);
-    }
+    this.SetAwake(true);
+    
     this.m_force.x += force.x;
     this.m_force.y += force.y;
     this.m_torque += ((point.x - this.m_sweep.c.x) * force.y - (point.y - this.m_sweep.c.y) * force.x);
@@ -349,9 +344,8 @@ Box2D.Dynamics.b2Body.prototype.ApplyTorque = function(torque) {
     if (this.m_type != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
         return;
     }
-    if (this.IsAwake() == false) {
-        this.SetAwake(true);
-    }
+    this.SetAwake(true);
+    
     this.m_torque += torque;
 };
 
@@ -359,9 +353,8 @@ Box2D.Dynamics.b2Body.prototype.ApplyImpulse = function(impulse, point) {
     if (this.m_type != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
         return;
     }
-    if (this.IsAwake() == false) {
-        this.SetAwake(true);
-    }
+    this.SetAwake(true);
+    
     this.m_linearVelocity.x += this.m_invMass * impulse.x;
     this.m_linearVelocity.y += this.m_invMass * impulse.y;
     this.m_angularVelocity += this.m_invI * ((point.x - this.m_sweep.c.x) * impulse.y - (point.y - this.m_sweep.c.y) * impulse.x);
@@ -432,17 +425,25 @@ Box2D.Dynamics.b2Body.prototype.GetInertia = function() {
     return this.m_I;
 };
 
-Box2D.Dynamics.b2Body.prototype.GetMassData = function(data) {
-    data.mass = this.m_mass;
-    data.I = this.m_I;
-    data.center.SetV(this.m_sweep.localCenter);
+/**
+ * @param {Box2D.Collision.Shapes.b2MassData=} massData
+ * @return {!Box2D.Collision.Shapes.b2MassData}
+ */
+Box2D.Dynamics.b2Body.prototype.GetMassData = function(massData) {
+    if (!massData) {
+        massData = new Box2D.Collision.Shapes.b2MassData();
+    }
+    massData.mass = this.m_mass;
+    massData.I = this.m_I;
+    massData.center.SetV(this.m_sweep.localCenter);
+    return massData;
 };
 
+/**
+ * @param {!Box2D.Collision.Shapes.b2MassData} massData
+ */
 Box2D.Dynamics.b2Body.prototype.SetMassData = function(massData) {
-    Box2D.Common.b2Settings.b2Assert(this.m_world.IsLocked() == false);
-    if (this.m_world.IsLocked() == true) {
-        return;
-    }
+    Box2D.Common.b2Settings.b2Assert(!this.m_world.IsLocked());
     if (this.m_type != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
         return;
     }
@@ -543,26 +544,38 @@ Box2D.Dynamics.b2Body.prototype.GetLinearVelocityFromLocalPoint = function(local
     return new Box2D.Common.Math.b2Vec2(this.m_linearVelocity.x - this.m_angularVelocity * (worldPoint.y - this.m_sweep.c.y), this.m_linearVelocity.y + this.m_angularVelocity * (worldPoint.x - this.m_sweep.c.x));
 };
 
+/**
+ * @return {number}
+ */
 Box2D.Dynamics.b2Body.prototype.GetLinearDamping = function() {
     return this.m_linearDamping;
 };
 
+/**
+ * @param {number} linearDamping
+ */
 Box2D.Dynamics.b2Body.prototype.SetLinearDamping = function(linearDamping) {
-    if (linearDamping === undefined) linearDamping = 0;
     this.m_linearDamping = linearDamping;
 };
 
+/**
+ * @return {number}
+ */
 Box2D.Dynamics.b2Body.prototype.GetAngularDamping = function() {
     return this.m_angularDamping;
 };
 
+/**
+ * @param {number} angularDamping
+ */
 Box2D.Dynamics.b2Body.prototype.SetAngularDamping = function(angularDamping) {
-    if (angularDamping === undefined) angularDamping = 0;
     this.m_angularDamping = angularDamping;
 };
 
+/**
+ * @param {number} type
+ */
 Box2D.Dynamics.b2Body.prototype.SetType = function(type) {
-    if (type === undefined) type = 0;
     if (this.m_type == type) {
         return;
     }
@@ -580,10 +593,16 @@ Box2D.Dynamics.b2Body.prototype.SetType = function(type) {
     }
 };
 
+/**
+ * @return {number}
+ */
 Box2D.Dynamics.b2Body.prototype.GetType = function() {
     return this.m_type;
 };
 
+/**
+ * @param {boolean} flag
+ */
 Box2D.Dynamics.b2Body.prototype.SetBullet = function(flag) {
     if (flag) {
         this.m_flags |= Box2D.Dynamics.b2Body.e_bulletFlag;
@@ -592,10 +611,16 @@ Box2D.Dynamics.b2Body.prototype.SetBullet = function(flag) {
     }
 };
 
+/**
+ * @return {boolean}
+ */
 Box2D.Dynamics.b2Body.prototype.IsBullet = function() {
     return (this.m_flags & Box2D.Dynamics.b2Body.e_bulletFlag) == Box2D.Dynamics.b2Body.e_bulletFlag;
 };
 
+/**
+ * @param {boolean} flag
+ */
 Box2D.Dynamics.b2Body.prototype.SetSleepingAllowed = function(flag) {
     this.m_allowSleep = flag;
     if (!flag) {
@@ -603,21 +628,32 @@ Box2D.Dynamics.b2Body.prototype.SetSleepingAllowed = function(flag) {
     }
 };
 
+/**
+ * @param {boolean} flag
+ */
 Box2D.Dynamics.b2Body.prototype.SetAwake = function(flag) {
-    this.m_awake = flag;
-    this.m_sleepTime = 0;
-    if (!flag) {
-        this.m_linearVelocity.SetZero();
-        this.m_angularVelocity = 0.0;
-        this.m_force.SetZero();
-        this.m_torque = 0.0;
+    if (this.m_awake != flag) {
+        this.m_awake = flag;
+        this.m_sleepTime = 0;
+        if (!flag) {
+            this.m_linearVelocity.SetZero();
+            this.m_angularVelocity = 0.0;
+            this.m_force.SetZero();
+            this.m_torque = 0.0;
+        }
     }
 };
 
+/**
+ * @return {boolean}
+ */
 Box2D.Dynamics.b2Body.prototype.IsAwake = function() {
     return this.m_awake;
 };
 
+/**
+ * @param {boolean} fixed
+ */
 Box2D.Dynamics.b2Body.prototype.SetFixedRotation = function(fixed) {
     if (fixed) {
         this.m_flags |= Box2D.Dynamics.b2Body.e_fixedRotationFlag;
@@ -627,10 +663,16 @@ Box2D.Dynamics.b2Body.prototype.SetFixedRotation = function(fixed) {
     this.ResetMassData();
 };
 
+/**
+ * @return {boolean}
+ */
 Box2D.Dynamics.b2Body.prototype.IsFixedRotation = function() {
     return (this.m_flags & Box2D.Dynamics.b2Body.e_fixedRotationFlag) == Box2D.Dynamics.b2Body.e_fixedRotationFlag;
 };
 
+/**
+ * @param {boolean} flag
+ */
 Box2D.Dynamics.b2Body.prototype.SetActive = function(flag) {
     if (flag == this.IsActive()) {
         return;
@@ -659,10 +701,16 @@ Box2D.Dynamics.b2Body.prototype.SetActive = function(flag) {
     }
 };
 
+/**
+ * @return {boolean}
+ */
 Box2D.Dynamics.b2Body.prototype.IsActive = function() {
     return (this.m_flags & Box2D.Dynamics.b2Body.e_activeFlag) == Box2D.Dynamics.b2Body.e_activeFlag;
 };
 
+/**
+ * @return {boolean}
+ */
 Box2D.Dynamics.b2Body.prototype.IsSleepingAllowed = function() {
     return this.m_allowSleep;
 };

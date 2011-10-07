@@ -583,10 +583,10 @@ Box2D.Dynamics.b2World.prototype.QueryAABB = function(callback, aabb) {
 /**
  * @param {function(!Box2D.Dynamics.b2Fixture):boolean} callback
  * @param {!Box2D.Collision.Shapes.b2Shape} shape
- * @param {!Box2D.Common.Math.b2Transform=} transform
+ * @param {Box2D.Common.Math.b2Transform=} transform
  */
 Box2D.Dynamics.b2World.prototype.QueryShape = function(callback, shape, transform) {
-    if (typeof(transform) == "undefined") {
+    if (!transform) {
         transform = new Box2D.Common.Math.b2Transform();
         transform.SetIdentity();
     }
@@ -604,9 +604,12 @@ Box2D.Dynamics.b2World.prototype.QueryShape = function(callback, shape, transfor
     broadPhase.Query(WorldQueryWrapper, aabb);
 };
 
+/**
+ * @param {function(!Box2D.Dynamics.b2Fixture): boolean} callback
+ * @param {!Box2D.Common.Math.b2Vec2} p
+ */
 Box2D.Dynamics.b2World.prototype.QueryPoint = function(callback, p) {
-    var broadPhase = this.m_contactManager.m_broadPhase;
-
+    /** @type {function(!Box2D.Dynamics.b2Fixture): boolean} */
     var WorldQueryWrapper = function(fixture) {
             if (fixture.TestPoint(p)) {
                 return callback(fixture);
@@ -617,7 +620,7 @@ Box2D.Dynamics.b2World.prototype.QueryPoint = function(callback, p) {
     var aabb = new Box2D.Collision.b2AABB();
     aabb.lowerBound.Set(p.x - Box2D.Common.b2Settings.b2_linearSlop, p.y - Box2D.Common.b2Settings.b2_linearSlop);
     aabb.upperBound.Set(p.x + Box2D.Common.b2Settings.b2_linearSlop, p.y + Box2D.Common.b2Settings.b2_linearSlop);
-    broadPhase.Query(WorldQueryWrapper, aabb);
+    this.m_contactManager.m_broadPhase.Query(WorldQueryWrapper, aabb);
 };
 
 /**
@@ -692,18 +695,30 @@ Box2D.Dynamics.b2World.prototype.RayCastAll = function(point1, point2) {
     return result;
 };
 
+/**
+ * @return {Box2D.Dynamics.b2Body}
+ */
 Box2D.Dynamics.b2World.prototype.GetBodyList = function() {
     return this.m_bodyList;
 };
 
+/**
+ * @return {Box2D.Dynamics.Joints.b2Joint}
+ */
 Box2D.Dynamics.b2World.prototype.GetJointList = function() {
     return this.m_jointList;
 };
 
+/**
+ * @return {Box2D.Dynamics.Contacts.b2Contact}
+ */
 Box2D.Dynamics.b2World.prototype.GetContactList = function() {
     return this.m_contactList;
 };
 
+/**
+ * @return {boolean}
+ */
 Box2D.Dynamics.b2World.prototype.IsLocked = function() {
     return this.m_isLocked;
 };
@@ -837,6 +852,7 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
         queue.enqueue(seed);
         seed.m_islandFlag = true;
         while (queue.size > 0) {
+            /** @type {!Box2D.Dynamics.b2Body} */
             var b = queue.dequeue();
             m_island.AddBody(b);
             if (!b.IsAwake()) {
@@ -914,6 +930,9 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
     }
 };
 
+/**
+ * @param {!Box2D.Dynamics.b2TimeStep} step
+ */
 Box2D.Dynamics.b2World.prototype._SolveTOI2 = function(step) {
     var minContact = null;
     var minTOI = 1.0;
@@ -955,6 +974,11 @@ Box2D.Dynamics.b2World.prototype._SolveTOI2 = function(step) {
     };
 };
 
+/**
+ * @param {!Box2D.Dynamics.b2TimeStep} step
+ * @param {!Box2D.Dynamics.Contacts.b2Contact} c
+ * @return {boolean}
+ */
 Box2D.Dynamics.b2World.prototype._SolveTOI2SkipContact = function(step, c) {
     if (c.IsSensor() || c.IsEnabled() == false || !c.IsContinuous()) {
         return true;
@@ -971,13 +995,11 @@ Box2D.Dynamics.b2World.prototype._SolveTOI2SkipContact = function(step, c) {
 Box2D.Dynamics.b2World.prototype.DrawJoint = function(joint) {
     if (joint instanceof Box2D.Dynamics.Joints.b2DistanceJoint || joint instanceof Box2D.Dynamics.Joints.b2MouseJoint) {
         this.m_debugDraw.DrawSegment(joint.GetAnchorA(), joint.GetAnchorB(), Box2D.Dynamics.b2World.s_jointColor);
-    }
-    else if (joint instanceof Box2D.Dynamics.Joints.b2PulleyJoint) {
+    } else if (joint instanceof Box2D.Dynamics.Joints.b2PulleyJoint) {
         this.m_debugDraw.DrawSegment(joint.GetGroundAnchorA(), joint.GetAnchorA(), Box2D.Dynamics.b2World.s_jointColor);
         this.m_debugDraw.DrawSegment(joint.GetGroundAnchorB(), joint.GetAnchorB(), Box2D.Dynamics.b2World.s_jointColor);
         this.m_debugDraw.DrawSegment(joint.GetGroundAnchorA(), joint.GetGroundAnchorB(), Box2D.Dynamics.b2World.s_jointColor);
-    }
-    else {
+    } else {
         if (joint.GetBodyA() != this.m_groundBody) {
             this.m_debugDraw.DrawSegment(joint.GetBodyA().m_xf.position, joint.GetAnchorA(), Box2D.Dynamics.b2World.s_jointColor);
         }
@@ -988,6 +1010,11 @@ Box2D.Dynamics.b2World.prototype.DrawJoint = function(joint) {
     }
 };
 
+/**
+ * @param {!Box2D.Collision.Shapes.b2Shape} shape
+ * @param {!Box2D.Common.Math.b2Transform} xf
+ * @param {!Box2D.Common.b2Color} color
+ */
 Box2D.Dynamics.b2World.prototype.DrawShape = function(shape, xf, color) {
     if (shape instanceof Box2D.Collision.Shapes.b2CircleShape) {
         var circle = shape;
@@ -1011,7 +1038,14 @@ Box2D.Dynamics.b2World.prototype.DrawShape = function(shape, xf, color) {
     }
 };
 
+/** @type {!Box2D.Common.Math.b2Transform} */
 Box2D.Dynamics.b2World.s_xf = new Box2D.Common.Math.b2Transform();
+
+/** @type {!Box2D.Common.Math.b2Sweep} */
 Box2D.Dynamics.b2World.s_backupA = new Box2D.Common.Math.b2Sweep();
+
+/** @type {!Box2D.Common.Math.b2Sweep} */
 Box2D.Dynamics.b2World.s_backupB = new Box2D.Common.Math.b2Sweep();
+
+/** @type {!Box2D.Common.b2Color} */
 Box2D.Dynamics.b2World.s_jointColor = new Box2D.Common.b2Color(0.5, 0.8, 0.8);

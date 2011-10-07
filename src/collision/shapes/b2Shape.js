@@ -58,6 +58,11 @@ Box2D.Collision.Shapes.b2Shape.prototype.Set = function(other) {
     this.m_radius = other.m_radius;
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Transform} transform
+ * @param {!Box2D.Common.Math.b2Vec2} p
+ * @return {boolean}
+ */
 Box2D.Collision.Shapes.b2Shape.prototype.TestPoint = function(xf, p) {
     return false;
 };

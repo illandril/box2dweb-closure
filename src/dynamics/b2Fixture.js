@@ -136,9 +136,12 @@ Box2D.Dynamics.b2Fixture.prototype.RayCast = function(output, input) {
     return this.m_shape.RayCast(output, input, this.m_body.GetTransform());
 };
 
+/**
+ * @param {Box2D.Collision.Shapes.b2MassData=} massData
+ * @return {!Box2D.Collision.Shapes.b2MassData}
+ */
 Box2D.Dynamics.b2Fixture.prototype.GetMassData = function(massData) {
-    if (massData === undefined) massData = null;
-    if (massData == null) {
+    if (!massData) {
         massData = new Box2D.Collision.Shapes.b2MassData();
     }
     this.m_shape.ComputeMass(massData, this.m_density);
