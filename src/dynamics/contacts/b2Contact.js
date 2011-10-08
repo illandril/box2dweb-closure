@@ -195,8 +195,8 @@ Box2D.Dynamics.Contacts.b2Contact.prototype.Update = function (listener) {
   this.enabled = true;
   var touching = false;
   var wasTouching = this.IsTouching();
-  var bodyA = this.m_fixtureA.m_body;
-  var bodyB = this.m_fixtureB.m_body;
+  var bodyA = this.m_fixtureA.GetBody();
+  var bodyB = this.m_fixtureB.GetBody();
   var aabbOverlap = this.m_fixtureA.m_aabb.TestOverlap(this.m_fixtureB.m_aabb);
   if (this.sensor) {
      if (aabbOverlap) {

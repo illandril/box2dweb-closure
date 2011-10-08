@@ -189,7 +189,7 @@ Box2D.Dynamics.Joints.b2FrictionJoint.prototype.SolveVelocityConstraints = funct
     
     var CdotX = vB.x - wB * rBY - vA.x + wA * rAY;
     var CdotY = vB.y + wB * rBX - vA.y - wA * rAX;
-    var impulseV = Box2D.Common.Math.b2Math.MulMV(this.m_linearMass, new b2Vec2((-CdotX), (-CdotY)));
+    var impulseV = Box2D.Common.Math.b2Math.MulMV(this.m_linearMass, new Box2D.Common.Math.b2Vec2((-CdotX), (-CdotY)));
     var oldImpulseV = this.m_linearImpulse.Copy();
     this.m_linearImpulse.Add(impulseV);
     maxImpulse = step.dt * this.m_maxForce;

@@ -85,7 +85,7 @@ Box2D.Dynamics.Contacts.b2ContactFactory.prototype.Create = function(fixtureA, f
 
 Box2D.Dynamics.Contacts.b2ContactFactory.prototype.Destroy = function(contact) {
     if (contact.m_manifold.m_pointCount > 0) {
-        contact.m_fixtureA.m_body.SetAwake(true);
-        contact.m_fixtureB.m_body.SetAwake(true);
+        contact.m_fixtureA.GetBody().SetAwake(true);
+        contact.m_fixtureB.GetBody().SetAwake(true);
     }
 };

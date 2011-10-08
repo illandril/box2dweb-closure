@@ -41,28 +41,53 @@ goog.require('Box2D.Collision.Shapes.b2MassData');
  * @constructor
  */
 Box2D.Dynamics.b2Fixture = function() {
-    /** @type {!Box2D.Dynamics.b2FilterData} */
+    
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2FilterData}
+     */
     this.m_filter = new Box2D.Dynamics.b2FilterData();
     
-    /** @type {!Box2D.Collision.b2AABB} */
+    /**
+     * @private
+     * @type {!Box2D.Collision.b2AABB}
+     */
     this.m_aabb = new Box2D.Collision.b2AABB();
     
-    /** @type {Box2D.Dynamics.b2Body} */
+    /**
+     * @private
+     * @type {Box2D.Dynamics.b2Body}
+     */
     this.m_body = null;
     
-    /** @type {Box2D.Dynamics.b2Fixture} */
+    /**
+     * @private
+     * @type {Box2D.Dynamics.b2Fixture}
+     */
     this.m_next = null;
     
-    /** @type {Box2D.Collision.Shapes.b2Shape} */
+    /**
+     * @private
+     * @type {Box2D.Collision.Shapes.b2Shape}
+     */
     this.m_shape = null;
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this.m_density = 0.0;
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this.m_friction = 0.0;
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this.m_restitution = 0.0;
 };
 
