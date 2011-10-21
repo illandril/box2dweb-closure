@@ -5,7 +5,7 @@
     var fixDef = new Box2D.Dynamics.b2FixtureDef();
     var maxRestitution = 2;
     
-    var radius = 2.5;
+    var radius = 1.25;
     var step = radius * 5;
     fixDef.shape = new Box2D.Collision.Shapes.b2CircleShape(radius);
     for (var x = 0; x < 60; x += step) {
@@ -21,7 +21,7 @@
     var minKinSpeed = 5;
     var maxKinSpeed = 5;
     bodyDef.type = Box2D.Dynamics.b2BodyDef.b2_KinematicBody;
-    bodyDef.position.Set(0, 20);
+    bodyDef.position.Set(0, 10);
     fixDef.shape = new Box2D.Collision.Shapes.b2CircleShape(1);
     var kBody1 = world.CreateBody(bodyDef);
     kBody1.CreateFixture(fixDef);
@@ -36,7 +36,7 @@
         }
     });
     
-    bodyDef.position.Set(0, 10);
+    bodyDef.position.Set(0, 5);
     fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
     fixDef.shape.SetAsBox(1, 1);
     var kBody2 = world.CreateBody(bodyDef);
@@ -49,6 +49,22 @@
         if(kBody2.GetPosition().x > 55) {
             kBody2.m_linearVelocity.x = -1 * (minKinSpeed + Math.random() * maxKinSpeed);
             kBody2.m_angularVelocity = Math.random() * maxKinSpeed - maxKinSpeed / 2;
+        }
+    });
+    
+    bodyDef.position.Set(0, 20);
+    fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
+    fixDef.shape.SetAsArray([new Box2D.Common.Math.b2Vec2(0,0),new Box2D.Common.Math.b2Vec2(1,0),new Box2D.Common.Math.b2Vec2(0,1)]);
+    var kBody3 = world.CreateBody(bodyDef);
+    kBody3.CreateFixture(fixDef);
+    updateCalls.push(function(){
+        if(kBody3.GetPosition().x < 5) {
+            kBody3.m_linearVelocity.x = minKinSpeed + Math.random() * maxKinSpeed;
+            kBody3.m_angularVelocity = Math.random() * maxKinSpeed - maxKinSpeed / 2;
+        }
+        if(kBody3.GetPosition().x > 55) {
+            kBody3.m_linearVelocity.x = -1 * (minKinSpeed + Math.random() * maxKinSpeed);
+            kBody3.m_angularVelocity = Math.random() * maxKinSpeed - maxKinSpeed / 2;
         }
     });
     
@@ -111,19 +127,30 @@
         return new Box2D.Common.Math.b2Vec2(Math.random() * 58 + 1, Math.random() * 38 + 1);
     };
     
-    for(var i = 0; i < 5; ++i) {
-        if(i % 2 === 0) {
-            createSpinner(getRandomPos(), new Box2D.Common.Math.b2Vec2(2, 2));
-            fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
-            fixDef.shape.SetAsBox(Math.random() + 0.1, Math.random() + 0.1);
-        } else {
-            createSnake(getRandomPos(), new Box2D.Common.Math.b2Vec2(2.5, 0.5));
-            fixDef.shape = new Box2D.Collision.Shapes.b2CircleShape(Math.random() + 0.1);
-        }
-        bodyDef.position = getRandomPos();
-        fixDef.restitution = Math.random() * maxRestitution;
-        world.CreateBody(bodyDef).CreateFixture(fixDef);
-    }
+    var testObjectCount = 0;
     
+    window.addContactStressTestObjects = function(count) {
+        for (var i = 0; i < count; i++) {
+            testObjectCount++;
+            if(testObjectCount % 2 === 0) {
+                fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape();
+                fixDef.shape.SetAsBox(Math.random() * 0.5 + 0.1, Math.random() * 0.5 + 0.1);
+            } else {
+                fixDef.shape = new Box2D.Collision.Shapes.b2CircleShape(Math.random() * 0.5 + 0.1);
+            }
+            bodyDef.position = getRandomPos();
+            fixDef.restitution = Math.random() * maxRestitution;
+            world.CreateBody(bodyDef).CreateFixture(fixDef);
+        }
+    };
+    
+    for(var i = 0; i < 10; ++i) {
+        if(i % 2 === 0) {
+            createSpinner(getRandomPos(), new Box2D.Common.Math.b2Vec2(1, 1));
+        } else {
+            createSnake(getRandomPos(), new Box2D.Common.Math.b2Vec2(1.25, 0.25));
+        }
+        addContactStressTestObjects(10);
+    }
     
 })();
