@@ -20,7 +20,7 @@
     }
     var minKinSpeed = 5;
     var maxKinSpeed = 5;
-    bodyDef.type = Box2D.Dynamics.b2BodyDef.b2_KinematicBody;
+    bodyDef.type = Box2D.Dynamics.b2BodyDef.b2_kinematicBody;
     bodyDef.position.Set(0, 10);
     fixDef.shape = new Box2D.Collision.Shapes.b2CircleShape(1);
     var kBody1 = world.CreateBody(bodyDef);
@@ -128,7 +128,7 @@
     };
     
     var testObjectCount = 0;
-    
+    var testObjects = [];
     window.addContactStressTestObjects = function(count) {
         for (var i = 0; i < count; i++) {
             testObjectCount++;
@@ -140,7 +140,17 @@
             }
             bodyDef.position = getRandomPos();
             fixDef.restitution = Math.random() * maxRestitution;
-            world.CreateBody(bodyDef).CreateFixture(fixDef);
+            var body = world.CreateBody(bodyDef);
+            body.CreateFixture(fixDef);
+            testObjects.push(body);
+        }
+    };
+    
+    window.deleteContactStressTestObjects = function(count) {
+        for (var i = 0; i < count; i++) {
+            var index = Math.floor(Math.random() * testObjects.length);
+            var body = testObjects.splice(index,1)[0];
+            world.DestroyBody(body);
         }
     };
     

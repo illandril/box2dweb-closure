@@ -150,18 +150,6 @@ Box2D.Dynamics.b2Body = function(bd, world) {
     
     /**
      * @private
-     * @type {Box2D.Dynamics.b2Body}
-     */
-    this.m_prev = null;
-    
-    /**
-     * @private
-     * @type {Box2D.Dynamics.b2Body}
-     */
-    this.m_next = null;
-    
-    /**
-     * @private
      * @type {number}
      */
     this.m_angularVelocity = bd.angularVelocity;
@@ -237,6 +225,12 @@ Box2D.Dynamics.b2Body = function(bd, world) {
      * @type {number}
      */
     this.m_fixtureCount = 0;
+    
+    /**
+     * @private
+     * @type {Array.<Box2D.Dynamics.b2BodyList>}
+     */
+     this.m_lists = [];
 };
 
 /**
@@ -688,6 +682,9 @@ Box2D.Dynamics.b2Body.prototype.SetType = function(type) {
     for (var ce = this.m_contactList; ce; ce = ce.next) {
         ce.contact.FlagForFiltering();
     }
+    for (var i = 0; i < this.m_lists.length; i++) {
+        this.m_lists[i].UpdateBody(this);
+    }
 };
 
 /**
@@ -733,6 +730,9 @@ Box2D.Dynamics.b2Body.prototype.SetAwake = function(flag) {
             this.m_angularVelocity = 0.0;
             this.m_force.SetZero();
             this.m_torque = 0.0;
+        }
+        for (var i = 0; i < this.m_lists.length; i++) {
+            this.m_lists[i].UpdateBody(this);
         }
     }
 };
@@ -786,6 +786,9 @@ Box2D.Dynamics.b2Body.prototype.SetActive = function(flag) {
         }
         this.m_contactList = null;
     }
+    for (var i = 0; i < this.m_lists.length; i++) {
+        this.m_lists[i].UpdateBody(this);
+    }
 };
 
 /**
@@ -816,10 +819,6 @@ Box2D.Dynamics.b2Body.prototype.GetControllerList = function() {
 
 Box2D.Dynamics.b2Body.prototype.GetContactList = function() {
     return this.m_contactList;
-};
-
-Box2D.Dynamics.b2Body.prototype.GetNext = function() {
-    return this.m_next;
 };
 
 Box2D.Dynamics.b2Body.prototype.GetWorld = function() {

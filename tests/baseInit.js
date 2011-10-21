@@ -26,6 +26,12 @@ var doDebug = true;
     debugDraw.SetDrawScale(10.0);
     debugDraw.SetFillAlpha(0.5);
     debugDraw.SetLineThickness(1.0);
+//  Box2D.Dynamics.b2DebugDraw.e_shapeBit = 0x0001;
+//  Box2D.Dynamics.b2DebugDraw.e_jointBit = 0x0002;
+//  Box2D.Dynamics.b2DebugDraw.e_aabbBit = 0x0004;
+//  Box2D.Dynamics.b2DebugDraw.e_pairBit = 0x0008;
+//  Box2D.Dynamics.b2DebugDraw.e_centerOfMassBit = 0x0010;
+//  Box2D.Dynamics.b2DebugDraw.e_controllerBit = 0x0020;
     debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit | Box2D.Dynamics.b2DebugDraw.e_aabbBit);
     world.SetDebugDraw(debugDraw);
     

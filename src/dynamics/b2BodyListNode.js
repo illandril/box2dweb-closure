@@ -30,69 +30,64 @@
  * https://github.com/illandril/box2dweb-closure
  */
  
-goog.provide('Box2D.Dynamics.b2BodyDef');
-
-goog.require('Box2D.Common.Math.b2Vec2');
+goog.provide('Box2D.Dynamics.b2BodyListNode');
 
 /**
+ * @param {!Box2D.Dynamics.b2Body} body
  * @constructor
  */
-Box2D.Dynamics.b2BodyDef = function() {
+Box2D.Dynamics.b2BodyListNode = function(body) {
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
-    this.position = new Box2D.Common.Math.b2Vec2(0, 0);
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2Body}
+     */
+    this.body = body;
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
-    this.linearVelocity = new Box2D.Common.Math.b2Vec2(0, 0);
+    /**
+     * @private
+     * @type {Box2D.Dynamics.b2BodyListNode}
+     */
+    this.next = null;
     
-    /** @type {number} */
-    this.angle = 0.0;
-    
-    /** @type {number} */
-    this.angularVelocity = 0.0;
-    
-    /** @type {number} */
-    this.linearDamping = 0.0;
-    
-    /** @type {number} */
-    this.angularDamping = 0.0;
-    
-    /** @type {boolean} */
-    this.allowSleep = true;
-    
-    /** @type {boolean} */
-    this.awake = true;
-    
-    /** @type {boolean} */
-    this.fixedRotation = false;
-    
-    /** @type {boolean} */
-    this.bullet = false;
-    
-    /** @type {number} */
-    this.type = Box2D.Dynamics.b2BodyDef.b2_staticBody;
-    
-    /** @type {boolean} */
-    this.active = true;
-    
-    /** @type {number} */
-    this.inertiaScale = 1.0;
+    /**
+     * @private
+     * @type {Box2D.Dynamics.b2BodyListNode}
+     */
+    this.previous = null;
 };
 
 /**
- * @const
- * @type {number}
+ * @param {Box2D.Dynamics.b2BodyListNode} node
  */
-Box2D.Dynamics.b2BodyDef.b2_staticBody = 0;
+Box2D.Dynamics.b2BodyListNode.prototype.SetNextNode = function(node) {
+    this.next = node;
+};
 
 /**
- * @const
- * @type {number}
+ * @param {Box2D.Dynamics.b2BodyListNode} node
  */
-Box2D.Dynamics.b2BodyDef.b2_kinematicBody = 1;
+Box2D.Dynamics.b2BodyListNode.prototype.SetPreviousNode = function(node) {
+    this.previous = node;
+};
 
 /**
- * @const
- * @type {number}
+ * @return {Box2D.Dynamics.b2Body}
  */
-Box2D.Dynamics.b2BodyDef.b2_dynamicBody = 2;
+Box2D.Dynamics.b2BodyListNode.prototype.GetBody = function() {
+    return this.body;
+};
+
+/**
+ * @return {Box2D.Dynamics.b2BodyListNode}
+ */
+Box2D.Dynamics.b2BodyListNode.prototype.GetNextNode = function() {
+    return this.next;
+};
+
+/**
+ * @return {Box2D.Dynamics.b2BodyListNode}
+ */
+Box2D.Dynamics.b2BodyListNode.prototype.GetPreviousNode = function() {
+    return this.previous;
+};

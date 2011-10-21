@@ -1,6 +1,6 @@
 document.write('<div id="counts">???</div>');
 updateCalls.push(function() {
-    var bodyCount = world.m_bodyCount;
+    var bodyCount = world.GetBodyCount();
     var jointCount = world.m_jointCount;
     var contactCount = world.GetContactCount();
     document.getElementById('counts').innerHTML =
