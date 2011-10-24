@@ -82,7 +82,7 @@ Box2D.Dynamics.b2World = function(gravity, doSleep) { /** @type {!Box2D.Dynamics
 
     /**
      * @private
-     * @type {Box2D.Dynamics.b2BodyList}
+     * @type {!Box2D.Dynamics.b2BodyList}
      */
     this.bodyList = new Box2D.Dynamics.b2BodyList();
 
@@ -660,7 +660,7 @@ Box2D.Dynamics.b2World.prototype.RayCastAll = function(point1, point2) {
 };
 
 /**
- * @return {Box2D.Dynamics.b2Body}
+ * @return {!Box2D.Dynamics.b2BodyList}
  */
 Box2D.Dynamics.b2World.prototype.GetBodyList = function() {
     return this.bodyList;
