@@ -7,8 +7,11 @@
        <br>
        <input type="checkbox" onclick="doDebug = this.checked;" name="doDebugCheckbox" checked> <label for="doDebugCheckbox">Update Debug Canvas</label>
        <br>
-       <input type="submit" onclick="addContactStressTestObjects(Math.random() * 10 + 1); return false" value="Add Objects">
-       <input type="submit" onclick="deleteContactStressTestObjects(Math.random() * 10 + 1); return false" value="Delete Object">
+       <input type="submit" onclick="addContactStressTestObjects(Math.random() * 9 + 1); return false" value="Add Random 1-10 Objects">
+       <input type="submit" onclick="deleteContactStressTestObjects(Math.random() * 9 + 1); return false" value="Delete Random 1-10 Object">
+       <br>
+       <input type="submit" onclick="addContactStressTestObjects(100); return false" value="Add 100 Objects">
+       <input type="submit" onclick="deleteContactStressTestObjects(100); return false" value="Delete 100 Object">
        <script type="text/javascript" src="../../closure-library/closure/goog/base.js"></script>
        <script type="text/javascript" src="../../src/deps.js"></script>
        <script type="text/javascript" src="../requireAllBox2D.js"></script>

@@ -1,7 +1,8 @@
 var updateCalls = [];
 var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8) /* gravity */, true /* allowSleep */);
-var doDebug = true;
+var doDebug = false;
 (function(){
+    var targetFPS = 200;
     var fixDef = new Box2D.Dynamics.b2FixtureDef();
     fixDef.density = 1.0;
     fixDef.friction = 0.5;
@@ -39,12 +40,12 @@ var doDebug = true;
         for (var i = 0; i < updateCalls.length; i++) {
             updateCalls[i]();
         }
-        world.Step(1 / 60, 10, 10);
+        world.Step(1 / targetFPS, 10, 10);
         if (doDebug) {
             world.DrawDebugData();
         }
         world.ClearForces();
      };
-     window.setInterval(update, 1000 / 60);
+     window.setInterval(update, 1000 / targetFPS);
 
 })();
