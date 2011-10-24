@@ -1,6 +1,6 @@
 var updateCalls = [];
 var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8) /* gravity */, true /* allowSleep */);
-var doDebug = false;
+var doDebug = true;
 (function(){
     var targetFPS = 200;
     var fixDef = new Box2D.Dynamics.b2FixtureDef();

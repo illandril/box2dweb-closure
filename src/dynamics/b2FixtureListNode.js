@@ -30,64 +30,57 @@
  * https://github.com/illandril/box2dweb-closure
  */
  
-goog.provide('Box2D.Dynamics.b2BodyListNode');
+goog.provide('Box2D.Dynamics.b2FixtureListNode');
 
 /**
- * @param {!Box2D.Dynamics.b2Body} body
+ * @param {!Box2D.Dynamics.b2Fixture} fixture
  * @constructor
  */
-Box2D.Dynamics.b2BodyListNode = function(body) {
+Box2D.Dynamics.b2FixtureListNode = function(fixture) {
     
     /**
      * @const
-     * @type {!Box2D.Dynamics.b2Body}
+     * @type {!Box2D.Dynamics.b2Fixture}
      */
-    this.body = body;
+    this.fixture = fixture;
     
     /**
      * @private
-     * @type {Box2D.Dynamics.b2BodyListNode}
+     * @type {Box2D.Dynamics.b2FixtureListNode}
      */
     this.next = null;
     
     /**
      * @private
-     * @type {Box2D.Dynamics.b2BodyListNode}
+     * @type {Box2D.Dynamics.b2FixtureListNode}
      */
     this.previous = null;
 };
 
 /**
- * @param {Box2D.Dynamics.b2BodyListNode} node
+ * @param {Box2D.Dynamics.b2FixtureListNode} node
  */
-Box2D.Dynamics.b2BodyListNode.prototype.SetNextNode = function(node) {
+Box2D.Dynamics.b2FixtureListNode.prototype.SetNextNode = function(node) {
     this.next = node;
 };
 
 /**
- * @param {Box2D.Dynamics.b2BodyListNode} node
+ * @param {Box2D.Dynamics.b2FixtureListNode} node
  */
-Box2D.Dynamics.b2BodyListNode.prototype.SetPreviousNode = function(node) {
+Box2D.Dynamics.b2FixtureListNode.prototype.SetPreviousNode = function(node) {
     this.previous = node;
 };
 
 /**
- * @return {Box2D.Dynamics.b2Body}
+ * @return {Box2D.Dynamics.b2FixtureListNode}
  */
-Box2D.Dynamics.b2BodyListNode.prototype.GetBody = function() {
-    return this.body;
-};
-
-/**
- * @return {Box2D.Dynamics.b2BodyListNode}
- */
-Box2D.Dynamics.b2BodyListNode.prototype.GetNextNode = function() {
+Box2D.Dynamics.b2FixtureListNode.prototype.GetNextNode = function() {
     return this.next;
 };
 
 /**
- * @return {Box2D.Dynamics.b2BodyListNode}
+ * @return {Box2D.Dynamics.b2FixtureListNode}
  */
-Box2D.Dynamics.b2BodyListNode.prototype.GetPreviousNode = function() {
+Box2D.Dynamics.b2FixtureListNode.prototype.GetPreviousNode = function() {
     return this.previous;
 };

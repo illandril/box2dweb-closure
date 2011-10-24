@@ -68,9 +68,9 @@ Box2D.Dynamics.Controllers.b2BuoyancyController.prototype.Step = function(step) 
         var massc = new Box2D.Common.Math.b2Vec2(0, 0);
         var area = 0.0;
         var mass = 0.0;
-        for (var fixture = body.GetFixtureList(); fixture; fixture = fixture.GetNext()) {
+        for (var fixtureNode = body.GetFixtureList().GetFirstNode(Box2D.Dynamics.b2FixtureList.TYPES.allFixtures); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
             var sc = new Box2D.Common.Math.b2Vec2(0, 0);
-            var sarea = fixture.GetShape().ComputeSubmergedArea(this.normal, this.offset, body.GetTransform(), sc);
+            var sarea = fixtureNode.fixture.GetShape().ComputeSubmergedArea(this.normal, this.offset, body.GetTransform(), sc);
             area += sarea;
             areac.x += sarea * sc.x;
             areac.y += sarea * sc.y;

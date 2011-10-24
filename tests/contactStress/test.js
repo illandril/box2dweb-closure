@@ -147,7 +147,7 @@
     };
     
     window.deleteContactStressTestObjects = function(count) {
-        for (var i = 0; i < count; i++) {
+        for (var i = 0; i < count && testObjects.length > 0; i++) {
             var index = Math.floor(Math.random() * testObjects.length);
             var body = testObjects.splice(index,1)[0];
             world.DestroyBody(body);

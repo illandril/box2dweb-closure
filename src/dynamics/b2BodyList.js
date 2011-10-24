@@ -46,7 +46,7 @@ Box2D.Dynamics.b2BodyList = function() {
      * @type {Array.<Box2D.Dynamics.b2BodyListNode>}
      */
     this.bodyFirstNodes = [];
-    for(var i = 0; i < Box2D.Dynamics.b2BodyList.TYPES.allBodies; i++) {
+    for(var i = 0; i <= Box2D.Dynamics.b2BodyList.TYPES.allBodies; i++) {
         this.bodyFirstNodes[i] = null;
     }
     
@@ -55,7 +55,7 @@ Box2D.Dynamics.b2BodyList = function() {
      * @type {Array.<Box2D.Dynamics.b2BodyListNode>}
      */
     this.bodyLastNodes = [];
-    for(var i = 0; i < Box2D.Dynamics.b2BodyList.TYPES.allBodies; i++) {
+    for(var i = 0; i <= Box2D.Dynamics.b2BodyList.TYPES.allBodies; i++) {
         this.bodyLastNodes[i] = null;
     }
     
@@ -84,7 +84,7 @@ Box2D.Dynamics.b2BodyList.prototype.GetFirstNode = function(type) {
  * @param {!Box2D.Dynamics.b2Body} body
  */
 Box2D.Dynamics.b2BodyList.prototype.AddBody = function(body) {
-    var bodyID = body.GetID();
+    var bodyID = body.ID;
     if (this.bodyNodeLookup[bodyID] == null) {
         this.CreateNode(body, bodyID, Box2D.Dynamics.b2BodyList.TYPES.allBodies);
         this.UpdateBody(body);
@@ -98,7 +98,7 @@ Box2D.Dynamics.b2BodyList.prototype.AddBody = function(body) {
  */
 Box2D.Dynamics.b2BodyList.prototype.UpdateBody = function(body) {
     var type = body.GetType();
-    var bodyID = body.GetID();
+    var bodyID = body.ID;
     var awake = body.IsAwake();
     var active = body.IsActive();
     if (type == Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
@@ -127,10 +127,10 @@ Box2D.Dynamics.b2BodyList.prototype.UpdateBody = function(body) {
  * @param {!Box2D.Dynamics.b2Body} body
  */
 Box2D.Dynamics.b2BodyList.prototype.RemoveBody = function(body) {
-    var bodyID = body.GetID();
+    var bodyID = body.ID;
     if (this.bodyNodeLookup[bodyID] != null) {
         goog.array.remove(body.m_lists, this);
-        for(var i = 0; i < Box2D.Dynamics.b2BodyList.TYPES.allBodies; i++) {
+        for(var i = 0; i <= Box2D.Dynamics.b2BodyList.TYPES.allBodies; i++) {
             this.RemoveNode(bodyID, i);
         }
         delete this.bodyNodeLookup[bodyID];
@@ -175,7 +175,7 @@ Box2D.Dynamics.b2BodyList.prototype.CreateNode = function(body, bodyID, type) {
     var nodeList = this.bodyNodeLookup[bodyID];
     if (nodeList == null) {
         nodeList = [];
-        for(var i = 0; i < Box2D.Dynamics.b2BodyList.TYPES.allBodies; i++) {
+        for(var i = 0; i <= Box2D.Dynamics.b2BodyList.TYPES.allBodies; i++) {
             nodeList[i] = null;
         }
         this.bodyNodeLookup[bodyID] = nodeList;
@@ -204,9 +204,9 @@ Box2D.Dynamics.b2BodyList.prototype.GetBodyCount = function() {
  * @enum {number}
  */
 Box2D.Dynamics.b2BodyList.TYPES = {
-    dynamicBodies: 1,
-    nonStaticBodies: 2,
-    activeBodies: 3,
-    nonStaticActiveAwakeBodies: 4,
-    allBodies: 5 // Assumed to be last by above code
+    dynamicBodies: 0,
+    nonStaticBodies: 1,
+    activeBodies: 2,
+    nonStaticActiveAwakeBodies: 3,
+    allBodies: 4 // Assumed to be last by above code
 };

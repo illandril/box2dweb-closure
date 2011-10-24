@@ -43,6 +43,13 @@ goog.require('Box2D.Collision.Shapes.b2MassData');
 Box2D.Dynamics.b2Fixture = function() {
     
     /**
+     * @const
+     * @private
+     * @type {string}
+     */
+    this.ID = "Fixture" + Box2D.Dynamics.b2Fixture.NEXT_ID++;
+    
+    /**
      * @private
      * @type {!Box2D.Dynamics.b2FilterData}
      */
@@ -59,12 +66,6 @@ Box2D.Dynamics.b2Fixture = function() {
      * @type {Box2D.Dynamics.b2Body}
      */
     this.m_body = null;
-    
-    /**
-     * @private
-     * @type {Box2D.Dynamics.b2Fixture}
-     */
-    this.m_next = null;
     
     /**
      * @private
@@ -89,6 +90,12 @@ Box2D.Dynamics.b2Fixture = function() {
      * @type {number}
      */
     this.m_restitution = 0.0;
+    
+    /**
+     * @private
+     * @type {Array.<Box2D.Dynamics.b2BodyList>}
+     */
+     this.m_lists = [];
 };
 
 Box2D.Dynamics.b2Fixture.prototype.GetShape = function() {
@@ -142,10 +149,6 @@ Box2D.Dynamics.b2Fixture.prototype.GetFilterData = function() {
 
 Box2D.Dynamics.b2Fixture.prototype.GetBody = function() {
     return this.m_body;
-};
-
-Box2D.Dynamics.b2Fixture.prototype.GetNext = function() {
-    return this.m_next;
 };
 
 Box2D.Dynamics.b2Fixture.prototype.TestPoint = function(p) {
@@ -223,7 +226,6 @@ Box2D.Dynamics.b2Fixture.prototype.Create = function(body, xf, def) {
     this.m_friction = def.friction;
     this.m_restitution = def.restitution;
     this.m_body = body;
-    this.m_next = null;
     this.m_filter = def.filter.Copy();
     this.m_isSensor = def.isSensor;
     this.m_shape = def.shape.Copy();
@@ -257,3 +259,9 @@ Box2D.Dynamics.b2Fixture.prototype.Synchronize = function(broadPhase, transform1
     var displacement = Box2D.Common.Math.b2Math.SubtractVV(transform2.position, transform1.position);
     broadPhase.MoveProxy(this.m_proxy, this.m_aabb, displacement);
 };
+
+/**
+ * @type {number}
+ * @private
+ */
+Box2D.Dynamics.b2Fixture.NEXT_ID = 0;
