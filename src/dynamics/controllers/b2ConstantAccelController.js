@@ -47,11 +47,8 @@ goog.inherits(Box2D.Dynamics.Controllers.b2ConstantAccelController, Box2D.Dynami
 
 Box2D.Dynamics.Controllers.b2ConstantAccelController.prototype.Step = function(step) {
     var smallA = new Box2D.Common.Math.b2Vec2(this.A.x * step.dt, this.A.y * step.dt);
-    for (var i = this.m_bodyList; i; i = i.nextBody) {
-        var body = i.body;
-        if (!body.IsAwake()) {
-            continue;
-        }
+    for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.awakeBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
+        var body = bodyNode.body;
         var oldVelocity = body.GetLinearVelocity();
         body.SetLinearVelocity(new Box2D.Common.Math.b2Vec2(oldVelocity.x + smallA.x, oldVelocity.y + smallA.y));
     }

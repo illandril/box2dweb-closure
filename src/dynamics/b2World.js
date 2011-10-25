@@ -52,6 +52,7 @@ goog.require('Box2D.Dynamics.b2DebugDraw');
 goog.require('Box2D.Dynamics.b2Island');
 goog.require('Box2D.Dynamics.b2TimeStep');
 goog.require('Box2D.Dynamics.Contacts.b2ContactSolver');
+goog.require('Box2D.Dynamics.Controllers.b2ControllerList');
 goog.require('Box2D.Dynamics.Joints.b2Joint');
 goog.require('Box2D.Dynamics.Joints.b2DistanceJoint');
 goog.require('Box2D.Dynamics.Joints.b2MouseJoint');
@@ -92,14 +93,14 @@ Box2D.Dynamics.b2World = function(gravity, doSleep) { /** @type {!Box2D.Dynamics
     /** @type {Box2D.Dynamics.Joints.b2Joint} */
     this.m_jointList = null;
 
-    /** @type {Box2D.Dynamics.Controllers.b2Controller} */
-    this.m_controllerList = null;
-
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.Controllers.b2ControllerList}
+     */
+    this.controllerList = new Box2D.Dynamics.Controllers.b2ControllerList();
+    
     /** @type {number} */
     this.m_jointCount = 0;
-
-    /** @type {number} */
-    this.m_controllerCount = 0;
 
     /** @type {boolean} */
     this.m_warmStarting = true;
@@ -200,11 +201,8 @@ Box2D.Dynamics.b2World.prototype.DestroyBody = function(b) {
         }
         this.DestroyJoint(jn0.joint);
     }
-    var coe = b.m_controllerList;
-    while (coe) {
-        var coe0 = coe;
-        coe = coe.nextController;
-        coe0.controller.RemoveBody(b);
+    for (var node = b.GetControllerList().GetFirstNode(); node; node = node.GetNextNode()) {
+        node.controller.RemoveBody(b);
     }
     var ce = b.m_contactList;
     while (ce) {
@@ -319,15 +317,22 @@ Box2D.Dynamics.b2World.prototype.DestroyJoint = function(j) {
 };
 
 /**
+ * @return {!Box2D.Dynamics.Controllers.b2ControllerList}
+ */
+Box2D.Dynamics.b2World.prototype.GetControllerList = function() {
+    return this.controllerList;
+};
+
+/**
  * @param {!Box2D.Dynamics.Controllers.b2Controller} c
  * @return {!Box2D.Dynamics.Controllers.b2Controller}
  */
 Box2D.Dynamics.b2World.prototype.AddController = function(c) {
-    c.m_next = this.m_controllerList;
-    c.m_prev = null;
-    this.m_controllerList = c;
+    if (c.m_world != null && c.m_world != this) {
+        throw new Error("Controller can only be a member of one world");
+    }
+    this.controllerList.AddController(c);
     c.m_world = this;
-    this.m_controllerCount++;
     return c;
 };
 
@@ -335,10 +340,8 @@ Box2D.Dynamics.b2World.prototype.AddController = function(c) {
  * @param {!Box2D.Dynamics.Controllers.b2Controller} c
  */
 Box2D.Dynamics.b2World.prototype.RemoveController = function(c) {
-    if (c.m_prev) c.m_prev.m_next = c.m_next;
-    if (c.m_next) c.m_next.m_prev = c.m_prev;
-    if (this.m_controllerList == c) this.m_controllerList = c.m_next;
-    this.m_controllerCount--;
+    this.controllerList.RemoveController(c);
+    c.m_world = null;
 };
 
 /**
@@ -346,18 +349,7 @@ Box2D.Dynamics.b2World.prototype.RemoveController = function(c) {
  * @return {!Box2D.Dynamics.Controllers.b2Controller}
  */
 Box2D.Dynamics.b2World.prototype.CreateController = function(controller) {
-    if (controller.m_world != this) {
-        throw new Error("Controller can only be a member of one world");
-    }
-    controller.m_next = this.m_controllerList;
-    controller.m_prev = null;
-    if (this.m_controllerList) {
-        this.m_controllerList.m_prev = controller;
-    }
-    this.m_controllerList = controller;
-    this.m_controllerCount++;
-    controller.m_world = this;
-    return controller;
+    return this.AddController(controller);
 };
 
 /**
@@ -365,16 +357,7 @@ Box2D.Dynamics.b2World.prototype.CreateController = function(controller) {
  */
 Box2D.Dynamics.b2World.prototype.DestroyController = function(controller) {
     controller.Clear();
-    if (controller.m_next) {
-        controller.m_next.m_prev = controller.m_prev;
-    }
-    if (controller.m_prev) {
-        controller.m_prev.m_next = controller.m_next;
-    }
-    if (controller == this.m_controllerList) {
-        this.m_controllerList = controller.m_next;
-    }
-    this.m_controllerCount--;
+    this.RemoveController();
 };
 
 /**
@@ -515,8 +498,8 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
         }
     }
     if (flags & Box2D.Dynamics.b2DebugDraw.e_controllerBit) {
-        for (var c = this.m_controllerList; c; c = c.m_next) {
-            c.Draw(this.m_debugDraw);
+        for (var node = this.controllerList.GetFirstNode(); node; node = node.GetNextNode()) {
+            node.controller.Draw(this.m_debugDraw);
         }
     }
     if (flags & Box2D.Dynamics.b2DebugDraw.e_pairBit) {
@@ -687,8 +670,8 @@ Box2D.Dynamics.b2World.prototype.IsLocked = function() {
  * @param {!Box2D.Dynamics.b2TimeStep} step
  */
 Box2D.Dynamics.b2World.prototype.Solve = function(step) {
-    for (var controller = this.m_controllerList; controller; controller = controller.m_next) {
-        controller.Step(step);
+    for (var node = this.controllerList.GetFirstNode(); node; node = node.GetNextNode()) {
+        node.controller.Step(step);
     }
     var m_island = new Box2D.Dynamics.b2Island(this.m_contactManager.m_contactListener, this.m_contactSolver);
     

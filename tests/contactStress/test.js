@@ -127,6 +127,18 @@
         return new Box2D.Common.Math.b2Vec2(Math.random() * 58 + 1, Math.random() * 38 + 1);
     };
     
+    var accelController1 = new Box2D.Dynamics.Controllers.b2ConstantAccelController();
+    accelController1.A = new Box2D.Common.Math.b2Vec2(10,0);
+    world.AddController(accelController1);
+    
+    var accelController2 = new Box2D.Dynamics.Controllers.b2ConstantAccelController();
+    accelController2.A = new Box2D.Common.Math.b2Vec2(-10,0);
+    world.AddController(accelController2);
+    
+    var gravController = new Box2D.Dynamics.Controllers.b2GravityController();
+    gravController.G = 10;
+    world.AddController(gravController);
+    
     var testObjectCount = 0;
     var testObjects = [];
     window.addContactStressTestObjects = function(count) {
@@ -143,6 +155,15 @@
             var body = world.CreateBody(bodyDef);
             body.CreateFixture(fixDef);
             testObjects.push(body);
+            for (var controllerNode = world.GetControllerList().GetFirstNode(); controllerNode; controllerNode = controllerNode.GetNextNode()) {
+                var addChance = 0.05;
+                if (controllerNode.controller instanceof Box2D.Dynamics.Controllers.b2GravityController) {
+                    addChance = 0.001;
+                }
+                if (Math.random() < addChance) {
+                    controllerNode.controller.AddBody(body);
+                }
+            }
         }
     };
     
@@ -154,13 +175,33 @@
         }
     };
     
-    for(var i = 0; i < 20; ++i) {
-        if(i % 2 === 0) {
-            createSpinner(getRandomPos(), new Box2D.Common.Math.b2Vec2(1, 1));
-        } else {
-            createSnake(getRandomPos(), new Box2D.Common.Math.b2Vec2(1.25, 0.25));
-        }
-        addContactStressTestObjects(10);
+    for(var i = 0; i < 5; ++i) {
+        createSpinner(getRandomPos(), new Box2D.Common.Math.b2Vec2(1, 1));
+        createSnake(getRandomPos(), new Box2D.Common.Math.b2Vec2(1.25, 0.25));
     }
-    
+    addContactStressTestObjects(250);
+    /*
+    updateCalls.push(function(){
+        if (Math.random() < 0.1) {
+            for (var controllerNode = world.GetControllerList().GetFirstNode(); controllerNode; controllerNode = controllerNode.GetNextNode()) {
+                if (Math.random() < 0.01) {
+                    controllerNode.controller.Clear();
+                } else {
+                    for (var bodyNode = controllerNode.controller.GetBodyList().GetFirstNode(); bodyNode; bodyNode = bodyNode.GetNextNode()) {
+                        if (Math.random() < 0.10) {
+                            controllerNode.controller.RemoveBody(bodyNode.body);
+                        }
+                    }
+                }
+                var addChance = 0.5;
+                if (controllerNode.controller instanceof Box2D.Dynamics.Controllers.b2GravityController) {
+                    addChance = 0.1;
+                }
+                if (Math.random() < addChance) {
+                    controllerNode.controller.AddBody(testObjects[Math.floor(Math.random() * testObjects.length)]);
+                }
+            }
+        }
+    });
+    */
 })();

@@ -32,78 +32,67 @@
  
 goog.provide('Box2D.Dynamics.Controllers.b2Controller');
 
-goog.require('Box2D.Dynamics.Controllers.b2ControllerEdge');
+goog.require('Box2D.Dynamics.b2BodyList');
 
 /**
  * @constructor
  */
-Box2D.Dynamics.Controllers.b2Controller = function() {};
+Box2D.Dynamics.Controllers.b2Controller = function() {
+    
+    /**
+     * @const
+     * @private
+     * @type {string}
+     */
+    this.ID = "Controller" + Box2D.Dynamics.Controllers.b2Controller.NEXT_ID++;
+    
+    /**
+     * @type {Box2D.Dynamics.b2World}
+     */
+    this.m_world = null;
+    
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2BodyList}
+     */
+    this.bodyList = new Box2D.Dynamics.b2BodyList();
+};
 
 Box2D.Dynamics.Controllers.b2Controller.prototype.Step = function(step) {};
 
 Box2D.Dynamics.Controllers.b2Controller.prototype.Draw = function(debugDraw) {};
 
+/**
+ * @param {!Box2D.Dynamics.b2Body} body
+ */
 Box2D.Dynamics.Controllers.b2Controller.prototype.AddBody = function(body) {
-    var edge = new Box2D.Dynamics.Controllers.b2ControllerEdge();
-    edge.controller = this;
-    edge.body = body;
-    edge.nextBody = this.m_bodyList;
-    edge.prevBody = null;
-    this.m_bodyList = edge;
-    if (edge.nextBody) {
-        edge.nextBody.prevBody = edge;
-    }
-    this.m_bodyCount++;
-    edge.nextController = body.m_controllerList;
-    edge.prevController = null;
-    body.m_controllerList = edge;
-    if (edge.nextController) {
-        edge.nextController.prevController = edge;
-    }
-    body.m_controllerCount++;
+    this.bodyList.AddBody(body);
+    body.AddController(this);
 };
 
+/**
+ * @param {!Box2D.Dynamics.b2Body} body
+ */
 Box2D.Dynamics.Controllers.b2Controller.prototype.RemoveBody = function(body) {
-    var edge = body.m_controllerList;
-    while (edge && edge.controller != this) {
-        edge = edge.nextController;
-    }
-    if (edge.prevBody) {
-        edge.prevBody.nextBody = edge.nextBody;
-    }
-    if (edge.nextBody) {
-        edge.nextBody.prevBody = edge.prevBody;
-    }
-    if (edge.nextController) {
-        edge.nextController.prevController = edge.prevController;
-    }
-    if (edge.prevController) {
-        edge.prevController.nextController = edge.nextController;
-    }
-    if (this.m_bodyList == edge) {
-        this.m_bodyList = edge.nextBody;
-    }
-    if (body.m_controllerList == edge) {
-        body.m_controllerList = edge.nextController;
-    }
-    body.m_controllerCount--;
-    this.m_bodyCount--;
+    this.bodyList.RemoveBody(body);
+    body.RemoveController(this);
 };
 
 Box2D.Dynamics.Controllers.b2Controller.prototype.Clear = function() {
-    while (this.m_bodyList) {
-        this.RemoveBody(this.m_bodyList.body);
+    for (var node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); node; node = node.GetNextNode()) {
+        this.RemoveBody(node.body);
     }
 };
 
-Box2D.Dynamics.Controllers.b2Controller.prototype.GetNext = function() {
-    return this.m_next;
-};
-
-Box2D.Dynamics.Controllers.b2Controller.prototype.GetWorld = function() {
-    return this.m_world;
-};
-
+/**
+ * @return {!Box2D.Dynamics.b2BodyList}
+ */
 Box2D.Dynamics.Controllers.b2Controller.prototype.GetBodyList = function() {
-    return this.m_bodyList;
+    return this.bodyList;
 };
+
+/**
+ * @type {number}
+ * @private
+ */
+Box2D.Dynamics.Controllers.b2Controller.NEXT_ID = 0;

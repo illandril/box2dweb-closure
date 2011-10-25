@@ -57,18 +57,15 @@ goog.inherits(Box2D.Dynamics.Controllers.b2BuoyancyController, Box2D.Dynamics.Co
 Box2D.Dynamics.Controllers.b2BuoyancyController.prototype.Step = function(step) {
     if (!this.m_bodyList) return;
     if (this.useWorldGravity) {
-        this.gravity = this.GetWorld().GetGravity().Copy();
+        this.gravity = this.m_world.GetGravity().Copy();
     }
-    for (var i = this.m_bodyList; i; i = i.nextBody) {
-        var body = i.body;
-        if (!body.IsAwake()) {
-            continue;
-        }
+    for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.awakeBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
+        var body = bodyNode.body;
         var areac = new Box2D.Common.Math.b2Vec2(0, 0);
         var massc = new Box2D.Common.Math.b2Vec2(0, 0);
         var area = 0.0;
         var mass = 0.0;
-        for (var fixtureNode = body.GetFixtureList().GetFirstNode(Box2D.Dynamics.b2FixtureList.TYPES.allFixtures); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
+        for (var fixtureNode = body.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
             var sc = new Box2D.Common.Math.b2Vec2(0, 0);
             var sarea = fixtureNode.fixture.GetShape().ComputeSubmergedArea(this.normal, this.offset, body.GetTransform(), sc);
             area += sarea;

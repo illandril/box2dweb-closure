@@ -30,97 +30,96 @@
  * https://github.com/illandril/box2dweb-closure
  */
  
-goog.provide('Box2D.Dynamics.b2FixtureList');
+goog.provide('Box2D.Dynamics.Controllers.b2ControllerList');
 
-goog.require('Box2D.Dynamics.b2FixtureListNode');
-
+goog.require('Box2D.Dynamics.Controllers.b2ControllerListNode');
 
 /**
  * @constructor
  */
-Box2D.Dynamics.b2FixtureList = function() {
+Box2D.Dynamics.Controllers.b2ControllerList = function() {
     
     /**
      * @private
-     * @type {Box2D.Dynamics.b2FixtureListNode}
+     * @type {Box2D.Dynamics.Controllers.b2ControllerListNode}
      */
-    this.fixtureFirstNode = null;
+    this.controllerFirstNode = null;
     
     /**
      * @private
-     * @type {Box2D.Dynamics.b2FixtureListNode}
+     * @type {Box2D.Dynamics.Controllers.b2ControllerListNode}
      */
-    this.fixtureLastNode = null;
+    this.controllerLastNode = null;
     
     /**
      * @private
-     * @type {Object.<Array.<Box2D.Dynamics.b2FixtureListNode>>}
+     * @type {Object.<Array.<Box2D.Dynamics.Controllers.b2ControllerListNode>>}
      */
-    this.fixtureNodeLookup = {};
+    this.controllerNodeLookup = {};
     
     /**
      * @private
      * @type {number}
      */
-    this.fixtureCount = 0;
+    this.controllerCount = 0;
 };
 
 /**
  * @param {number} type
- * @return {Box2D.Dynamics.b2FixtureListNode}
+ * @return {Box2D.Dynamics.Controllers.b2ControllerListNode}
  */
-Box2D.Dynamics.b2FixtureList.prototype.GetFirstNode = function() {
-    return this.fixtureFirstNode;
+Box2D.Dynamics.Controllers.b2ControllerList.prototype.GetFirstNode = function() {
+    return this.controllerFirstNode;
 };
 
 /**
- * @param {!Box2D.Dynamics.b2Fixture} fixture
+ * @param {!Box2D.Dynamics.Controllers.b2Controller} controller
  */
-Box2D.Dynamics.b2FixtureList.prototype.AddFixture = function(fixture) {
-    var fixtureID = fixture.ID;
-    if (this.fixtureNodeLookup[fixtureID] == null) {
-        var node = new Box2D.Dynamics.b2FixtureListNode(fixture);
-        var prevNode = this.fixtureLastNode;
+Box2D.Dynamics.Controllers.b2ControllerList.prototype.AddController = function(controller) {
+    var controllerID = controller.ID;
+    if (this.controllerNodeLookup[controllerID] == null) {
+        var node = new Box2D.Dynamics.Controllers.b2ControllerListNode(controller);
+        var prevNode = this.controllerLastNode;
         if (prevNode != null) {
             prevNode.SetNextNode(node);
         } else {
-            this.fixtureFirstNode = node;
+            this.controllerFirstNode = node;
         }
         node.SetPreviousNode(prevNode);
-        this.fixtureLastNode = node;
-        this.fixtureNodeLookup[fixtureID] = node;
-        this.fixtureCount++;
+        this.controllerLastNode = node;
+        this.controllerNodeLookup[controllerID] = node;
+        this.controllerCount++;
     }
 };
 
 /**
- * @param {!Box2D.Dynamics.b2Fixture} fixture
+ * @param {!Box2D.Dynamics.Controllers.b2Controller} controller
  */
-Box2D.Dynamics.b2FixtureList.prototype.RemoveFixture = function(fixture) {
-    var fixtureID = fixture.ID;
-    var node = this.fixtureNodeLookup[fixtureID];
+Box2D.Dynamics.Controllers.b2ControllerList.prototype.RemoveController = function(controller) {
+    var controllerID = controller.ID;
+    var node = this.controllerNodeLookup[controllerID];
     if (node == null) {
         return;
     }
     var prevNode = node.GetPreviousNode();
     var nextNode = node.GetNextNode();
     if (prevNode == null) {
-        this.fixtureFirstNode = nextNode;
+        this.controllerFirstNode = nextNode;
     } else {
         prevNode.SetNextNode(nextNode);
     }
     if (nextNode == null) {
-        this.fixtureLastNode = prevNode;
+        this.controllerLastNode = prevNode;
     } else {
         nextNode.SetPreviousNode(prevNode);
     }
-    delete this.fixtureNodeLookup[fixtureID];
-    this.fixtureCount--;
+    delete this.controllerNodeLookup[controllerID];
+    this.controllerCount--;
 };
 
 /**
  * @return {number}
  */
-Box2D.Dynamics.b2FixtureList.prototype.GetFixtureCount = function() {
-    return this.fixtureCount;
+Box2D.Dynamics.Controllers.b2ControllerList.prototype.GetControllerCount = function() {
+    return this.controllerCount;
 };

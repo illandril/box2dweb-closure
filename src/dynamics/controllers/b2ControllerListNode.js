@@ -30,9 +30,57 @@
  * https://github.com/illandril/box2dweb-closure
  */
  
-goog.provide('Box2D.Dynamics.Controllers.b2ControllerEdge');
+goog.provide('Box2D.Dynamics.Controllers.b2ControllerListNode');
 
 /**
+ * @param {!Box2D.Dynamics.b2Controller} controller
  * @constructor
  */
-Box2D.Dynamics.Controllers.b2ControllerEdge = function() {};
+Box2D.Dynamics.Controllers.b2ControllerListNode = function(controller) {
+    
+    /**
+     * @const
+     * @type {!Box2D.Dynamics.Controllers.b2Controller}
+     */
+    this.controller = controller;
+    
+    /**
+     * @private
+     * @type {Box2D.Dynamics.Controllers.b2ControllerListNode}
+     */
+    this.next = null;
+    
+    /**
+     * @private
+     * @type {Box2D.Dynamics.Controllers.b2ControllerListNode}
+     */
+    this.previous = null;
+};
+
+/**
+ * @param {Box2D.Dynamics.Controllers.b2ControllerListNode} node
+ */
+Box2D.Dynamics.Controllers.b2ControllerListNode.prototype.SetNextNode = function(node) {
+    this.next = node;
+};
+
+/**
+ * @param {Box2D.Dynamics.Controllers.b2ControllerListNode} node
+ */
+Box2D.Dynamics.Controllers.b2ControllerListNode.prototype.SetPreviousNode = function(node) {
+    this.previous = node;
+};
+
+/**
+ * @return {Box2D.Dynamics.Controllers.b2ControllerListNode}
+ */
+Box2D.Dynamics.Controllers.b2ControllerListNode.prototype.GetNextNode = function() {
+    return this.next;
+};
+
+/**
+ * @return {Box2D.Dynamics.Controllers.b2ControllerListNode}
+ */
+Box2D.Dynamics.Controllers.b2ControllerListNode.prototype.GetPreviousNode = function() {
+    return this.previous;
+};

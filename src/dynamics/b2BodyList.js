@@ -116,6 +116,11 @@ Box2D.Dynamics.b2BodyList.prototype.UpdateBody = function(body) {
     } else {
         this.RemoveNode(bodyID, Box2D.Dynamics.b2BodyList.TYPES.nonStaticActiveAwakeBodies);
     }
+    if (awake) {
+        this.CreateNode(body, bodyID, Box2D.Dynamics.b2BodyList.TYPES.awakeBodies);
+    } else {
+        this.RemoveNode(bodyID, Box2D.Dynamics.b2BodyList.TYPES.awakeBodies);
+    }
     if (active) {
         this.CreateNode(body, bodyID, Box2D.Dynamics.b2BodyList.TYPES.activeBodies);
     } else {
@@ -208,5 +213,6 @@ Box2D.Dynamics.b2BodyList.TYPES = {
     nonStaticBodies: 1,
     activeBodies: 2,
     nonStaticActiveAwakeBodies: 3,
-    allBodies: 4 // Assumed to be last by above code
+    awakeBodies: 4,
+    allBodies: 5 // Assumed to be last by above code
 };

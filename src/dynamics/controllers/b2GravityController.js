@@ -59,12 +59,15 @@ Box2D.Dynamics.Controllers.b2GravityController.prototype.Step = function(step) {
     var r2 = 0;
     var f = null;
     if (this.invSqr) {
-        for (i = this.m_bodyList; i; i = i.nextBody) {
-            var body1 = i.body;
+        for (var body1Node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); body1Node; body1Node = body1Node.GetNextNode()) {
+            var body1 = body1Node.body;
             var p1 = body1.GetWorldCenter();
             var mass1 = body1.GetMass();
-            for (j = this.m_bodyList; j != i; j = j.nextBody) {
-                var body2 = j.body;
+            for (var body2Node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); body2Node; body2Node = body2Node.GetNextNode()) {
+                var body2 = body2Node.body;
+                if ( !body1.IsAwake() && !body2.IsAwake() ) {
+                    continue;
+                }
                 var p2 = body2.GetWorldCenter();
                 var dx = p2.x - p1.x;
                 var dy = p2.y - p1.y;
@@ -72,7 +75,7 @@ Box2D.Dynamics.Controllers.b2GravityController.prototype.Step = function(step) {
                 if (r2 < Number.MIN_VALUE) {
                     continue;
                 }
-                var f = new Box2d.Common.Math.b2Vec2(dx, dy);
+                var f = new Box2D.Common.Math.b2Vec2(dx, dy);
                 f.Multiply(this.G / r2 / Math.sqrt(r2) * mass1 * body2.GetMass());
                 if (body1.IsAwake()) {
                     body1.ApplyForce(f, p1);
@@ -84,12 +87,15 @@ Box2D.Dynamics.Controllers.b2GravityController.prototype.Step = function(step) {
             }
         }
     } else {
-        for (i = this.m_bodyList; i; i = i.nextBody) {
-            var body1 = i.body;
+        for (var body1Node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); body1Node; body1Node = body1Node.GetNextNode()) {
+            var body1 = bodyNode.body;
             var p1 = body1.GetWorldCenter();
             var mass1 = body1.GetMass();
-            for (j = this.m_bodyList; j != i; j = j.nextBody) {
-                var body2 = j.body;
+            for (var body2Node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); body2Node; body2Node = body2Node.GetNextNode()) {
+                var body2 = bodyNode.body;
+                if ( !body1.IsAwake() && !body2.IsAwake() ) {
+                    continue;
+                }
                 var p2 = body2.GetWorldCenter();
                 var dx = p2.x - p1.x;
                 var dy = p2.y - p1.y;
@@ -97,7 +103,7 @@ Box2D.Dynamics.Controllers.b2GravityController.prototype.Step = function(step) {
                 if (r2 < Number.MIN_VALUE) {
                     continue;
                 }
-                var f = new Box2d.Common.Math.b2Vec2(dx, dy);
+                var f = new Box2D.Common.Math.b2Vec2(dx, dy);
                 f.Multiply(this.G / r2 * mass1 * body2.GetMass());
                 if (body1.IsAwake()) {
                     body1.ApplyForce(f, p1);

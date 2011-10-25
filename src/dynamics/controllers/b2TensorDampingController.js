@@ -66,11 +66,8 @@ Box2D.Dynamics.Controllers.b2TensorDampingController.prototype.Step = function(s
     var timestep = step.dt;
     if (timestep <= Number.MIN_VALUE) return;
     if (timestep > this.maxTimestep && this.maxTimestep > 0) timestep = this.maxTimestep;
-    for (var i = this.m_bodyList; i; i = i.nextBody) {
-        var body = i.body;
-        if (!body.IsAwake()) {
-            continue;
-        }
+    for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.awakeBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
+        var body = bodyNode.body;
         var damping = body.GetWorldVector(Box2D.Common.Math.b2Math.MulMV(this.T, body.GetLocalVector(body.GetLinearVelocity())));
         body.SetLinearVelocity(new Box2D.Common.Math.b2Vec2(body.GetLinearVelocity().x + damping.x * timestep, body.GetLinearVelocity().y + damping.y * timestep));
     }

@@ -41,6 +41,7 @@ goog.require('Box2D.Dynamics.b2BodyDef');
 goog.require('Box2D.Dynamics.b2Fixture');
 goog.require('Box2D.Dynamics.b2FixtureDef');
 goog.require('Box2D.Dynamics.b2FixtureList');
+goog.require('Box2D.Dynamics.Controllers.b2ControllerList');
 
 /**
  * @param {!Box2D.Dynamics.b2BodyDef} bd
@@ -140,9 +141,9 @@ Box2D.Dynamics.b2Body = function(bd, world) {
     
     /**
      * @private
-     * @type {Box2D.Dynamics.Controllers.b2Controller}
+     * @type {!Box2D.Dynamics.Controllers.b2ControllerList}
      */
-    this.m_controllerList = null;
+    this.controllerList = new Box2D.Dynamics.Controllers.b2ControllerList();
     
     /**
      * @private
@@ -771,7 +772,21 @@ Box2D.Dynamics.b2Body.prototype.GetJointList = function() {
 };
 
 Box2D.Dynamics.b2Body.prototype.GetControllerList = function() {
-    return this.m_controllerList;
+    return this.controllerList;
+};
+
+/**
+ * @param {!Box2D.Dynamics.Contollers.b2Controller} controller
+ */
+Box2D.Dynamics.b2Body.prototype.AddController = function(controller) {
+    this.controllerList.AddController(controller);
+};
+
+/**
+ * @param {!Box2D.Dynamics.Contollers.b2Controller} controller
+ */
+Box2D.Dynamics.b2Body.prototype.RemoveController = function(controller) {
+    this.controllerList.RemoveController(controller);
 };
 
 Box2D.Dynamics.b2Body.prototype.GetContactList = function() {
