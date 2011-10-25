@@ -436,7 +436,7 @@ Box2D.Dynamics.b2Body.prototype.Split = function(callback) {
     for (var node = body1.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
         var f = node.fixture;
         if (callback(f)) {
-            body1.fixtureList.RemoveFixture(f)
+            body1.fixtureList.RemoveFixture(f);
             body2.fixtureList.AddFixture(f);
         }
     }
@@ -457,8 +457,8 @@ Box2D.Dynamics.b2Body.prototype.Split = function(callback) {
 
 Box2D.Dynamics.b2Body.prototype.Merge = function(other) {
     for (var node = other.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
-        this.fixtureList.AddFixture(f)
-        other.fixtureList.RemoveFixture(f);
+        this.fixtureList.AddFixture(node.fixture);
+        other.fixtureList.RemoveFixture(node.fixture);
     }
     other.ResetMassData();
     this.ResetMassData();
