@@ -66,7 +66,6 @@ Box2D.Dynamics.b2FixtureList = function() {
 };
 
 /**
- * @param {number} type
  * @return {Box2D.Dynamics.b2FixtureListNode}
  */
 Box2D.Dynamics.b2FixtureList.prototype.GetFirstNode = function() {

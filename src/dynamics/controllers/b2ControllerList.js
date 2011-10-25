@@ -65,7 +65,6 @@ Box2D.Dynamics.Controllers.b2ControllerList = function() {
 };
 
 /**
- * @param {number} type
  * @return {Box2D.Dynamics.Controllers.b2ControllerListNode}
  */
 Box2D.Dynamics.Controllers.b2ControllerList.prototype.GetFirstNode = function() {
