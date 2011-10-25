@@ -92,10 +92,16 @@ Box2D.Dynamics.b2Fixture = function() {
     this.m_restitution = 0.0;
 };
 
+/**
+ * @return {Box2D.Collision.Shapes.b2Shape}
+ */
 Box2D.Dynamics.b2Fixture.prototype.GetShape = function() {
     return this.m_shape;
 };
 
+/**
+ * @param {boolean} sensor
+ */
 Box2D.Dynamics.b2Fixture.prototype.SetSensor = function(sensor) {
     if (this.m_isSensor == sensor) {
         return;
@@ -116,10 +122,16 @@ Box2D.Dynamics.b2Fixture.prototype.SetSensor = function(sensor) {
     }
 };
 
+/**
+ * @return {boolean}
+ */
 Box2D.Dynamics.b2Fixture.prototype.IsSensor = function() {
     return this.m_isSensor;
 };
 
+/**
+ * @param {!Box2D.Dynamics.b2FilterData} filter
+ */
 Box2D.Dynamics.b2Fixture.prototype.SetFilterData = function(filter) {
     this.m_filter = filter.Copy();
     if (this.m_body == null) {
@@ -137,14 +149,24 @@ Box2D.Dynamics.b2Fixture.prototype.SetFilterData = function(filter) {
     }
 };
 
+/**
+ * @return {!Box2D.Dynamics.b2FilterData}
+ */
 Box2D.Dynamics.b2Fixture.prototype.GetFilterData = function() {
     return this.m_filter.Copy();
 };
 
+/**
+ * @return {Box2D.Dynamics.b2Body}
+ */
 Box2D.Dynamics.b2Fixture.prototype.GetBody = function() {
     return this.m_body;
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} p
+ * @return {boolean}
+ */
 Box2D.Dynamics.b2Fixture.prototype.TestPoint = function(p) {
     return this.m_shape.TestPoint(this.m_body.GetTransform(), p);
 };
@@ -212,10 +234,18 @@ Box2D.Dynamics.b2Fixture.prototype.SetRestitution = function(restitution) {
     this.m_restitution = restitution;
 };
 
+/**
+ * @return {!Box2D.Collision.b2AABB}
+ */
 Box2D.Dynamics.b2Fixture.prototype.GetAABB = function() {
     return this.m_aabb;
 };
 
+/**
+ * @param {!Box2D.Dynamics.b2Body} body
+ * @param {!Box2D.Common.Math.b2Transform} xf
+ * @param {!Box2D.Dynamics.b2FixtureDef} def
+ */
 Box2D.Dynamics.b2Fixture.prototype.Create = function(body, xf, def) {
     this.m_friction = def.friction;
     this.m_restitution = def.restitution;
@@ -230,11 +260,18 @@ Box2D.Dynamics.b2Fixture.prototype.Destroy = function() {
     this.m_shape = null;
 };
 
+/**
+ * @param {!Box2D.Collision.IBroadPhase} broadPhase
+ * @param {!Box2D.Common.Math.b2Transform} xf
+ */
 Box2D.Dynamics.b2Fixture.prototype.CreateProxy = function(broadPhase, xf) {
     this.m_shape.ComputeAABB(this.m_aabb, xf);
     this.m_proxy = broadPhase.CreateProxy(this.m_aabb, this);
 };
 
+/**
+ * @param {!Box2D.Collision.IBroadPhase} broadPhase
+ */
 Box2D.Dynamics.b2Fixture.prototype.DestroyProxy = function(broadPhase) {
     if (this.m_proxy == null) {
         return;
@@ -243,6 +280,11 @@ Box2D.Dynamics.b2Fixture.prototype.DestroyProxy = function(broadPhase) {
     this.m_proxy = null;
 };
 
+/**
+ * @param {!Box2D.Collision.IBroadPhase} broadPhase
+ * @param {!Box2D.Common.Math.b2Transform} transform1
+ * @param {!Box2D.Common.Math.b2Transform} transform2
+ */
 Box2D.Dynamics.b2Fixture.prototype.Synchronize = function(broadPhase, transform1, transform2) {
     if (!this.m_proxy) return;
     var aabb1 = new Box2D.Collision.b2AABB();
