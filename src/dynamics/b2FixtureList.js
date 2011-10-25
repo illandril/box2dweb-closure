@@ -43,21 +43,15 @@ Box2D.Dynamics.b2FixtureList = function() {
     
     /**
      * @private
-     * @type {Array.<Box2D.Dynamics.b2FixtureListNode>}
+     * @type {Box2D.Dynamics.b2FixtureListNode}
      */
-    this.fixtureFirstNodes = [];
-    for(var i = 0; i <= Box2D.Dynamics.b2FixtureList.TYPES.allFixtures; i++) {
-        this.fixtureFirstNodes[i] = null;
-    }
+    this.fixtureFirstNode = null;
     
     /**
      * @private
-     * @type {Array.<Box2D.Dynamics.b2FixtureListNode>}
+     * @type {Box2D.Dynamics.b2FixtureListNode}
      */
-    this.fixtureLastNodes = [];
-    for(var i = 0; i <= Box2D.Dynamics.b2FixtureList.TYPES.allFixtures; i++) {
-        this.fixtureLastNodes[i] = null;
-    }
+    this.fixtureLastNode = null;
     
     /**
      * @private
@@ -76,8 +70,8 @@ Box2D.Dynamics.b2FixtureList = function() {
  * @param {number} type
  * @return {Box2D.Dynamics.b2FixtureListNode}
  */
-Box2D.Dynamics.b2FixtureList.prototype.GetFirstNode = function(type) {
-    return this.fixtureFirstNodes[type];
+Box2D.Dynamics.b2FixtureList.prototype.GetFirstNode = function() {
+    return this.fixtureFirstNode;
 };
 
 /**
@@ -86,43 +80,20 @@ Box2D.Dynamics.b2FixtureList.prototype.GetFirstNode = function(type) {
 Box2D.Dynamics.b2FixtureList.prototype.AddFixture = function(fixture) {
     var fixtureID = fixture.ID;
     if (this.fixtureNodeLookup[fixtureID] == null) {
-        this.CreateNode(fixture, fixtureID, Box2D.Dynamics.b2FixtureList.TYPES.allFixtures);
-        this.UpdateFixture(fixture);
-        fixture.m_lists.push(this);
-        this.fixtureCount++;
+        var node = this.fixtureNodeLookup[fixtureID];
+        if (node == null) {
+            node = new Box2D.Dynamics.b2FixtureListNode(fixture);
+            var prevNode = this.fixtureLastNode;
+            if (prevNode != null) {
+                prevNode.SetNextNode(node);
+            } else {
+                this.fixtureFirstNode = node;
+            }
+            node.SetPreviousNode(prevNode);
+            this.fixtureLastNode = node;
+            this.fixtureCount++;
+        }
     }
-};
-
-/**
- * @param {!Box2D.Dynamics.b2Fixture} fixture
- */
-Box2D.Dynamics.b2FixtureList.prototype.UpdateFixture = function(fixture) {
-    /*
-    var type = fixture.GetType();
-    var fixtureID = fixture.ID;
-    var awake = fixture.IsAwake();
-    var active = fixture.IsActive();
-    if (type == Box2D.Dynamics.b2FixtureDef.b2_dynamicFixture) {
-        this.CreateNode(fixture, fixtureID, Box2D.Dynamics.b2FixtureList.TYPES.dynamicFixtures);
-    } else {
-        this.RemoveNode(fixtureID, Box2D.Dynamics.b2FixtureList.TYPES.dynamicFixtures);
-    }
-    if (type != Box2D.Dynamics.b2FixtureDef.b2_staticFixture) {
-        this.CreateNode(fixture, fixtureID, Box2D.Dynamics.b2FixtureList.TYPES.nonStaticFixtures);
-    } else {
-        this.RemoveNode(fixtureID, Box2D.Dynamics.b2FixtureList.TYPES.nonStaticFixtures);
-    }
-    if (type != Box2D.Dynamics.b2FixtureDef.b2_staticFixture && active && awake) {
-        this.CreateNode(fixture, fixtureID, Box2D.Dynamics.b2FixtureList.TYPES.nonStaticActiveAwakeFixtures);
-    } else {
-        this.RemoveNode(fixtureID, Box2D.Dynamics.b2FixtureList.TYPES.nonStaticActiveAwakeFixtures);
-    }
-    if (active) {
-        this.CreateNode(fixture, fixtureID, Box2D.Dynamics.b2FixtureList.TYPES.activeFixtures);
-    } else {
-        this.RemoveNode(fixtureID, Box2D.Dynamics.b2FixtureList.TYPES.activeFixtures);
-    }
-    */
 };
 
 /**
@@ -130,69 +101,24 @@ Box2D.Dynamics.b2FixtureList.prototype.UpdateFixture = function(fixture) {
  */
 Box2D.Dynamics.b2FixtureList.prototype.RemoveFixture = function(fixture) {
     var fixtureID = fixture.ID;
-    if (this.fixtureNodeLookup[fixtureID] != null) {
-        goog.array.remove(fixture.m_lists, this);
-        for(var i = 0; i <= Box2D.Dynamics.b2FixtureList.TYPES.allFixtures; i++) {
-            this.RemoveNode(fixtureID, i);
-        }
-        delete this.fixtureNodeLookup[fixtureID];
-        this.fixtureCount--;
-    }
-};
-
-/**
- * @param {string} fixtureID
- * @param {number} type
- */
-Box2D.Dynamics.b2FixtureList.prototype.RemoveNode = function(fixtureID, type) {
-    var nodeList = this.fixtureNodeLookup[fixtureID];
-    if (nodeList == null) {
-        return;
-    }
-    var node = nodeList[type];
+    var node = this.fixtureNodeLookup[fixtureID];
     if (node == null) {
         return;
     }
-    nodeList[type] = null;
     var prevNode = node.GetPreviousNode();
     var nextNode = node.GetNextNode();
     if (prevNode == null) {
-        this.fixtureFirstNodes[type] = nextNode;
+        this.fixtureFirstNode = nextNode;
     } else {
         prevNode.SetNextNode(nextNode);
     }
     if (nextNode == null) {
-        this.fixtureLastNodes[type] = prevNode;
+        this.fixtureLastNode = prevNode;
     } else {
         nextNode.SetPreviousNode(prevNode);
     }
-};
-
-/**
- * @param {!Box2D.Dynamics.b2Fixture} fixture
- * @param {string} fixtureID
- * @param {number} type
- */
-Box2D.Dynamics.b2FixtureList.prototype.CreateNode = function(fixture, fixtureID, type) {
-    var nodeList = this.fixtureNodeLookup[fixtureID];
-    if (nodeList == null) {
-        nodeList = [];
-        for(var i = 0; i <= Box2D.Dynamics.b2FixtureList.TYPES.allFixtures; i++) {
-            nodeList[i] = null;
-        }
-        this.fixtureNodeLookup[fixtureID] = nodeList;
-    }
-    if (nodeList[type] == null) {
-        nodeList[type] = new Box2D.Dynamics.b2FixtureListNode(fixture);
-        var prevNode = this.fixtureLastNodes[type];
-        if (prevNode != null) {
-            prevNode.SetNextNode(nodeList[type]);
-        } else {
-            this.fixtureFirstNodes[type] = nodeList[type];
-        }
-        nodeList[type].SetPreviousNode(prevNode);
-        this.fixtureLastNodes[type] = nodeList[type];
-    }
+    delete this.fixtureNodeLookup[fixtureID];
+    this.fixtureCount--;
 };
 
 /**
@@ -200,11 +126,4 @@ Box2D.Dynamics.b2FixtureList.prototype.CreateNode = function(fixture, fixtureID,
  */
 Box2D.Dynamics.b2FixtureList.prototype.GetFixtureCount = function() {
     return this.fixtureCount;
-};
-
-/**
- * @enum {number}
- */
-Box2D.Dynamics.b2FixtureList.TYPES = {
-    allFixtures: 0 // Assumed to be last by above code
 };

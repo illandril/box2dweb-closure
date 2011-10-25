@@ -161,7 +161,7 @@ Box2D.Dynamics.b2World.prototype.SetBroadPhase = function(broadPhase) {
     var oldBroadPhase = this.m_contactManager.m_broadPhase;
     this.m_contactManager.m_broadPhase = broadPhase;
     for (var node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); node; node = node.GetNextNode()) {
-        for (var fixtureNode = node.body.GetFixtureList().GetFirstNode(Box2D.Dynamics.b2FixtureList.TYPES.allFixtures); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
+        for (var fixtureNode = node.body.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
             var f = fixtureNode.fixture;
             f.m_proxy = broadPhase.CreateProxy(oldBroadPhase.GetFatAABB(f.m_proxy), f);
         }
@@ -213,7 +213,7 @@ Box2D.Dynamics.b2World.prototype.DestroyBody = function(b) {
         this.m_contactManager.Destroy(ce0.contact);
     }
     b.m_contactList = null;
-    for (var fixtureNode = b.GetFixtureList().GetFirstNode(Box2D.Dynamics.b2FixtureList.TYPES.allFixtures); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
+    for (var fixtureNode = b.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
         // Why doesn't this happen in body.DestroyFixture?
         if (this.m_destructionListener) {
             this.m_destructionListener.SayGoodbyeFixture(fixtureNode.fixture);
@@ -488,7 +488,7 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
         for (var node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); node; node = node.GetNextNode()) {
             var b = node.body;
             var xf = b.m_xf;
-            for (var fixtureNode = b.GetFixtureList().GetFirstNode(Box2D.Dynamics.b2FixtureList.TYPES.allFixtures); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
+            for (var fixtureNode = b.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
                 var f = fixtureNode.fixture;
                 var s = f.GetShape();
                 if (!b.IsActive()) {
@@ -533,7 +533,7 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
         var aabbColor = new Box2D.Common.b2Color(0.0, 0.0, 0.8);
         for (var node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.activeBodies); node; node = node.GetNextNode()) {
             var b = node.body;
-            for (var fixtureNode = b.GetFixtureList().GetFirstNode(Box2D.Dynamics.b2FixtureList.TYPES.allFixtures); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
+            for (var fixtureNode = b.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
                 var f = fixtureNode.fixture;
                 var aabb = this.m_contactManager.m_broadPhase.GetFatAABB(f.m_proxy);
                 var vs = [new Box2D.Common.Math.b2Vec2(aabb.lowerBound.x, aabb.lowerBound.y), new Box2D.Common.Math.b2Vec2(aabb.upperBound.x, aabb.lowerBound.y), new Box2D.Common.Math.b2Vec2(aabb.upperBound.x, aabb.upperBound.y), new Box2D.Common.Math.b2Vec2(aabb.lowerBound.x, aabb.upperBound.y)];

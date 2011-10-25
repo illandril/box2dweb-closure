@@ -90,12 +90,6 @@ Box2D.Dynamics.b2Fixture = function() {
      * @type {number}
      */
     this.m_restitution = 0.0;
-    
-    /**
-     * @private
-     * @type {Array.<Box2D.Dynamics.b2BodyList>}
-     */
-     this.m_lists = [];
 };
 
 Box2D.Dynamics.b2Fixture.prototype.GetShape = function() {

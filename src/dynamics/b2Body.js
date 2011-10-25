@@ -297,7 +297,7 @@ Box2D.Dynamics.b2Body.prototype.SetPositionAndAngle = function(position, angle) 
     this.m_sweep.a0 = this.m_sweep.a = angle;
     var broadPhase = this.m_world.m_contactManager.m_broadPhase;
     
-    for (var node = this.fixtureList.GetFirstNode(Box2D.Dynamics.b2FixtureList.TYPES.allFixtures); node; node = node.GetNextNode()) {
+    for (var node = this.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
         node.fixture.Synchronize(broadPhase, this.m_xf, this.m_xf);
     }
     this.m_world.m_contactManager.FindNewContacts();
@@ -432,7 +432,7 @@ Box2D.Dynamics.b2Body.prototype.Split = function(callback) {
     var body1 = this;
     var body2 = this.m_world.CreateBody(this.GetDefinition());
     var prev;
-    for (var node = body1.fixtureList.GetFirstNode(Box2D.Dynamics.b2FixtureList.TYPES.allFixtures); node; node = node.GetNextNode()) {
+    for (var node = body1.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
         var f = node.fixture;
         if (callback(f)) {
             body1.fixtureList.RemoveFixture(f)
@@ -455,7 +455,7 @@ Box2D.Dynamics.b2Body.prototype.Split = function(callback) {
 };
 
 Box2D.Dynamics.b2Body.prototype.Merge = function(other) {
-    for (var node = other.fixtureList.GetFirstNode(Box2D.Dynamics.b2FixtureList.TYPES.allFixtures); node; node = node.GetNextNode()) {
+    for (var node = other.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
         this.fixtureList.AddFixture(f)
         other.fixtureList.RemoveFixture(f);
     }
@@ -524,7 +524,7 @@ Box2D.Dynamics.b2Body.prototype.ResetMassData = function() {
         return;
     }
     var center = new Box2D.Common.Math.b2Vec2(0, 0);
-    for (var node = this.fixtureList.GetFirstNode(Box2D.Dynamics.b2FixtureList.TYPES.allFixtures); node; node = node.GetNextNode()) {
+    for (var node = this.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
         var f = node.fixture;
         if (f.m_density == 0.0) {
             continue;
@@ -726,13 +726,13 @@ Box2D.Dynamics.b2Body.prototype.SetActive = function(flag) {
     if (flag) {
         this.m_active = true;
         var broadPhase = this.m_world.m_contactManager.m_broadPhase;
-        for (var node = this.fixtureList.GetFirstNode(Box2D.Dynamics.b2FixtureList.TYPES.allFixtures); node; node = node.GetNextNode()) {
+        for (var node = this.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
             node.fixture.CreateProxy(broadPhase, this.m_xf);
         }
     } else {
         this.m_active = false;
         var broadPhase = this.m_world.m_contactManager.m_broadPhase;
-        for (var node = this.fixtureList.GetFirstNode(Box2D.Dynamics.b2FixtureList.TYPES.allFixtures); node; node = node.GetNextNode()) {
+        for (var node = this.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
             node.fixture.DestroyProxy(broadPhase);
         }
         var ce = this.m_contactList;
@@ -791,7 +791,7 @@ Box2D.Dynamics.b2Body.prototype.SynchronizeFixtures = function() {
     xf1.position.y = this.m_sweep.c0.y - (tMat.col1.y * tVec.x + tMat.col2.y * tVec.y);
     var f;
     var broadPhase = this.m_world.m_contactManager.m_broadPhase;
-    for (var node = this.fixtureList.GetFirstNode(Box2D.Dynamics.b2FixtureList.TYPES.allFixtures); node; node = node.GetNextNode()) {
+    for (var node = this.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
         node.fixture.Synchronize(broadPhase, xf1, this.m_xf);
     }
 };
