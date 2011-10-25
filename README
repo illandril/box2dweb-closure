@@ -26,7 +26,9 @@ Anticipated future changes:
  * b2JointList (similar to b2BodyList and b2FixtureList)
  * b2ContactList (similar to replacement of b2ControllerEdge... maybe)
  * b2ContactID/Features consolidation
-
+ * (maybe) renaming of some variables (mostly removing the m_ prefixes, but some changes to make them more clear on what they are for)
+ * fixing visibility of most variables (by annotation and convention only - not by anything that would actually make them private as far as javascript is concerned)
+ * moving constant values from b2Settings (and maybe other areas) to Box2D.Consts
 
 Notice anything else that doesn't work (especially if it did work using box2dweb)?
 E-mail box2dweb@illandril.net
