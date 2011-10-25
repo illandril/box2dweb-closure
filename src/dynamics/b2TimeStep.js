@@ -33,14 +33,52 @@
 goog.provide('Box2D.Dynamics.b2TimeStep');
 
 /**
+ * @param {number} dt
+ * @param {number} dtRatio
+ * @param {number} positionIterations
+ * @param {number} velocityIterations
+ * @param {boolean} warmStarting
  * @constructor
  */
-Box2D.Dynamics.b2TimeStep = function() {};
-
-Box2D.Dynamics.b2TimeStep.prototype.Set = function(step) {
-    this.dt = step.dt;
-    this.inv_dt = step.inv_dt;
-    this.positionIterations = step.positionIterations;
-    this.velocityIterations = step.velocityIterations;
-    this.warmStarting = step.warmStarting;
+Box2D.Dynamics.b2TimeStep = function(dt, dtRatio, positionIterations, velocityIterations, warmStarting) {
+    /**
+     * @const
+     * @type {number}
+     */
+    this.dt = dt;
+    
+    var invDT = 0;
+    if (dt > 0) {
+        invDT = 1 / dt;
+    }
+    
+    /**
+     * @const
+     * @type {number}
+     */
+    this.inv_dt = invDT;
+    
+    /**
+     * @const
+     * @type {number}
+     */
+    this.dtRatio = dtRatio;
+    
+    /**
+     * @const
+     * @type {number}
+     */
+    this.positionIterations = positionIterations;
+    
+    /**
+     * @const
+     * @type {number}
+     */
+    this.velocityIterations = velocityIterations;
+    
+    /**
+     * @const
+     * @type {boolean}
+     */
+    this.warmStarting = warmStarting;
 };

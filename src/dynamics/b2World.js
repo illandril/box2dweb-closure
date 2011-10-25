@@ -474,21 +474,11 @@ Box2D.Dynamics.b2World.prototype.Step = function(dt, velocityIterations, positio
         this.m_newFixture = false;
     }
     this.m_isLocked = true;
-    var step = new Box2D.Dynamics.b2TimeStep();
-    step.dt = dt;
-    step.velocityIterations = velocityIterations;
-    step.positionIterations = positionIterations;
-    if (dt > 0.0) {
-        step.inv_dt = 1.0 / dt;
-    } else {
-        step.inv_dt = 0.0;
-    }
-    step.dtRatio = this.m_inv_dt0 * dt;
-    step.warmStarting = this.m_warmStarting;
+    var step = new Box2D.Dynamics.b2TimeStep(dt, this.m_inv_dt0 * dt /* dtRatio */, velocityIterations, positionIterations, this.m_warmStarting);
     this.m_contactManager.Collide();
     if (step.dt > 0.0) {
         this.Solve(step);
-        if (this.m_continuousPhysics && step.dt > 0.0) {
+        if (this.m_continuousPhysics) {
             this.SolveTOI(step);
         }
         this.m_inv_dt0 = step.inv_dt;
@@ -875,14 +865,7 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
                 jEdge.other.m_islandFlag = true;
             }
         }
-        var subStep = new Box2D.Dynamics.b2TimeStep();
-        subStep.warmStarting = false;
-        subStep.dt = (1.0 - minTOI) * step.dt;
-        subStep.inv_dt = 1.0 / subStep.dt;
-        subStep.dtRatio = 0.0;
-        subStep.velocityIterations = step.velocityIterations;
-        subStep.positionIterations = step.positionIterations;
-        m_island.SolveTOI(subStep);
+        m_island.SolveTOI(new Box2D.Dynamics.b2TimeStep((1.0 - minTOI) * step.dt /* dt */, 0 /* dtRatio */, step.velocityIterations, step.positionIterations, false /* warmStarting */));
 
         for (var i = 0; i < m_island.m_bodies.length; i++) {
             m_island.m_bodies[i].m_islandFlag = false;

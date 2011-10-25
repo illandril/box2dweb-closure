@@ -43,14 +43,12 @@ goog.require('Box2D.Dynamics.Contacts.b2PositionSolverManifold');
  * @constructor
  */
 Box2D.Dynamics.Contacts.b2ContactSolver = function() {
-    this.m_step = new Box2D.Dynamics.b2TimeStep();
     this.m_constraints = [];
 };
 
 Box2D.Dynamics.Contacts.b2ContactSolver.prototype.Initialize = function(step, contacts, contactCount) {
     if (contactCount === undefined) contactCount = 0;
     var contact;
-    this.m_step.Set(step);
     var i = 0;
     var tVec;
     var tMat;
