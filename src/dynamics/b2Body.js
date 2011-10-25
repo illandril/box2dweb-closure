@@ -235,8 +235,7 @@ Box2D.Dynamics.b2Body = function(bd, world) {
  */
 Box2D.Dynamics.b2Body.prototype.CreateFixture = function(def) {
     Box2D.Common.b2Settings.b2Assert(!this.m_world.IsLocked());
-    var fixture = new Box2D.Dynamics.b2Fixture();
-    fixture.Create(this, this.m_xf, def);
+    var fixture = new Box2D.Dynamics.b2Fixture(this, this.m_xf, def);
     if (this.m_active) {
         var broadPhase = this.m_world.m_contactManager.m_broadPhase;
         fixture.CreateProxy(broadPhase, this.m_xf);

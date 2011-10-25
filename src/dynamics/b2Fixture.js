@@ -38,9 +38,12 @@ goog.require('Box2D.Collision.b2AABB');
 goog.require('Box2D.Collision.Shapes.b2MassData');
 
 /**
+ * @param {!Box2D.Dynamics.b2Body} body
+ * @param {!Box2D.Common.Math.b2Transform} xf
+ * @param {!Box2D.Dynamics.b2FixtureDef} def
  * @constructor
  */
-Box2D.Dynamics.b2Fixture = function() {
+Box2D.Dynamics.b2Fixture = function(body, xf, def) {
     
     /**
      * @const
@@ -53,8 +56,8 @@ Box2D.Dynamics.b2Fixture = function() {
      * @private
      * @type {!Box2D.Dynamics.b2FilterData}
      */
-    this.m_filter = new Box2D.Dynamics.b2FilterData();
-    
+    this.m_filter = def.filter.Copy();
+
     /**
      * @private
      * @type {!Box2D.Collision.b2AABB}
@@ -63,37 +66,43 @@ Box2D.Dynamics.b2Fixture = function() {
     
     /**
      * @private
-     * @type {Box2D.Dynamics.b2Body}
+     * @type {!Box2D.Dynamics.b2Body}
      */
-    this.m_body = null;
+    this.m_body = body;
     
     /**
      * @private
-     * @type {Box2D.Collision.Shapes.b2Shape}
+     * @type {!Box2D.Collision.Shapes.b2Shape}
      */
-    this.m_shape = null;
-    
-    /**
-     * @private
-     * @type {number}
-     */
-    this.m_density = 0.0;
+    this.m_shape = def.shape.Copy();
     
     /**
      * @private
      * @type {number}
      */
-    this.m_friction = 0.0;
+    this.m_density = def.density;
     
     /**
      * @private
      * @type {number}
      */
-    this.m_restitution = 0.0;
+    this.m_friction = def.friction;
+    
+    /**
+     * @private
+     * @type {number}
+     */
+    this.m_restitution = def.restitution;
+    
+    /**
+     * @private
+     * @type {boolean}
+     */
+    this.m_isSensor = def.isSensor;
 };
 
 /**
- * @return {Box2D.Collision.Shapes.b2Shape}
+ * @return {!Box2D.Collision.Shapes.b2Shape}
  */
 Box2D.Dynamics.b2Fixture.prototype.GetShape = function() {
     return this.m_shape;
@@ -241,27 +250,12 @@ Box2D.Dynamics.b2Fixture.prototype.GetAABB = function() {
     return this.m_aabb;
 };
 
-/**
- * @param {!Box2D.Dynamics.b2Body} body
- * @param {!Box2D.Common.Math.b2Transform} xf
- * @param {!Box2D.Dynamics.b2FixtureDef} def
- */
-Box2D.Dynamics.b2Fixture.prototype.Create = function(body, xf, def) {
-    this.m_friction = def.friction;
-    this.m_restitution = def.restitution;
-    this.m_body = body;
-    this.m_filter = def.filter.Copy();
-    this.m_isSensor = def.isSensor;
-    this.m_shape = def.shape.Copy();
-    this.m_density = def.density;
-};
-
 Box2D.Dynamics.b2Fixture.prototype.Destroy = function() {
     this.m_shape = null;
 };
 
 /**
- * @param {!Box2D.Collision.IBroadPhase} broadPhase
+ * @param {!Box2D.Collision.b2DynamicTreeBroadPhase} broadPhase
  * @param {!Box2D.Common.Math.b2Transform} xf
  */
 Box2D.Dynamics.b2Fixture.prototype.CreateProxy = function(broadPhase, xf) {
@@ -270,7 +264,7 @@ Box2D.Dynamics.b2Fixture.prototype.CreateProxy = function(broadPhase, xf) {
 };
 
 /**
- * @param {!Box2D.Collision.IBroadPhase} broadPhase
+ * @param {!Box2D.Collision.b2DynamicTreeBroadPhase} broadPhase
  */
 Box2D.Dynamics.b2Fixture.prototype.DestroyProxy = function(broadPhase) {
     if (this.m_proxy == null) {
@@ -281,7 +275,7 @@ Box2D.Dynamics.b2Fixture.prototype.DestroyProxy = function(broadPhase) {
 };
 
 /**
- * @param {!Box2D.Collision.IBroadPhase} broadPhase
+ * @param {!Box2D.Collision.b2DynamicTreeBroadPhase} broadPhase
  * @param {!Box2D.Common.Math.b2Transform} transform1
  * @param {!Box2D.Common.Math.b2Transform} transform2
  */
