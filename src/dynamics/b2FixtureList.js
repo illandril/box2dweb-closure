@@ -54,7 +54,7 @@ Box2D.Dynamics.b2FixtureList = function() {
     
     /**
      * @private
-     * @type {Object.<Array.<Box2D.Dynamics.b2FixtureListNode>>}
+     * @type {Object.<Box2D.Dynamics.b2FixtureListNode>}
      */
     this.fixtureNodeLookup = {};
     

@@ -53,7 +53,7 @@ Box2D.Dynamics.Controllers.b2ControllerList = function() {
     
     /**
      * @private
-     * @type {Object.<Array.<Box2D.Dynamics.Controllers.b2ControllerListNode>>}
+     * @type {Object.<Box2D.Dynamics.Controllers.b2ControllerListNode>}
      */
     this.controllerNodeLookup = {};
     
