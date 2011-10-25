@@ -38,13 +38,37 @@ goog.require('Box2D.Dynamics.b2FilterData');
  * @constructor
  */
 Box2D.Dynamics.b2FixtureDef = function () {
+    
+    /**
+     * @type {!Box2D.Dynamics.b2FilterData}
+     */
     this.filter = new Box2D.Dynamics.b2FilterData();
-    this.shape = null;
-    this.friction = 0.2;
-    this.restitution = 0.0;
-    this.density = 0.0;
     this.filter.categoryBits = 0x0001;
     this.filter.maskBits = 0xFFFF;
     this.filter.groupIndex = 0;
+    
+    /**
+     * @type {Box2D.Collision.Shapes.b2Shape}
+     */
+    this.shape = null;
+    
+    /**
+     * @type {number}
+     */
+    this.friction = 0.2;
+    
+    /**
+     * @type {number}
+     */
+    this.restitution = 0.0;
+    
+    /**
+     * @type {number}
+     */
+    this.density = 0.0;
+    
+    /**
+     * @type {boolean}
+     */
     this.isSensor = false;
 };
