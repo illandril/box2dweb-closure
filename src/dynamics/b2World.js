@@ -189,7 +189,7 @@ Box2D.Dynamics.b2World.prototype.SetContactFilter = function(filter) {
 };
 
 /**
- * @param {!Box2D.Dynamics.b22ContactListener} listener
+ * @param {!Box2D.Dynamics.b2ContactListener} listener
  */
 Box2D.Dynamics.b2World.prototype.SetContactListener = function(listener) {
     this.m_contactManager.m_contactListener = listener;
