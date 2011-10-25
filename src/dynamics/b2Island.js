@@ -43,25 +43,47 @@ goog.require('Box2D.Common.b2Settings');
  * @constructor
  */
 Box2D.Dynamics.b2Island = function(listener, contactSolver) {
-    /** @type {!Box2D.Dynamics.b2ContactListener} */
+    
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2ContactListener}
+     */
     this.m_listener = listener;
     
-    /** @type {!Box2D.Dynamics.Contacts.b2ContactSolver} */
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.Contacts.b2ContactSolver}
+     */
     this.m_contactSolver = contactSolver;
     
-    /** @type {Array.<!Box2D.Dynamics.b2Body>} */
+    /**
+     * @private
+     * @type {Array.<!Box2D.Dynamics.b2Body>}
+     */
     this.m_bodies = [];
     
-    /** @type {Array.<!Box2D.Dynamics.b2Body>} */
+    /**
+     * @private
+     * @type {Array.<!Box2D.Dynamics.b2Body>}
+     */
     this.m_dynamicBodies = [];
     
-    /** @type {Array.<!Box2D.Dynamics.b2Body>} */
+    /**
+     * @private
+     * @type {Array.<!Box2D.Dynamics.b2Body>}
+     */
     this.m_nonStaticBodies = [];
     
-    /** @type {Array.<!Box2D.Dynamics.Contacts.b2Contact>} */
+    /**
+     * @private
+     * @type {Array.<!Box2D.Dynamics.Contacts.b2Contact>}
+     */
     this.m_contacts = [];
     
-    /** @type {Array.<!Box2D.Dynamics.Joints.b2Joint>} */
+    /**
+     * @private
+     * @type {Array.<!Box2D.Dynamics.Joints.b2Joint>}
+     */
     this.m_joints = [];
 };
 
@@ -255,6 +277,9 @@ Box2D.Dynamics.b2Island.prototype.SolveTOI = function(subStep) {
     this.Report(contactSolver.m_constraints);
 };
 
+/**
+ * @param {Array.<!Box2D.Dynamics.Contacts.b2ContactConstraint>} constraints
+ */
 Box2D.Dynamics.b2Island.prototype.Report = function(constraints) {
     if (this.m_listener == null) {
         return;
@@ -262,11 +287,12 @@ Box2D.Dynamics.b2Island.prototype.Report = function(constraints) {
     for (var i = 0; i < this.m_contacts.length; ++i) {
         var c = this.m_contacts[i];
         var cc = constraints[i];
+        var impulse = new Box2D.Dynamics.b2ContactImpulse();
         for (var j = 0; j < cc.pointCount; ++j) {
-            Box2D.Dynamics.b2Island.s_impulse.normalImpulses[j] = cc.points[j].normalImpulse;
-            Box2D.Dynamics.b2Island.s_impulse.tangentImpulses[j] = cc.points[j].tangentImpulse;
+            impulse.normalImpulses[j] = cc.points[j].normalImpulse;
+            impulse.tangentImpulses[j] = cc.points[j].tangentImpulse;
         }
-        this.m_listener.PostSolve(c, Box2D.Dynamics.b2Island.s_impulse);
+        this.m_listener.PostSolve(c, impulse);
     }
 };
 
@@ -296,5 +322,3 @@ Box2D.Dynamics.b2Island.prototype.AddContact = function(contact) {
 Box2D.Dynamics.b2Island.prototype.AddJoint = function(joint) {
     this.m_joints.push(joint);
 };
-
-Box2D.Dynamics.b2Island.s_impulse = new Box2D.Dynamics.b2ContactImpulse();
