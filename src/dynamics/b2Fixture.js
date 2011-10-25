@@ -251,7 +251,6 @@ Box2D.Dynamics.b2Fixture.prototype.GetAABB = function() {
 };
 
 Box2D.Dynamics.b2Fixture.prototype.Destroy = function() {
-    this.m_shape = null;
 };
 
 /**

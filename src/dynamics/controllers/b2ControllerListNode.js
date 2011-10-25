@@ -33,7 +33,7 @@
 goog.provide('Box2D.Dynamics.Controllers.b2ControllerListNode');
 
 /**
- * @param {!Box2D.Dynamics.b2Controller} controller
+ * @param {!Box2D.Dynamics.Controllers.b2Controller} controller
  * @constructor
  */
 Box2D.Dynamics.Controllers.b2ControllerListNode = function(controller) {

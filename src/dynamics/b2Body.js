@@ -775,14 +775,14 @@ Box2D.Dynamics.b2Body.prototype.GetControllerList = function() {
 };
 
 /**
- * @param {!Box2D.Dynamics.Contollers.b2Controller} controller
+ * @param {!Box2D.Dynamics.Controllers.b2Controller} controller
  */
 Box2D.Dynamics.b2Body.prototype.AddController = function(controller) {
     this.controllerList.AddController(controller);
 };
 
 /**
- * @param {!Box2D.Dynamics.Contollers.b2Controller} controller
+ * @param {!Box2D.Dynamics.Controllers.b2Controller} controller
  */
 Box2D.Dynamics.b2Body.prototype.RemoveController = function(controller) {
     this.controllerList.RemoveController(controller);
