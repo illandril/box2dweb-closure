@@ -15,9 +15,18 @@ Requires Google Closure: http://code.google.com/closure/
 
 
 Important changes from Box2DWeb:
+ * all userData references have been removed
  * b2Body types are now in b2BodyDef
  * b2Shape types are now in each specific Shape
  * most integer parameters now assume non-null, non-undefined values (like the b2Vec2 and b2Vec3 constructors)
+ * b2BodyList and b2FixtureList have been added, instead of each object acting as a node in a linked list
+ * b2ContollerEdge has been replaced by b2ControllerList and b2BodyList
 
-Notice anything else that doesn't work that did work using box2dweb?
+Anticipated future changes:
+ * b2JointList (similar to b2BodyList and b2FixtureList)
+ * b2ContactList (similar to replacement of b2ControllerEdge... maybe)
+ * b2ContactID/Features consolidation
+
+
+Notice anything else that doesn't work (especially if it did work using box2dweb)?
 E-mail box2dweb@illandril.net
