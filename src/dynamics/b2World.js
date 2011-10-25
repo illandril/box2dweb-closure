@@ -63,22 +63,42 @@ goog.require('Box2D.Dynamics.Joints.b2PulleyJoint');
  * @param {boolean} doSleep
  * @constructor
  */
-Box2D.Dynamics.b2World = function(gravity, doSleep) { /** @type {!Box2D.Dynamics.b2ContactManager} */
+Box2D.Dynamics.b2World = function(gravity, doSleep) {
+    
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2ContactManager}
+     */
     this.m_contactManager = new Box2D.Dynamics.b2ContactManager(this);
 
-    /** @type {!Box2D.Dynamics.Contacts.b2ContactSolver} */
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.Contacts.b2ContactSolver}
+     */
     this.m_contactSolver = new Box2D.Dynamics.Contacts.b2ContactSolver();
 
-    /** @type {boolean} */
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.m_isLocked = false;
 
-    /** @type {boolean} */
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.m_newFixture = false;
 
-    /** @type {Box2D.Dynamics.b2DestructionListener} */
+    /**
+     * @private
+     * @type {Box2D.Dynamics.b2DestructionListener}
+     */
     this.m_destructionListener = null;
 
-    /** @type {Box2D.Dynamics.b2DebugDraw} */
+    /**
+     * @private
+     * @type {Box2D.Dynamics.b2DebugDraw}
+     */
     this.m_debugDraw = null;
 
     /**
@@ -87,10 +107,16 @@ Box2D.Dynamics.b2World = function(gravity, doSleep) { /** @type {!Box2D.Dynamics
      */
     this.bodyList = new Box2D.Dynamics.b2BodyList();
 
-    /** @type {Box2D.Dynamics.Contacts.b2Contact} */
+    /**
+     * @private
+     * @type {Box2D.Dynamics.Contacts.b2Contact}
+     */
     this.m_contactList = null;
 
-    /** @type {Box2D.Dynamics.Joints.b2Joint} */
+    /**
+     * @private
+     * @type {Box2D.Dynamics.Joints.b2Joint}
+     */
     this.m_jointList = null;
 
     /**
@@ -99,25 +125,46 @@ Box2D.Dynamics.b2World = function(gravity, doSleep) { /** @type {!Box2D.Dynamics
      */
     this.controllerList = new Box2D.Dynamics.Controllers.b2ControllerList();
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this.m_jointCount = 0;
 
-    /** @type {boolean} */
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.m_warmStarting = true;
 
-    /** @type {boolean} */
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.m_continuousPhysics = true;
 
-    /** @type {boolean} */
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.m_allowSleep = doSleep;
 
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_gravity = gravity;
 
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this.m_inv_dt0 = 0.0;
 
-    /** @type {!Box2D.Dynamics.b2Body} */
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2Body}
+     */
     this.m_groundBody = this.CreateBody(new Box2D.Dynamics.b2BodyDef());
 };
 
@@ -328,7 +375,7 @@ Box2D.Dynamics.b2World.prototype.GetControllerList = function() {
  * @return {!Box2D.Dynamics.Controllers.b2Controller}
  */
 Box2D.Dynamics.b2World.prototype.AddController = function(c) {
-    if (c.m_world != null && c.m_world != this) {
+    if (c.m_world !== null && c.m_world != this) {
         throw new Error("Controller can only be a member of one world");
     }
     this.controllerList.AddController(c);
@@ -342,6 +389,7 @@ Box2D.Dynamics.b2World.prototype.AddController = function(c) {
 Box2D.Dynamics.b2World.prototype.RemoveController = function(c) {
     this.controllerList.RemoveController(c);
     c.m_world = null;
+    c.Clear();
 };
 
 /**
@@ -356,8 +404,7 @@ Box2D.Dynamics.b2World.prototype.CreateController = function(controller) {
  * @param {!Box2D.Dynamics.Controllers.b2Controller} controller
  */
 Box2D.Dynamics.b2World.prototype.DestroyController = function(controller) {
-    controller.Clear();
-    this.RemoveController();
+    this.RemoveController(controller);
 };
 
 /**
@@ -468,25 +515,21 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
         var color_kinematic = new Box2D.Common.b2Color(0.5, 0.5, 0.9);
         var color_dynamic_sleeping = new Box2D.Common.b2Color(0.6, 0.6, 0.6);
         var color_dynamic_awake = new Box2D.Common.b2Color(0.9, 0.7, 0.7);
-        for (var node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); node; node = node.GetNextNode()) {
-            var b = node.body;
+        for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
+            var b = bodyNode.body;
             var xf = b.m_xf;
             for (var fixtureNode = b.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
                 var f = fixtureNode.fixture;
                 var s = f.GetShape();
                 if (!b.IsActive()) {
                     this.DrawShape(s, b.m_xf, color_inactive);
-                }
-                else if (b.GetType() == Box2D.Dynamics.b2BodyDef.b2_staticBody) {
+                } else if (b.GetType() == Box2D.Dynamics.b2BodyDef.b2_staticBody) {
                     this.DrawShape(s, b.m_xf, color_static);
-                }
-                else if (b.GetType() == Box2D.Dynamics.b2BodyDef.b2_kinematicBody) {
+                } else if (b.GetType() == Box2D.Dynamics.b2BodyDef.b2_kinematicBody) {
                     this.DrawShape(s, b.m_xf, color_kinematic);
-                }
-                else if (!b.IsAwake()) {
+                } else if (!b.IsAwake()) {
                     this.DrawShape(s, b.m_xf, color_dynamic_sleeping);
-                }
-                else {
+                } else {
                     this.DrawShape(s, b.m_xf, color_dynamic_awake);
                 }
             }
@@ -498,8 +541,8 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
         }
     }
     if (flags & Box2D.Dynamics.b2DebugDraw.e_controllerBit) {
-        for (var node = this.controllerList.GetFirstNode(); node; node = node.GetNextNode()) {
-            node.controller.Draw(this.m_debugDraw);
+        for (var controllerNode = this.controllerList.GetFirstNode(); controllerNode; controllerNode = controllerNode.GetNextNode()) {
+            controllerNode.controller.Draw(this.m_debugDraw);
         }
     }
     if (flags & Box2D.Dynamics.b2DebugDraw.e_pairBit) {
@@ -514,8 +557,8 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
     }
     if (flags & Box2D.Dynamics.b2DebugDraw.e_aabbBit) {
         var aabbColor = new Box2D.Common.b2Color(0.0, 0.0, 0.8);
-        for (var node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.activeBodies); node; node = node.GetNextNode()) {
-            var b = node.body;
+        for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.activeBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
+            var b = bodyNode.body;
             for (var fixtureNode = b.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
                 var f = fixtureNode.fixture;
                 var aabb = this.m_contactManager.m_broadPhase.GetFatAABB(f.m_proxy);
@@ -525,8 +568,8 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
         }
     }
     if (flags & Box2D.Dynamics.b2DebugDraw.e_centerOfMassBit) {
-        for (var node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); node; node = node.GetNextNode()) {
-            var b = node.body;
+        for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
+            var b = bodyNode.body;
             Box2D.Dynamics.b2World.s_xf.R = b.m_xf.R;
             Box2D.Dynamics.b2World.s_xf.position = b.GetWorldCenter();
             this.m_debugDraw.DrawTransform(Box2D.Dynamics.b2World.s_xf);
@@ -539,12 +582,7 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
  * @param {!Box2D.Collision.b2AABB} aabb
  */
 Box2D.Dynamics.b2World.prototype.QueryAABB = function(callback, aabb) {
-    var broadPhase = this.m_contactManager.m_broadPhase;
-
-    var WorldQueryWrapper = function(fixture) {
-            return callback(fixture);
-        };
-    broadPhase.Query(WorldQueryWrapper, aabb);
+    this.m_contactManager.m_broadPhase.Query(callback, aabb);
 };
 
 /**
@@ -554,12 +592,12 @@ Box2D.Dynamics.b2World.prototype.QueryAABB = function(callback, aabb) {
 Box2D.Dynamics.b2World.prototype.QueryPoint = function(callback, p) {
     /** @type {function(!Box2D.Dynamics.b2Fixture): boolean} */
     var WorldQueryWrapper = function(fixture) {
-            if (fixture.TestPoint(p)) {
-                return callback(fixture);
-            } else {
-                return true;
-            }
-        };
+        if (fixture.TestPoint(p)) {
+            return callback(fixture);
+        } else {
+            return true;
+        }
+    };
     var aabb = new Box2D.Collision.b2AABB();
     aabb.lowerBound.Set(p.x - Box2D.Common.b2Settings.b2_linearSlop, p.y - Box2D.Common.b2Settings.b2_linearSlop);
     aabb.upperBound.Set(p.x + Box2D.Common.b2Settings.b2_linearSlop, p.y + Box2D.Common.b2Settings.b2_linearSlop);
@@ -608,9 +646,9 @@ Box2D.Dynamics.b2World.prototype.RayCastOne = function(point1, point2) {
      * @return {number}
      */
     var RayCastOneWrapper = function(fixture, point, normal, fraction) {
-            result = fixture;
-            return fraction;
-        };
+        result = fixture;
+        return fraction;
+    };
     this.RayCast(RayCastOneWrapper, point1, point2);
     return result;
 };
@@ -631,9 +669,9 @@ Box2D.Dynamics.b2World.prototype.RayCastAll = function(point1, point2) {
      * @return {number}
      */
     var RayCastAllWrapper = function(fixture, point, normal, fraction) {
-            result.push(fixture);
-            return 1;
-        };
+        result.push(fixture);
+        return 1;
+    };
     this.RayCast(RayCastAllWrapper, point1, point2);
     return result;
 };
@@ -670,13 +708,13 @@ Box2D.Dynamics.b2World.prototype.IsLocked = function() {
  * @param {!Box2D.Dynamics.b2TimeStep} step
  */
 Box2D.Dynamics.b2World.prototype.Solve = function(step) {
-    for (var node = this.controllerList.GetFirstNode(); node; node = node.GetNextNode()) {
-        node.controller.Step(step);
+    for (var controllerNode = this.controllerList.GetFirstNode(); controllerNode; controllerNode = controllerNode.GetNextNode()) {
+        controllerNode.controller.Step(step);
     }
     var m_island = new Box2D.Dynamics.b2Island(this.m_contactManager.m_contactListener, this.m_contactSolver);
     
-    for (var node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); node; node = node.GetNextNode()) {
-        node.body.m_islandFlag = false;
+    for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
+        bodyNode.body.m_islandFlag = false;
     }
     for (var c = this.m_contactList; c; c = c.m_next) {
         c.m_islandFlag = false;
@@ -685,8 +723,8 @@ Box2D.Dynamics.b2World.prototype.Solve = function(step) {
         j.m_islandFlag = false;
     }
     
-    for (var node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.nonStaticActiveAwakeBodies); node; node = node.GetNextNode()) {
-        var seed = node.body;
+    for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.nonStaticActiveAwakeBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
+        var seed = bodyNode.body;
         if (seed.m_islandFlag) {
             continue;
         }
@@ -733,8 +771,8 @@ Box2D.Dynamics.b2World.prototype.Solve = function(step) {
         }
         m_island.Solve(step, this.m_gravity, this.m_allowSleep);
     }
-    for (var node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.nonStaticActiveAwakeBodies); node; node = node.GetNextNode()) {
-        node.body.SynchronizeFixtures();
+    for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.nonStaticActiveAwakeBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
+        bodyNode.body.SynchronizeFixtures();
     }
     this.m_contactManager.FindNewContacts();
 };
@@ -744,8 +782,8 @@ Box2D.Dynamics.b2World.prototype.Solve = function(step) {
  */
 Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
     var m_island = new Box2D.Dynamics.b2Island(this.m_contactManager.m_contactListener, this.m_contactSolver);
-    for (var node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); node; node = node.GetNextNode()) {
-        var b = node.body;
+    for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
+        var b = bodyNode.body;
         b.m_islandFlag = false;
         b.m_sweep.t0 = 0.0;
     }
@@ -869,6 +907,7 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
 
 /**
  * @param {!Box2D.Dynamics.b2TimeStep} step
+ * @return {{minContact: Box2D.Dynamics.Contacts.b2Contact, minTOI: number}}
  */
 Box2D.Dynamics.b2World.prototype._SolveTOI2 = function(step) {
     var minContact = null;
