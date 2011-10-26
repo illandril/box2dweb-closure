@@ -55,7 +55,6 @@ Box2D.Dynamics.Controllers.b2BuoyancyController = function() {
 goog.inherits(Box2D.Dynamics.Controllers.b2BuoyancyController, Box2D.Dynamics.Controllers.b2Controller);
 
 Box2D.Dynamics.Controllers.b2BuoyancyController.prototype.Step = function(step) {
-    if (!this.m_bodyList) return;
     if (this.useWorldGravity) {
         this.gravity = this.m_world.GetGravity().Copy();
     }

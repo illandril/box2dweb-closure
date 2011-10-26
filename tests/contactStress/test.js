@@ -135,9 +135,19 @@
     accelController2.A = new Box2D.Common.Math.b2Vec2(-10,0);
     world.AddController(accelController2);
     
+    var forceController = new Box2D.Dynamics.Controllers.b2ConstantForceController();
+    forceController.F = new Box2D.Common.Math.b2Vec2(1.75,-1.5);
+    world.AddController(forceController);
+    
     var gravController = new Box2D.Dynamics.Controllers.b2GravityController();
     gravController.G = 10;
     world.AddController(gravController);
+    
+    var bouyancyController = new Box2D.Dynamics.Controllers.b2BuoyancyController();
+    bouyancyController.offset = 0;
+    bouyancyController.density = 2;
+    world.AddController(bouyancyController);
+    
     
     var testObjectCount = 0;
     var testObjects = [];

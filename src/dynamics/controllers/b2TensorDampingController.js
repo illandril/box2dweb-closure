@@ -48,9 +48,11 @@ Box2D.Dynamics.Controllers.b2TensorDampingController = function() {
 };
 goog.inherits(Box2D.Dynamics.Controllers.b2TensorDampingController, Box2D.Dynamics.Controllers.b2Controller);
 
+/**
+ * @param {number} xDamping
+ * @param {number} yDamping
+ */
 Box2D.Dynamics.Controllers.b2TensorDampingController.prototype.SetAxisAligned = function(xDamping, yDamping) {
-    if (xDamping === undefined) xDamping = 0;
-    if (yDamping === undefined) yDamping = 0;
     this.T.col1.x = (-xDamping);
     this.T.col1.y = 0;
     this.T.col2.x = 0;
