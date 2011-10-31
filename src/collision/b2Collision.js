@@ -72,34 +72,44 @@ Box2D.Collision.b2Collision.ClipSegmentToLine = function(vOut, vIn, normal, offs
     return numOut;
 };
 
+/**
+ * @param {!Box2D.Collision.Shapes.b2PolygonShape} poly1
+ * @param {!Box2D.Common.Math.b2Transform} xf1
+ * @param {number} edge1
+ * @param {!Box2D.Collision.Shapes.b2PolygonShape} poly2
+ * @param {!Box2D.Common.Math.b2Transform} xf1
+ * @return {number}
+ */
 Box2D.Collision.b2Collision.EdgeSeparation = function(poly1, xf1, edge1, poly2, xf2) {
-    if (edge1 === undefined) edge1 = 0;
-    var vertices1 = poly1.m_vertices;
-    var normals1 = poly1.m_normals;
-    var vertices2 = poly2.m_vertices;
-    var normal1WorldX = (xf1.R.col1.x * normals1[edge1].x + xf1.R.col2.x * normals1[edge1].y);
-    var normal1WorldY = (xf1.R.col1.y * normals1[edge1].x + xf1.R.col2.y * normals1[edge1].y);
+    var normal1WorldX = (xf1.R.col1.x * poly1.m_normals[edge1].x + xf1.R.col2.x * poly1.m_normals[edge1].y);
+    var normal1WorldY = (xf1.R.col1.y * poly1.m_normals[edge1].x + xf1.R.col2.y * poly1.m_normals[edge1].y);
     var normal1X = (xf2.R.col1.x * normal1WorldX + xf2.R.col1.y * normal1WorldY);
     var normal1Y = (xf2.R.col2.x * normal1WorldX + xf2.R.col2.y * normal1WorldY);
     var index = 0;
     var minDot = Number.MAX_VALUE;
-    for (var i = 0; i < poly2.m_vertexCount; ++i) {
-        var dot = vertices2[i].x * normal1X + vertices2[i].y * normal1Y;
+    for (var i = 0; i < poly2.m_vertexCount; i++) {
+        var dot = poly2.m_vertices[i].x * normal1X + poly2.m_vertices[i].y * normal1Y;
         if (dot < minDot) {
             minDot = dot;
             index = i;
         }
     }
-    var v1X = xf1.position.x + (xf1.R.col1.x * vertices1[edge1].x + xf1.R.col2.x * vertices1[edge1].y);
-    var v1Y = xf1.position.y + (xf1.R.col1.y * vertices1[edge1].x + xf1.R.col2.y * vertices1[edge1].y);
-    var v2X = xf2.position.x + (xf2.R.col1.x * vertices2[index].x + xf2.R.col2.x * vertices2[index].y);
-    var v2Y = xf2.position.y + (xf2.R.col1.y * vertices2[index].x + xf2.R.col2.y * vertices2[index].y);
+    var v1X = xf1.position.x + (xf1.R.col1.x * poly1.m_vertices[edge1].x + xf1.R.col2.x * poly1.m_vertices[edge1].y);
+    var v1Y = xf1.position.y + (xf1.R.col1.y * poly1.m_vertices[edge1].x + xf1.R.col2.y * poly1.m_vertices[edge1].y);
+    var v2X = xf2.position.x + (xf2.R.col1.x * poly2.m_vertices[index].x + xf2.R.col2.x * poly2.m_vertices[index].y);
+    var v2Y = xf2.position.y + (xf2.R.col1.y * poly2.m_vertices[index].x + xf2.R.col2.y * poly2.m_vertices[index].y);
     var separation = (v2X - v1X) * normal1WorldX + (v2Y - v1Y) * normal1WorldY;
     return separation;
 };
 
-Box2D.Collision.b2Collision.FindMaxSeparation = function(edgeIndex, poly1, xf1, poly2, xf2) {
-    var normals1 = poly1.m_normals;
+/**
+ * @param {!Box2D.Collision.Shapes.b2PolygonShape} poly1
+ * @param {!Box2D.Common.Math.b2Transform} xf1
+ * @param {!Box2D.Collision.Shapes.b2PolygonShape} poly2
+ * @param {!Box2D.Common.Math.b2Transform} xf1
+ * @return {{bestEdge: number, separation: number}}
+ */
+Box2D.Collision.b2Collision.FindMaxSeparation = function(poly1, xf1, poly2, xf2) {
     var dX = xf2.position.x + (xf2.R.col1.x * poly2.m_centroid.x + xf2.R.col2.x * poly2.m_centroid.y);
     var dY = xf2.position.y + (xf2.R.col1.y * poly2.m_centroid.x + xf2.R.col2.y * poly2.m_centroid.y);
     dX -= xf1.position.x + (xf1.R.col1.x * poly1.m_centroid.x + xf1.R.col2.x * poly1.m_centroid.y);
@@ -109,7 +119,7 @@ Box2D.Collision.b2Collision.FindMaxSeparation = function(edgeIndex, poly1, xf1, 
     var edge = 0;
     var maxDot = (-Number.MAX_VALUE);
     for (var i = 0; i < poly1.m_vertexCount; ++i) {
-        var dot = (normals1[i].x * dLocal1X + normals1[i].y * dLocal1Y);
+        var dot = (poly1.m_normals[i].x * dLocal1X + poly1.m_normals[i].y * dLocal1Y);
         if (dot > maxDot) {
             maxDot = dot;
             edge = i;
@@ -128,41 +138,43 @@ Box2D.Collision.b2Collision.FindMaxSeparation = function(edgeIndex, poly1, xf1, 
     var sNext = Box2D.Collision.b2Collision.EdgeSeparation(poly1, xf1, nextEdge, poly2, xf2);
     var bestEdge = 0;
     var bestSeparation = 0;
-    var increment = 0;
     if (sPrev > s && sPrev > sNext) {
-        increment = -1;
         bestEdge = prevEdge;
         bestSeparation = sPrev;
-    } else if (sNext > s) {
-        increment = 1;
-        bestEdge = nextEdge;
-        bestSeparation = sNext;
-    } else {
-        edgeIndex[0] = edge;
-        return s;
-    }
-    while (true) {
-        if (increment == -1) {
+        while (true) {
             edge = bestEdge - 1;
             if (edge < 0) {
                 edge = poly1.m_vertexCount - 1;
             }
-        } else {
+            s = Box2D.Collision.b2Collision.EdgeSeparation(poly1, xf1, edge, poly2, xf2);
+            if (s > bestSeparation) {
+                bestEdge = edge;
+                bestSeparation = s;
+            } else {
+                break;
+            }
+        }
+    } else if (sNext > s) {
+        bestEdge = nextEdge;
+        bestSeparation = sNext;
+        while (true) {
             edge = bestEdge + 1;
             if (edge >= poly1.m_vertexCount) {
                 edge = 0;
             }
+            s = Box2D.Collision.b2Collision.EdgeSeparation(poly1, xf1, edge, poly2, xf2);
+            if (s > bestSeparation) {
+                bestEdge = edge;
+                bestSeparation = s;
+            } else {
+                break;
+            }
         }
-        s = Box2D.Collision.b2Collision.EdgeSeparation(poly1, xf1, edge, poly2, xf2);
-        if (s > bestSeparation) {
-            bestEdge = edge;
-            bestSeparation = s;
-        } else {
-            break;
-        }
+    } else {
+        bestEdge = edge;
+        bestSeparation = s;
     }
-    edgeIndex[0] = bestEdge;
-    return bestSeparation;
+    return {bestEdge: bestEdge, separation: bestSeparation};
 };
 
 Box2D.Collision.b2Collision.FindIncidentEdge = function(c, poly1, xf1, edge1, poly2, xf2) {
@@ -205,15 +217,14 @@ Box2D.Collision.b2Collision.CollidePolygons = function(manifold, polyA, xfA, pol
     manifold.m_pointCount = 0;
     var totalRadius = polyA.m_radius + polyB.m_radius;
     
-    Box2D.Collision.b2Collision.s_edgeAO[0] = 0;
-    var separationA = Box2D.Collision.b2Collision.FindMaxSeparation(Box2D.Collision.b2Collision.s_edgeAO, polyA, xfA, polyB, xfB);
-    if (separationA > totalRadius) {
+    var separationEdgeA = Box2D.Collision.b2Collision.FindMaxSeparation(polyA, xfA, polyB, xfB);
+    var edge1 = separationEdgeA.bestEdge;
+    if (separationEdgeA.separation > totalRadius) {
         return;
     }
     
-    Box2D.Collision.b2Collision.s_edgeBO[0] = 0;
-    var separationB = Box2D.Collision.b2Collision.FindMaxSeparation(Box2D.Collision.b2Collision.s_edgeBO, polyB, xfB, polyA, xfA);
-    if (separationB > totalRadius) {
+    var separationEdgeB = Box2D.Collision.b2Collision.FindMaxSeparation(polyB, xfB, polyA, xfA);
+    if (separationEdgeB.separation > totalRadius) {
         return;
     }
     
@@ -221,15 +232,14 @@ Box2D.Collision.b2Collision.CollidePolygons = function(manifold, polyA, xfA, pol
     var poly2 = polyB;
     var xf1 = xfA;
     var xf2 = xfB;
-    var edge1 = Box2D.Collision.b2Collision.s_edgeAO[0];
     var flip = 0;
     manifold.m_type = Box2D.Collision.b2Manifold.e_faceA;
-    if (separationB > 0.98 /* k_relativeTol */ * separationA + 0.001 /* k_absoluteTol */ ) {
+    if (separationEdgeB.separation > 0.98 /* k_relativeTol */ * separationEdgeA.separation + 0.001 /* k_absoluteTol */ ) {
         poly1 = polyB;
         poly2 = polyA;
         xf1 = xfB;
         xf2 = xfA;
-        edge1 = Box2D.Collision.b2Collision.s_edgeBO[0];
+        edge1 = separationEdgeB.bestEdge;
         manifold.m_type = Box2D.Collision.b2Manifold.e_faceB;
         flip = 1;
     }
@@ -399,8 +409,6 @@ Box2D.Collision.b2Collision.TestOverlap = function(a, b) {
 Box2D.Collision.b2Collision.s_incidentEdge = Box2D.Collision.b2Collision.MakeClipPointVector();
 Box2D.Collision.b2Collision.s_clipPoints1 = Box2D.Collision.b2Collision.MakeClipPointVector();
 Box2D.Collision.b2Collision.s_clipPoints2 = Box2D.Collision.b2Collision.MakeClipPointVector();
-Box2D.Collision.b2Collision.s_edgeAO = [0];
-Box2D.Collision.b2Collision.s_edgeBO = [0];
 Box2D.Collision.b2Collision.s_localTangent = new Box2D.Common.Math.b2Vec2(0, 0);
 Box2D.Collision.b2Collision.s_localNormal = new Box2D.Common.Math.b2Vec2(0, 0);
 Box2D.Collision.b2Collision.s_planePoint = new Box2D.Common.Math.b2Vec2(0, 0);
