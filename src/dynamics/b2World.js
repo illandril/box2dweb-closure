@@ -51,6 +51,7 @@ goog.require('Box2D.Dynamics.b2ContactManager');
 goog.require('Box2D.Dynamics.b2DebugDraw');
 goog.require('Box2D.Dynamics.b2Island');
 goog.require('Box2D.Dynamics.b2TimeStep');
+goog.require('Box2D.Dynamics.Contacts.b2ContactList');
 goog.require('Box2D.Dynamics.Contacts.b2ContactSolver');
 goog.require('Box2D.Dynamics.Controllers.b2ControllerList');
 goog.require('Box2D.Dynamics.Joints.b2Joint');
@@ -112,6 +113,12 @@ Box2D.Dynamics.b2World = function(gravity, doSleep) {
      * @type {Box2D.Dynamics.Contacts.b2Contact}
      */
     this.m_contactList = null;
+    
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.Contacts.b2ContactList}
+     */
+     this.contactList = new Box2D.Dynamics.Contacts.b2ContactList();
 
     /**
      * @private
@@ -251,11 +258,8 @@ Box2D.Dynamics.b2World.prototype.DestroyBody = function(b) {
     for (var node = b.GetControllerList().GetFirstNode(); node; node = node.GetNextNode()) {
         node.controller.RemoveBody(b);
     }
-    var ce = b.m_contactList;
-    while (ce) {
-        var ce0 = ce;
-        ce = ce.next;
-        this.m_contactManager.Destroy(ce0.contact);
+    for (var contactNode = b.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+        this.m_contactManager.Destroy(contactNode.contact);
     }
     b.m_contactList = null;
     for (var fixtureNode = b.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
@@ -439,7 +443,7 @@ Box2D.Dynamics.b2World.prototype.GetJointCount = function() {
  * @return {number}
  */
 Box2D.Dynamics.b2World.prototype.GetContactCount = function() {
-    return this.m_contactManager.m_contactCount;
+    return this.contactList.GetContactCount();
 };
 
 /**
@@ -706,8 +710,8 @@ Box2D.Dynamics.b2World.prototype.Solve = function(step) {
     for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
         bodyNode.body.m_islandFlag = false;
     }
-    for (var c = this.m_contactList; c; c = c.m_next) {
-        c.m_islandFlag = false;
+    for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+        contactNode.contact.m_islandFlag = false;
     }
     for (var j = this.m_jointList; j; j = j.m_next) {
         j.m_islandFlag = false;
@@ -777,9 +781,9 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
         b.m_islandFlag = false;
         b.m_sweep.t0 = 0.0;
     }
-    for (var c = this.m_contactList; c; c = c.m_next) {
-        c.m_islandFlag = false;
-        c.m_toi = null;
+    for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+        contactNode.contact.m_islandFlag = false;
+        contactNode.contact.m_toi = null;
     }
     for (var j = this.m_jointList; j; j = j.m_next) {
         j.m_islandFlag = false;
@@ -896,7 +900,8 @@ Box2D.Dynamics.b2World.prototype._SolveTOI2 = function(step) {
     var minContact = null;
     var minTOI = 1.0;
     var contacts = 0;
-    for (var c = this.m_contactList; c; c = c.m_next) {
+    for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+        var c = contactNode.contact;
         if (this._SolveTOI2SkipContact(step, c)) {
             continue;
         }
