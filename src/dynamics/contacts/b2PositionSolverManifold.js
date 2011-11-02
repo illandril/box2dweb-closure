@@ -48,79 +48,86 @@ Box2D.Dynamics.Contacts.b2PositionSolverManifold = function() {
     }
 };
 
+/**
+ * @param {!Box2D.Dynamics.Contacts.b2ContactConstraint} cc
+ */
 Box2D.Dynamics.Contacts.b2PositionSolverManifold.prototype.Initialize = function(cc) {
     Box2D.Common.b2Settings.b2Assert(cc.pointCount > 0);
-    var i = 0;
-    var clipPointX = 0;
-    var clipPointY = 0;
-    var planePointX = 0;
-    var planePointY = 0;
     switch (cc.type) {
-    case Box2D.Collision.b2Manifold.e_circles:
-        var tMat = cc.bodyA.m_xf.R;
-        var tVec = cc.localPoint;
-        var pointAX = cc.bodyA.m_xf.position.x + (tMat.col1.x * tVec.x + tMat.col2.x * tVec.y);
-        var pointAY = cc.bodyA.m_xf.position.y + (tMat.col1.y * tVec.x + tMat.col2.y * tVec.y);
-        tMat = cc.bodyB.m_xf.R;
-        tVec = cc.points[0].localPoint;
-        var pointBX = cc.bodyB.m_xf.position.x + (tMat.col1.x * tVec.x + tMat.col2.x * tVec.y);
-        var pointBY = cc.bodyB.m_xf.position.y + (tMat.col1.y * tVec.x + tMat.col2.y * tVec.y);
-        var dX = pointBX - pointAX;
-        var dY = pointBY - pointAY;
-        var d2 = dX * dX + dY * dY;
-        if (d2 > Box2D.Common.b2Settings.MIN_VALUE_SQUARED) {
-            var d = Math.sqrt(d2);
-            this.m_normal.x = dX / d;
-            this.m_normal.y = dY / d;
-        } else {
-            this.m_normal.x = 1.0;
-            this.m_normal.y = 0.0;
-        }
-        this.m_points[0].x = 0.5 * (pointAX + pointBX);
-        this.m_points[0].y = 0.5 * (pointAY + pointBY);
-        this.m_separations[0] = dX * this.m_normal.x + dY * this.m_normal.y - cc.radius;
-        break;
-    case Box2D.Collision.b2Manifold.e_faceA:
-        var tMat = cc.bodyA.m_xf.R;
-        var tVec = cc.localPlaneNormal;
-        this.m_normal.x = tMat.col1.x * tVec.x + tMat.col2.x * tVec.y;
-        this.m_normal.y = tMat.col1.y * tVec.x + tMat.col2.y * tVec.y;
-        tMat = cc.bodyA.m_xf.R;
-        tVec = cc.localPoint;
-        planePointX = cc.bodyA.m_xf.position.x + (tMat.col1.x * tVec.x + tMat.col2.x * tVec.y);
-        planePointY = cc.bodyA.m_xf.position.y + (tMat.col1.y * tVec.x + tMat.col2.y * tVec.y);
-        tMat = cc.bodyB.m_xf.R;
-        for (i = 0; i < cc.pointCount; i++) {
-            tVec = cc.points[i].localPoint;
-            clipPointX = cc.bodyB.m_xf.position.x + (tMat.col1.x * tVec.x + tMat.col2.x * tVec.y);
-            clipPointY = cc.bodyB.m_xf.position.y + (tMat.col1.y * tVec.x + tMat.col2.y * tVec.y);
-            this.m_separations[i] = (clipPointX - planePointX) * this.m_normal.x + (clipPointY - planePointY) * this.m_normal.y - cc.radius;
-            this.m_points[i].x = clipPointX;
-            this.m_points[i].y = clipPointY;
-        }
-        break;
-    case Box2D.Collision.b2Manifold.e_faceB:
-        var tMat = cc.bodyB.m_xf.R;
-        var tVec = cc.localPlaneNormal;
-        this.m_normal.x = tMat.col1.x * tVec.x + tMat.col2.x * tVec.y;
-        this.m_normal.y = tMat.col1.y * tVec.x + tMat.col2.y * tVec.y;
-        tMat = cc.bodyB.m_xf.R;
-        tVec = cc.localPoint;
-        planePointX = cc.bodyB.m_xf.position.x + (tMat.col1.x * tVec.x + tMat.col2.x * tVec.y);
-        planePointY = cc.bodyB.m_xf.position.y + (tMat.col1.y * tVec.x + tMat.col2.y * tVec.y);
-        tMat = cc.bodyA.m_xf.R;
-        for (i = 0; i < cc.pointCount; i++) {
-            tVec = cc.points[i].localPoint;
-            clipPointX = cc.bodyA.m_xf.position.x + (tMat.col1.x * tVec.x + tMat.col2.x * tVec.y);
-            clipPointY = cc.bodyA.m_xf.position.y + (tMat.col1.y * tVec.x + tMat.col2.y * tVec.y);
-            this.m_separations[i] = (clipPointX - planePointX) * this.m_normal.x + (clipPointY - planePointY) * this.m_normal.y - cc.radius;
-            this.m_points[i].Set(clipPointX, clipPointY);
-        }
-        this.m_normal.x *= (-1);
-        this.m_normal.y *= (-1);
-        break;
+        case Box2D.Collision.b2Manifold.e_circles:
+            this._InitializeCircles(cc);
+            break;
+        case Box2D.Collision.b2Manifold.e_faceA:
+            this._InitializeFaceA(cc);
+            break;
+        case Box2D.Collision.b2Manifold.e_faceB:
+            this._InitializeFaceB(cc);
+            break;
     }
-}
+};
 
-Box2D.Dynamics.Contacts.b2PositionSolverManifold.circlePointA = new Box2D.Common.Math.b2Vec2(0, 0);
-Box2D.Dynamics.Contacts.b2PositionSolverManifold.circlePointB = new Box2D.Common.Math.b2Vec2(0, 0);
+/**
+ * @private
+ * @param {!Box2D.Dynamics.Contacts.b2ContactConstraint} cc
+ */
+Box2D.Dynamics.Contacts.b2PositionSolverManifold.prototype._InitializeCircles = function(cc) {
+    var tMat = cc.bodyA.m_xf.R;
+    var tVec = cc.localPoint;
+    var pointAX = cc.bodyA.m_xf.position.x + (tMat.col1.x * tVec.x + tMat.col2.x * tVec.y);
+    var pointAY = cc.bodyA.m_xf.position.y + (tMat.col1.y * tVec.x + tMat.col2.y * tVec.y);
+    tMat = cc.bodyB.m_xf.R;
+    tVec = cc.points[0].localPoint;
+    var pointBX = cc.bodyB.m_xf.position.x + (tMat.col1.x * tVec.x + tMat.col2.x * tVec.y);
+    var pointBY = cc.bodyB.m_xf.position.y + (tMat.col1.y * tVec.x + tMat.col2.y * tVec.y);
+    var dX = pointBX - pointAX;
+    var dY = pointBY - pointAY;
+    var d2 = dX * dX + dY * dY;
+    if (d2 > Box2D.Common.b2Settings.MIN_VALUE_SQUARED) {
+        var d = Math.sqrt(d2);
+        this.m_normal.x = dX / d;
+        this.m_normal.y = dY / d;
+    } else {
+        this.m_normal.x = 1.0;
+        this.m_normal.y = 0.0;
+    }
+    this.m_points[0].x = 0.5 * (pointAX + pointBX);
+    this.m_points[0].y = 0.5 * (pointAY + pointBY);
+    this.m_separations[0] = dX * this.m_normal.x + dY * this.m_normal.y - cc.radius;
+};
+
+/**
+ * @private
+ * @param {!Box2D.Dynamics.Contacts.b2ContactConstraint} cc
+ */
+Box2D.Dynamics.Contacts.b2PositionSolverManifold.prototype._InitializeFaceA = function(cc) {
+    this.m_normal.x = cc.bodyA.m_xf.R.col1.x * cc.localPlaneNormal.x + cc.bodyA.m_xf.R.col2.x * cc.localPlaneNormal.y;
+    this.m_normal.y = cc.bodyA.m_xf.R.col1.y * cc.localPlaneNormal.x + cc.bodyA.m_xf.R.col2.y * cc.localPlaneNormal.y;
+    var planePointX = cc.bodyA.m_xf.position.x + (cc.bodyA.m_xf.R.col1.x * cc.localPoint.x + cc.bodyA.m_xf.R.col2.x * cc.localPoint.y);
+    var planePointY = cc.bodyA.m_xf.position.y + (cc.bodyA.m_xf.R.col1.y * cc.localPoint.x + cc.bodyA.m_xf.R.col2.y * cc.localPoint.y);
+    for (var i = 0; i < cc.pointCount; i++) {
+        var clipPointX = cc.bodyB.m_xf.position.x + (cc.bodyB.m_xf.R.col1.x * cc.points[i].localPoint.x + cc.bodyB.m_xf.R.col2.x * cc.points[i].localPoint.y);
+        var clipPointY = cc.bodyB.m_xf.position.y + (cc.bodyB.m_xf.R.col1.y * cc.points[i].localPoint.x + cc.bodyB.m_xf.R.col2.y * cc.points[i].localPoint.y);
+        this.m_separations[i] = (clipPointX - planePointX) * this.m_normal.x + (clipPointY - planePointY) * this.m_normal.y - cc.radius;
+        this.m_points[i].x = clipPointX;
+        this.m_points[i].y = clipPointY;
+    }
+};
+
+/**
+ * @private
+ * @param {!Box2D.Dynamics.Contacts.b2ContactConstraint} cc
+ */
+Box2D.Dynamics.Contacts.b2PositionSolverManifold.prototype._InitializeFaceB = function(cc) {
+    this.m_normal.x = cc.bodyB.m_xf.R.col1.x * cc.localPlaneNormal.x + cc.bodyB.m_xf.R.col2.x * cc.localPlaneNormal.y;
+    this.m_normal.y = cc.bodyB.m_xf.R.col1.y * cc.localPlaneNormal.x + cc.bodyB.m_xf.R.col2.y * cc.localPlaneNormal.y;
+    var planePointX = cc.bodyB.m_xf.position.x + (cc.bodyB.m_xf.R.col1.x * cc.localPoint.x + cc.bodyB.m_xf.R.col2.x * cc.localPoint.y);
+    var planePointY = cc.bodyB.m_xf.position.y + (cc.bodyB.m_xf.R.col1.y * cc.localPoint.x + cc.bodyB.m_xf.R.col2.y * cc.localPoint.y);
+    for (var i = 0; i < cc.pointCount; i++) {
+        var clipPointX = cc.bodyA.m_xf.position.x + (cc.bodyA.m_xf.R.col1.x * cc.points[i].localPoint.x + cc.bodyA.m_xf.R.col2.x * cc.points[i].localPoint.y);
+        var clipPointY = cc.bodyA.m_xf.position.y + (cc.bodyA.m_xf.R.col1.y * cc.points[i].localPoint.x + cc.bodyA.m_xf.R.col2.y * cc.points[i].localPoint.y);
+        this.m_separations[i] = (clipPointX - planePointX) * this.m_normal.x + (clipPointY - planePointY) * this.m_normal.y - cc.radius;
+        this.m_points[i].Set(clipPointX, clipPointY);
+    }
+    this.m_normal.x *= -1;
+    this.m_normal.y *= -1;
+};
