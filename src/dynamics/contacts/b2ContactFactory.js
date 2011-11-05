@@ -46,7 +46,18 @@ goog.require('Box2D.Dynamics.Contacts.b2PolyAndEdgeContact');
  * @constructor
  */
 Box2D.Dynamics.Contacts.b2ContactFactory = function() {
-    this.m_registers = [];
+    
+    /**
+     * @private
+     */
+    this.m_registers = {};
+    
+    /**
+     * @private
+     * @type {Object.<Object.<Array.<!Box2D.Dynamics.b2Contact>>>}
+     */
+    this.m_freeContacts = {};
+    
     this.AddType(Box2D.Dynamics.Contacts.b2CircleContact, Box2D.Collision.Shapes.b2CircleShape.NAME, Box2D.Collision.Shapes.b2CircleShape.NAME);
     this.AddType(Box2D.Dynamics.Contacts.b2PolyAndCircleContact, Box2D.Collision.Shapes.b2PolygonShape.NAME, Box2D.Collision.Shapes.b2CircleShape.NAME);
     this.AddType(Box2D.Dynamics.Contacts.b2PolygonContact, Box2D.Collision.Shapes.b2PolygonShape.NAME, Box2D.Collision.Shapes.b2PolygonShape.NAME);
@@ -55,12 +66,15 @@ Box2D.Dynamics.Contacts.b2ContactFactory = function() {
 };
 
 Box2D.Dynamics.Contacts.b2ContactFactory.prototype.AddType = function(ctor, type1, type2) {
-    this.m_registers[type1] = this.m_registers[type1] || [];
+    this.m_freeContacts[type1] = this.m_freeContacts[type1] || {};
+    this.m_freeContacts[type1][type2] = this.m_freeContacts[type1][type2] || [];
+    
+    this.m_registers[type1] = this.m_registers[type1] || {};
     this.m_registers[type1][type2] = new Box2D.Dynamics.Contacts.b2ContactRegister();
     this.m_registers[type1][type2].ctor = ctor;
     this.m_registers[type1][type2].primary = true;
     if (type1 != type2) {
-        this.m_registers[type2] = this.m_registers[type2] || [];
+        this.m_registers[type2] = this.m_registers[type2] || {};
         this.m_registers[type2][type1] = new Box2D.Dynamics.Contacts.b2ContactRegister();
         this.m_registers[type2][type1].ctor = ctor;
         this.m_registers[type2][type1].primary = false;
@@ -70,12 +84,23 @@ Box2D.Dynamics.Contacts.b2ContactFactory.prototype.AddType = function(ctor, type
 Box2D.Dynamics.Contacts.b2ContactFactory.prototype.Create = function(fixtureA, fixtureB) {
     var type1 = fixtureA.GetShape().GetTypeName();
     var type2 = fixtureB.GetShape().GetTypeName();
+    
     var reg = this.m_registers[type1][type2];
     var ctor = reg.ctor;
     if (ctor != null) {
         if (reg.primary) {
+            if (this.m_freeContacts[type1][type2].length > 0) {
+                var c = this.m_freeContacts[type1][type2].pop();
+                c.Reset(fixtureA, fixtureB);
+                return c;
+            }
             return new ctor(fixtureA, fixtureB);
         } else {
+            if (this.m_freeContacts[type2][type1].length > 0) {
+                var c = this.m_freeContacts[type2][type1].pop();
+                c.Reset(fixtureB, fixtureA);
+                return c;
+            }
             return new ctor(fixtureB, fixtureA);
         }
     } else {
@@ -84,8 +109,7 @@ Box2D.Dynamics.Contacts.b2ContactFactory.prototype.Create = function(fixtureA, f
 };
 
 Box2D.Dynamics.Contacts.b2ContactFactory.prototype.Destroy = function(contact) {
-    if (contact.m_manifold.m_pointCount > 0) {
-        contact.m_fixtureA.GetBody().SetAwake(true);
-        contact.m_fixtureB.GetBody().SetAwake(true);
-    }
+    var type1 = contact.GetFixtureA().GetShape().GetTypeName();
+    var type2 = contact.GetFixtureB().GetShape().GetTypeName();
+    this.m_freeContacts[type1][type2].push(contact);
 };

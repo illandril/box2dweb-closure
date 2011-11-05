@@ -724,9 +724,9 @@ Box2D.Dynamics.b2World.prototype.Solve = function(step) {
             if (b.GetType() == Box2D.Dynamics.b2BodyDef.b2_staticBody) {
                 continue;
             }
-            for (var contactNode = b.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+            for (var contactNode = b.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.nonSensorEnabledTouchingContacts); contactNode; contactNode = contactNode.GetNextNode()) {
                 var contact = contactNode.contact;
-                if (contact.m_islandFlag || contact.IsSensor() || !contact.IsEnabled() || !contact.IsTouching()) {
+                if (contact.m_islandFlag) {
                     continue;
                 }
                 m_island.AddContact(contact);
@@ -818,12 +818,12 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
             if (b.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
                 continue;
             }
-            for (var contactNode = b.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+            for (var contactNode = b.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.nonSensorEnabledTouchingContacts); contactNode; contactNode = contactNode.GetNextNode()) {
                 if (m_island.m_contactCount == Box2D.Common.b2Settings.b2_maxTOIContactsPerIsland) {
                     break;
                 }
                 var contact = contactNode.contact;
-                if (contact.m_islandFlag || contact.IsSensor() || !contact.IsEnabled() || !contact.IsTouching()) {
+                if (contact.m_islandFlag) {
                     continue;
                 }
                 m_island.AddContact(contact);
@@ -891,7 +891,7 @@ Box2D.Dynamics.b2World.prototype._SolveTOI2 = function(step) {
     var minContact = null;
     var minTOI = 1.0;
     var contacts = 0;
-    for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+    for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.nonSensorEnabledContinuousContacts); contactNode; contactNode = contactNode.GetNextNode()) {
         var c = contactNode.contact;
         if (this._SolveTOI2SkipContact(step, c)) {
             continue;
@@ -937,9 +937,6 @@ Box2D.Dynamics.b2World.prototype._SolveTOI2 = function(step) {
  * @return {boolean}
  */
 Box2D.Dynamics.b2World.prototype._SolveTOI2SkipContact = function(step, c) {
-    if (c.IsSensor() || !c.IsEnabled() || !c.IsContinuous()) {
-        return true;
-    }
     var fixtureABody = c.m_fixtureA.GetBody();
     var fixtureBBody = c.m_fixtureB.GetBody();
     if ((fixtureABody.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody || !fixtureABody.IsAwake()) && (fixtureBBody.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody || !fixtureBBody.IsAwake())) {

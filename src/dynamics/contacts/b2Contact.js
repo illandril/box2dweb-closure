@@ -46,7 +46,7 @@ goog.require('Box2D.Common.b2Settings');
  * @constructor
  */
 Box2D.Dynamics.Contacts.b2Contact = function(fixtureA, fixtureB) {
-        
+    
     /**
      * @const
      * @private
@@ -98,18 +98,6 @@ Box2D.Dynamics.Contacts.b2Contact = function(fixtureA, fixtureB) {
     
     /**
      * @private
-     * @type {Box2D.Dynamics.Contacts.b2Contact}
-     */
-    this.m_next = null;
-    
-    /**
-     * @private
-     * @type {Box2D.Dynamics.Contacts.b2Contact}
-     */
-    this.m_prev = null;
-    
-    /**
-     * @private
      * @type {!Box2D.Dynamics.b2Fixture}
      */
     this.m_fixtureA = fixtureA;
@@ -127,9 +115,78 @@ Box2D.Dynamics.Contacts.b2Contact = function(fixtureA, fixtureB) {
     this.enabled = true;
     
     /**
-     * @type {Array.<!Box2D.Dynamics.Contacts.b2ContactList>}
+     * @private
+     * @type {!Box2D.Dynamics.Contacts.b2ContactList}
      */
-     this.m_lists = [];
+    this.bodyAList = bodyA.GetContactList();
+     
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.Contacts.b2ContactList}
+     */
+    this.bodyBList = bodyB.GetContactList();
+     
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.Contacts.b2ContactList}
+     */
+    this.worldList = bodyB.GetWorld().GetContactList();
+    
+    this.AddToLists();
+};
+
+/**
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureA
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureB
+ */
+Box2D.Dynamics.Contacts.b2Contact.prototype.Reset = function(fixtureA, fixtureB) {
+    this.m_manifold = new Box2D.Collision.b2Manifold();
+    this.m_oldManifold = new Box2D.Collision.b2Manifold();
+    this.touching = false;
+    var bodyA = fixtureA.GetBody();
+    var bodyB = fixtureB.GetBody();
+    this.continuous = (bodyA.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) ||
+                      bodyA.IsBullet() ||
+                      (bodyB.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) ||
+                      bodyB.IsBullet();
+    this.sensor = fixtureA.IsSensor() || fixtureB.IsSensor();
+    this.filtering = false;
+    this.m_fixtureA = fixtureA;
+    this.m_fixtureB = fixtureB;
+    this.enabled = true;
+    this.bodyAList = bodyA.GetContactList();
+    this.bodyBList = bodyB.GetContactList();
+    this.worldList = bodyB.GetWorld().GetContactList();
+    this.AddToLists();
+};
+
+Box2D.Dynamics.Contacts.b2Contact.prototype.AddToLists = function () {
+    this.bodyAList.AddContact(this);
+    this.bodyBList.AddContact(this);
+    this.worldList.AddContact(this);
+    this.UpdateLists();
+};
+
+Box2D.Dynamics.Contacts.b2Contact.prototype.UpdateLists = function () {
+    var nonSensorEnabledTouching = false;
+    var nonSensorEnabledContinuous = false;
+    if (!this.IsSensor() && this.IsEnabled()) {
+        if (this.IsTouching()) {
+            nonSensorEnabledTouching = true;
+        }
+        if (this.IsContinuous()) {
+            nonSensorEnabledContinuous = true;
+        }
+    }
+    this.bodyAList.UpdateContact(this, nonSensorEnabledTouching, nonSensorEnabledContinuous);
+    this.bodyBList.UpdateContact(this, nonSensorEnabledTouching, nonSensorEnabledContinuous);
+    this.worldList.UpdateContact(this, nonSensorEnabledTouching, nonSensorEnabledContinuous);
+};
+
+Box2D.Dynamics.Contacts.b2Contact.prototype.RemoveFromLists = function () {
+    this.bodyAList.RemoveContact(this);
+    this.bodyBList.RemoveContact(this);
+    this.worldList.RemoveContact(this);
 };
 
 /**
@@ -169,6 +226,7 @@ Box2D.Dynamics.Contacts.b2Contact.prototype.IsContinuous = function () {
  */
 Box2D.Dynamics.Contacts.b2Contact.prototype.SetSensor = function (sensor) {
    this.sensor = sensor;
+   this.UpdateLists();
 };
 
 /**
@@ -183,6 +241,7 @@ Box2D.Dynamics.Contacts.b2Contact.prototype.IsSensor = function () {
  */
 Box2D.Dynamics.Contacts.b2Contact.prototype.SetEnabled = function (flag) {
    this.enabled = flag;
+   this.UpdateLists();
 };
 
 /**
@@ -287,6 +346,9 @@ Box2D.Dynamics.Contacts.b2Contact.prototype.Update = function (listener) {
      }
   }
   this.touching = touching;
+  if (touching != wasTouching) {
+     this.UpdateLists();
+  }
   
   if (!wasTouching && touching) {
      listener.BeginContact(this);

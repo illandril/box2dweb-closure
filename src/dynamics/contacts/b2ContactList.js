@@ -86,9 +86,11 @@ Box2D.Dynamics.Contacts.b2ContactList.prototype.GetFirstNode = function(type) {
 Box2D.Dynamics.Contacts.b2ContactList.prototype.AddContact = function(contact) {
     var contactID = contact.ID;
     if (this.contactNodeLookup[contactID] == null) {
+        this.contactNodeLookup[contactID] = [];
+        for(var i = 0; i <= Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts; i++) {
+            this.contactNodeLookup[contactID][i] = null;
+        }
         this.CreateNode(contact, contactID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts);
-        this.UpdateContact(contact);
-        contact.m_lists.push(this);
         this.contactCount++;
     }
 };
@@ -96,38 +98,17 @@ Box2D.Dynamics.Contacts.b2ContactList.prototype.AddContact = function(contact) {
 /**
  * @param {!Box2D.Dynamics.Contacts.b2Contact} contact
  */
-Box2D.Dynamics.Contacts.b2ContactList.prototype.UpdateContact = function(contact) {
-    /*
-    var type = contact.GetType();
-    var contactID = contact.ID;
-    var awake = contact.IsAwake();
-    var active = contact.IsActive();
-    if (type == Box2D.Dynamics.Contacts.b2ContactDef.b2_dynamicContact) {
-        this.CreateNode(contact, contactID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.dynamicBodies);
+Box2D.Dynamics.Contacts.b2ContactList.prototype.UpdateContact = function(contact, nonSensorEnabledTouching, nonSensorEnabledContinuous) {
+    if (nonSensorEnabledTouching) {
+        this.CreateNode(contact, contact.ID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.nonSensorEnabledTouchingContacts);
     } else {
-        this.RemoveNode(contactID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.dynamicBodies);
+        this.RemoveNode(contact.ID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.nonSensorEnabledTouchingContacts);
     }
-    if (type != Box2D.Dynamics.Contacts.b2ContactDef.b2_staticContact) {
-        this.CreateNode(contact, contactID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.nonStaticBodies);
+    if (nonSensorEnabledContinuous) {
+        this.CreateNode(contact, contact.ID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.nonSensorEnabledContinuousContacts);
     } else {
-        this.RemoveNode(contactID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.nonStaticBodies);
+        this.RemoveNode(contact.ID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.nonSensorEnabledContinuousContacts);
     }
-    if (type != Box2D.Dynamics.Contacts.b2ContactDef.b2_staticContact && active && awake) {
-        this.CreateNode(contact, contactID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.nonStaticActiveAwakeBodies);
-    } else {
-        this.RemoveNode(contactID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.nonStaticActiveAwakeBodies);
-    }
-    if (awake) {
-        this.CreateNode(contact, contactID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.awakeBodies);
-    } else {
-        this.RemoveNode(contactID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.awakeBodies);
-    }
-    if (active) {
-        this.CreateNode(contact, contactID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.activeBodies);
-    } else {
-        this.RemoveNode(contactID, Box2D.Dynamics.Contacts.b2ContactList.TYPES.activeBodies);
-    }
-    */
 };
 
 /**
@@ -136,11 +117,10 @@ Box2D.Dynamics.Contacts.b2ContactList.prototype.UpdateContact = function(contact
 Box2D.Dynamics.Contacts.b2ContactList.prototype.RemoveContact = function(contact) {
     var contactID = contact.ID;
     if (this.contactNodeLookup[contactID] != null) {
-        goog.array.remove(contact.m_lists, this);
         for(var i = 0; i <= Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts; i++) {
             this.RemoveNode(contactID, i);
         }
-        delete this.contactNodeLookup[contactID];
+        this.contactNodeLookup[contactID] = null;
         this.contactCount--;
     }
 };
@@ -171,6 +151,7 @@ Box2D.Dynamics.Contacts.b2ContactList.prototype.RemoveNode = function(contactID,
     } else {
         nextNode.SetPreviousNode(prevNode);
     }
+    Box2D.Dynamics.Contacts.b2ContactListNode.FreeNode(node);
 };
 
 /**
@@ -180,22 +161,15 @@ Box2D.Dynamics.Contacts.b2ContactList.prototype.RemoveNode = function(contactID,
  */
 Box2D.Dynamics.Contacts.b2ContactList.prototype.CreateNode = function(contact, contactID, type) {
     var nodeList = this.contactNodeLookup[contactID];
-    if (nodeList == null) {
-        nodeList = [];
-        for(var i = 0; i <= Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts; i++) {
-            nodeList[i] = null;
-        }
-        this.contactNodeLookup[contactID] = nodeList;
-    }
     if (nodeList[type] == null) {
-        nodeList[type] = new Box2D.Dynamics.Contacts.b2ContactListNode(contact);
+        nodeList[type] = Box2D.Dynamics.Contacts.b2ContactListNode.GetNode(contact);
         var prevNode = this.contactLastNodes[type];
         if (prevNode != null) {
             prevNode.SetNextNode(nodeList[type]);
+            nodeList[type].SetPreviousNode(prevNode);
         } else {
             this.contactFirstNodes[type] = nodeList[type];
         }
-        nodeList[type].SetPreviousNode(prevNode);
         this.contactLastNodes[type] = nodeList[type];
     }
 };
@@ -211,5 +185,7 @@ Box2D.Dynamics.Contacts.b2ContactList.prototype.GetContactCount = function() {
  * @enum {number}
  */
 Box2D.Dynamics.Contacts.b2ContactList.TYPES = {
-    allContacts: 0 // Assumed to be last by above code
+    nonSensorEnabledTouchingContacts: 0,
+    nonSensorEnabledContinuousContacts: 1,
+    allContacts: 2 // Assumed to be last by above code
 };

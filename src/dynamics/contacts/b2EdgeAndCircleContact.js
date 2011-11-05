@@ -46,6 +46,14 @@ Box2D.Dynamics.Contacts.b2EdgeAndCircleContact = function(fixtureA, fixtureB) {
 };
 goog.inherits(Box2D.Dynamics.Contacts.b2EdgeAndCircleContact, Box2D.Dynamics.Contacts.b2Contact);
 
+/**
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureA
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureB
+ */
+Box2D.Dynamics.Contacts.b2EdgeAndCircleContact.prototype.Reset = function(fixtureA, fixtureB) {
+    Box2D.Dynamics.Contacts.b2Contact.Reset.call(this, fixtureA, fixtureB);
+};
+
 Box2D.Dynamics.Contacts.b2EdgeAndCircleContact.prototype.Evaluate = function() {
     var bA = this.m_fixtureA.GetBody();
     var bB = this.m_fixtureB.GetBody();

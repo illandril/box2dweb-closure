@@ -46,6 +46,14 @@ Box2D.Dynamics.Contacts.b2PolygonContact = function(fixtureA, fixtureB) {
 };
 goog.inherits(Box2D.Dynamics.Contacts.b2PolygonContact, Box2D.Dynamics.Contacts.b2Contact);
 
+/**
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureA
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureB
+ */
+Box2D.Dynamics.Contacts.b2EdgeAndCircleContact.prototype.Reset = function(fixtureA, fixtureB) {
+    Box2D.Dynamics.Contacts.b2Contact.Reset.call(this, fixtureA, fixtureB);
+};
+
 Box2D.Dynamics.Contacts.b2PolygonContact.prototype.Evaluate = function() {
     Box2D.Collision.b2Collision.CollidePolygons(this.m_manifold, this.m_fixtureA.GetShape(), this.m_fixtureA.GetBody().m_xf, this.m_fixtureB.GetShape(), this.m_fixtureB.GetBody().m_xf);
 };

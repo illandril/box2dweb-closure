@@ -39,7 +39,7 @@ goog.provide('Box2D.Dynamics.Contacts.b2ContactListNode');
 Box2D.Dynamics.Contacts.b2ContactListNode = function(contact) {
     
     /**
-     * @const
+     * @private
      * @type {!Box2D.Dynamics.Contacts.b2Contact}
      */
     this.contact = contact;
@@ -58,6 +58,35 @@ Box2D.Dynamics.Contacts.b2ContactListNode = function(contact) {
 };
 
 /**
+ * @private
+ * @type {Array.<!Box2D.Dynamics.Contacts.b2ContactListNode>
+ */
+Box2D.Dynamics.Contacts.b2ContactListNode.freeNodes = [];
+
+/**
+ * @param {!Box2D.Dynamics.Contacts.b2Contact} contact
+ * @return {!Box2D.Dynamics.Contacts.b2ContactListNode}
+ */
+Box2D.Dynamics.Contacts.b2ContactListNode.GetNode = function(contact) {
+    if (Box2D.Dynamics.Contacts.b2ContactListNode.freeNodes.length > 0) {
+        var node = Box2D.Dynamics.Contacts.b2ContactListNode.freeNodes.pop();
+        node.next = null;
+        node.previous = null;
+        node.contact = contact;
+        return node;
+    } else {
+        return new Box2D.Dynamics.Contacts.b2ContactListNode(contact);
+    }
+};
+
+/**
+ * @param {!Box2D.Dynamics.Contacts.b2ContactListNode} node
+ */
+Box2D.Dynamics.Contacts.b2ContactListNode.FreeNode = function(node) {
+    Box2D.Dynamics.Contacts.b2ContactListNode.freeNodes.push(node);
+};
+
+/**
  * @param {Box2D.Dynamics.Contacts.b2ContactListNode} node
  */
 Box2D.Dynamics.Contacts.b2ContactListNode.prototype.SetNextNode = function(node) {
@@ -72,7 +101,7 @@ Box2D.Dynamics.Contacts.b2ContactListNode.prototype.SetPreviousNode = function(n
 };
 
 /**
- * @return {Box2D.Dynamics.Contacts.b2Contact}
+ * @return {!Box2D.Dynamics.Contacts.b2Contact}
  */
 Box2D.Dynamics.Contacts.b2ContactListNode.prototype.GetContact = function() {
     return this.contact;
