@@ -46,50 +46,90 @@ goog.require('Box2D.Common.b2Settings');
  * @constructor
  */
 Box2D.Dynamics.Contacts.b2Contact = function(fixtureA, fixtureB) {
-    /** @type {!Box2D.Dynamics.Contacts.b2ContactEdge} */
-    this.m_nodeA = new Box2D.Dynamics.Contacts.b2ContactEdge();
+        
+    /**
+     * @const
+     * @private
+     * @type {string}
+     */
+    this.ID = "Contact" + Box2D.Dynamics.Contacts.b2Contact.NEXT_ID++;
     
-    /** @type {!Box2D.Dynamics.Contacts.b2ContactEdge} */
-    this.m_nodeB = new Box2D.Dynamics.Contacts.b2ContactEdge();
-
-    /** @type {!Box2D.Collision.b2Manifold} */
+    /**
+     * @private
+     * @type {!Box2D.Collision.b2Manifold}
+     */
     this.m_manifold = new Box2D.Collision.b2Manifold();
     
-    /** @type {!Box2D.Collision.b2Manifold} */
+    /**
+     * @private
+     * @type {!Box2D.Collision.b2Manifold}
+     */
     this.m_oldManifold = new Box2D.Collision.b2Manifold();
     
-    /** @type {boolean} */
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.touching = false;
 
     var bodyA = fixtureA.GetBody();
     var bodyB = fixtureB.GetBody();
     
-    /** @type {boolean} */
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.continuous = (bodyA.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) ||
                       bodyA.IsBullet() ||
                       (bodyB.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) ||
                       bodyB.IsBullet();
     
-    /** @type {boolean} */
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.sensor = fixtureA.IsSensor() || fixtureB.IsSensor();
     
-    /** @type {boolean} */
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.filtering = false;
     
-    /** @type {Box2D.Dynamics.Contacts.b2Contact} */
+    /**
+     * @private
+     * @type {Box2D.Dynamics.Contacts.b2Contact}
+     */
     this.m_next = null;
     
-    /** @type {Box2D.Dynamics.Contacts.b2Contact} */
+    /**
+     * @private
+     * @type {Box2D.Dynamics.Contacts.b2Contact}
+     */
     this.m_prev = null;
     
-    /** @type {!Box2D.Dynamics.b2Fixture} */
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2Fixture}
+     */
     this.m_fixtureA = fixtureA;
     
-    /** @type {!Box2D.Dynamics.b2Fixture} */
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2Fixture}
+     */
     this.m_fixtureB = fixtureB;
     
-    /** @type {boolean} */
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.enabled = true;
+    
+    /**
+     * @type {Array.<!Box2D.Dynamics.Contacts.b2ContactList>}
+     */
+     this.m_lists = [];
 };
 
 /**
@@ -171,6 +211,19 @@ Box2D.Dynamics.Contacts.b2Contact.prototype.GetFixtureA = function () {
  */
 Box2D.Dynamics.Contacts.b2Contact.prototype.GetFixtureB = function () {
   return this.m_fixtureB;
+};
+
+/**
+ * @param {!Box2D.Dynamics.b2Body} body
+ * @return {!Box2D.Dynamics.b2Body}
+ */
+Box2D.Dynamics.Contacts.b2Contact.prototype.GetOther = function (body) {
+    var bodyA = this.m_fixtureA.GetBody();
+    if (bodyA != body) {
+        return bodyA;
+    } else {
+        return this.m_fixtureB.GetBody();
+    }
 };
 
 Box2D.Dynamics.Contacts.b2Contact.prototype.FlagForFiltering = function () {
@@ -258,3 +311,9 @@ Box2D.Dynamics.Contacts.b2Contact.prototype.ComputeTOI = function (sweepA, sweep
 };
 
 Box2D.Dynamics.Contacts.b2Contact.s_input = new Box2D.Collision.b2TOIInput();
+
+/**
+ * @type {number}
+ * @private
+ */
+Box2D.Dynamics.Contacts.b2Contact.NEXT_ID = 0;

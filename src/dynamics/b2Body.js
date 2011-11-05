@@ -136,12 +136,6 @@ Box2D.Dynamics.b2Body = function(bd, world) {
     
     /**
      * @private
-     * @type {Box2D.Dynamics.Contacts.b2ContactEdge}
-     */
-    this.m_contactList = null;
-    
-    /**
-     * @private
      * @type {!Box2D.Dynamics.Contacts.b2ContactList}
      */
      this.contactList = new Box2D.Dynamics.Contacts.b2ContactList();
@@ -270,7 +264,6 @@ Box2D.Dynamics.b2Body.prototype.DestroyFixture = function(fixture) {
     for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
         if (fixture == contactNode.contact.GetFixtureA() || fixture == contactNode.contact.GetFixtureB()) {
             this.m_world.m_contactManager.Destroy(contactNode.contact);
-            this.contactList.RemoveContact(contactNode.contact);
         }
     }
     if (this.m_active) {
@@ -740,9 +733,7 @@ Box2D.Dynamics.b2Body.prototype.SetActive = function(flag) {
         }
         for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
             this.m_world.m_contactManager.Destroy(contactNode.contact);
-            this.contactList.RemoveContact(contactNode.contact);
         }
-        this.m_contactList = null;
     }
     for (var i = 0; i < this.m_lists.length; i++) {
         this.m_lists[i].UpdateBody(this);
@@ -790,7 +781,7 @@ Box2D.Dynamics.b2Body.prototype.RemoveController = function(controller) {
 };
 
 Box2D.Dynamics.b2Body.prototype.GetContactList = function() {
-    return this.m_contactList;
+    return this.contactList;
 };
 
 Box2D.Dynamics.b2Body.prototype.GetWorld = function() {

@@ -91,11 +91,10 @@ Box2D.Dynamics.b2ContactManager.prototype.AddPair = function (fixtureA, fixtureB
   if (!this.m_contactFilter.ShouldCollide(fixtureA, fixtureB)) {
      return;
   }
-  var edge = bodyB.GetContactList();
-  while (edge) {
-     if (edge.other == bodyA) {
-        var fA = edge.contact.GetFixtureA();
-        var fB = edge.contact.GetFixtureB();
+  for (var contactNode = bodyB.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+     if (contactNode.contact.GetOther(bodyB) == bodyA) {
+        var fA = contactNode.contact.GetFixtureA();
+        var fB = contactNode.contact.GetFixtureB();
         if (fA == fixtureA && fB == fixtureB) {
             return;
         }
@@ -103,7 +102,6 @@ Box2D.Dynamics.b2ContactManager.prototype.AddPair = function (fixtureA, fixtureB
             return;
         }
      }
-     edge = edge.next;
   }
   var c = this.m_contactFactory.Create(fixtureA, fixtureB);
   fixtureA = c.GetFixtureA();
@@ -113,22 +111,6 @@ Box2D.Dynamics.b2ContactManager.prototype.AddPair = function (fixtureA, fixtureB
   this.m_world.contactList.AddContact(c);
   bodyA.contactList.AddContact(c);
   bodyB.contactList.AddContact(c);
-  c.m_nodeA.contact = c;
-  c.m_nodeA.other = bodyB;
-  c.m_nodeA.prev = null;
-  c.m_nodeA.next = bodyA.m_contactList;
-  if (bodyA.m_contactList != null) {
-     bodyA.m_contactList.prev = c.m_nodeA;
-  }
-  bodyA.m_contactList = c.m_nodeA;
-  c.m_nodeB.contact = c;
-  c.m_nodeB.other = bodyA;
-  c.m_nodeB.prev = null;
-  c.m_nodeB.next = bodyB.m_contactList;
-  if (bodyB.m_contactList != null) {
-     bodyB.m_contactList.prev = c.m_nodeB;
-  }
-  bodyB.m_contactList = c.m_nodeB;
   return;
 };
 
@@ -149,32 +131,14 @@ Box2D.Dynamics.b2ContactManager.prototype.Destroy = function (c) {
   if (c.IsTouching()) {
      this.m_contactListener.EndContact(c);
   }
-  this.world.contactList.RemoveContact(c);
-  bodyA.contactList.RemoveContact(c);
-  bodyB.contactList.RemoveContact(c);
-  if (c.m_nodeA.prev) {
-     c.m_nodeA.prev.next = c.m_nodeA.next;
-  }
-  if (c.m_nodeA.next) {
-     c.m_nodeA.next.prev = c.m_nodeA.prev;
-  }
-  if (c.m_nodeA == bodyA.m_contactList) {
-     bodyA.m_contactList = c.m_nodeA.next;
-  }
-  if (c.m_nodeB.prev) {
-     c.m_nodeB.prev.next = c.m_nodeB.next;
-  }
-  if (c.m_nodeB.next) {
-     c.m_nodeB.next.prev = c.m_nodeB.prev;
-  }
-  if (c.m_nodeB == bodyB.m_contactList) {
-     bodyB.m_contactList = c.m_nodeB.next;
+  for (var i = c.m_lists.length - 1; i >= 0; i--) {
+      c.m_lists[i].RemoveContact(c);
   }
   this.m_contactFactory.Destroy(c);
 };
 
 Box2D.Dynamics.b2ContactManager.prototype.Collide = function() {
-    for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+    for (var contactNode = this.m_world.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
         var c = contactNode.contact;
         var fixtureA = c.GetFixtureA();
         var fixtureB = c.GetFixtureB();

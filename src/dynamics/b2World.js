@@ -107,12 +107,6 @@ Box2D.Dynamics.b2World = function(gravity, doSleep) {
      * @type {!Box2D.Dynamics.b2BodyList}
      */
     this.bodyList = new Box2D.Dynamics.b2BodyList();
-
-    /**
-     * @private
-     * @type {Box2D.Dynamics.Contacts.b2Contact}
-     */
-    this.m_contactList = null;
     
     /**
      * @private
@@ -261,7 +255,6 @@ Box2D.Dynamics.b2World.prototype.DestroyBody = function(b) {
     for (var contactNode = b.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
         this.m_contactManager.Destroy(contactNode.contact);
     }
-    b.m_contactList = null;
     for (var fixtureNode = b.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
         // Why doesn't this happen in body.DestroyFixture?
         if (this.m_destructionListener) {
@@ -304,12 +297,10 @@ Box2D.Dynamics.b2World.prototype.CreateJoint = function(def) {
     var bodyA = def.bodyA;
     var bodyB = def.bodyB;
     if (!def.collideConnected) {
-        var edge = bodyB.GetContactList();
-        while (edge) {
-            if (edge.other == bodyA) {
-                edge.contact.FlagForFiltering();
+        for (var contactNode = bodyB.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+            if (contactNode.contact.GetOther(bodyB) == bodyA) {
+                contactNode.contact.FlagForFiltering();
             }
-            edge = edge.next;
         }
     }
     return j;
@@ -357,12 +348,10 @@ Box2D.Dynamics.b2World.prototype.DestroyJoint = function(j) {
     j.m_edgeB.next = null;
     this.m_jointCount--;
     if (!collideConnected) {
-        var edge = bodyB.GetContactList();
-        while (edge) {
-            if (edge.other == bodyA) {
-                edge.contact.FlagForFiltering();
+        for (var contactNode = bodyB.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+            if (contactNode.contact.GetOther(bodyB) == bodyA) {
+                contactNode.contact.FlagForFiltering();
             }
-            edge = edge.next;
         }
     }
 };
@@ -541,9 +530,9 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
     }
     if (flags & Box2D.Dynamics.b2DebugDraw.e_pairBit) {
         var pairColor = new Box2D.Common.b2Color(0.3, 0.9, 0.9);
-        for (var contact = this.m_contactManager.m_contactList; contact; contact = contact.GetNext()) {
-            var fixtureA = contact.GetFixtureA();
-            var fixtureB = contact.GetFixtureB();
+        for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+            var fixtureA = contactNode.contact.GetFixtureA();
+            var fixtureB = contactNode.contact.GetFixtureB();
             var cA = fixtureA.GetAABB().GetCenter();
             var cB = fixtureB.GetAABB().GetCenter();
             this.m_debugDraw.DrawSegment(cA, cB, pairColor);
@@ -688,7 +677,7 @@ Box2D.Dynamics.b2World.prototype.GetJointList = function() {
  * @return {Box2D.Dynamics.Contacts.b2Contact}
  */
 Box2D.Dynamics.b2World.prototype.GetContactList = function() {
-    return this.m_contactList;
+    return this.contactList;
 };
 
 /**
@@ -722,9 +711,6 @@ Box2D.Dynamics.b2World.prototype.Solve = function(step) {
         if (seed.m_islandFlag) {
             continue;
         }
-        //if (!seed.IsAwake() || !seed.IsActive()) {
-        //    continue;
-        //}
         m_island.Clear();
         var stack = [];
         stack.push(seed);
@@ -738,17 +724,19 @@ Box2D.Dynamics.b2World.prototype.Solve = function(step) {
             if (b.GetType() == Box2D.Dynamics.b2BodyDef.b2_staticBody) {
                 continue;
             }
-            for (var ce = b.m_contactList; ce; ce = ce.next) {
-                if (ce.contact.m_islandFlag || ce.contact.IsSensor() || !ce.contact.IsEnabled() || !ce.contact.IsTouching()) {
+            for (var contactNode = b.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+                var contact = contactNode.contact;
+                if (contact.m_islandFlag || contact.IsSensor() || !contact.IsEnabled() || !contact.IsTouching()) {
                     continue;
                 }
-                m_island.AddContact(ce.contact);
-                ce.contact.m_islandFlag = true;
-                if (ce.other.m_islandFlag) {
+                m_island.AddContact(contact);
+                contact.m_islandFlag = true;
+                var other = contact.GetOther(b);
+                if (other.m_islandFlag) {
                     continue;
                 }
-                stack.push(ce.other);
-                ce.other.m_islandFlag = true;
+                stack.push(other);
+                other.m_islandFlag = true;
             }
             for (var jn = b.m_jointList; jn; jn = jn.next) {
                 if (jn.joint.m_islandFlag || !jn.other.IsActive()) {
@@ -830,24 +818,27 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
             if (b.GetType() != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
                 continue;
             }
-            for (var cEdge = b.m_contactList; cEdge; cEdge = cEdge.next) {
+            for (var contactNode = b.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
                 if (m_island.m_contactCount == Box2D.Common.b2Settings.b2_maxTOIContactsPerIsland) {
                     break;
                 }
-                if (cEdge.contact.m_islandFlag || cEdge.contact.IsSensor() || !cEdge.contact.IsEnabled() || !cEdge.contact.IsTouching()) {
+                var contact = contactNode.contact;
+                if (contact.m_islandFlag || contact.IsSensor() || !contact.IsEnabled() || !contact.IsTouching()) {
                     continue;
                 }
-                m_island.AddContact(cEdge.contact);
-                cEdge.contact.m_islandFlag = true;
-                if (cEdge.other.m_islandFlag) {
+                m_island.AddContact(contact);
+                contact.m_islandFlag = true;
+                
+                var other = contact.GetOther(b);
+                if (other.m_islandFlag) {
                     continue;
                 }
-                if (cEdge.other.GetType() != Box2D.Dynamics.b2BodyDef.b2_staticBody) {
-                    cEdge.other.Advance(minTOI);
-                    cEdge.other.SetAwake(true);
-                    queue.enqueue(cEdge.other);
+                if (other.GetType() != Box2D.Dynamics.b2BodyDef.b2_staticBody) {
+                    other.Advance(minTOI);
+                    other.SetAwake(true);
+                    queue.enqueue(other);
                 }
-                cEdge.other.m_islandFlag = true;
+                other.m_islandFlag = true;
             }
             for (var jEdge = b.m_jointList; jEdge; jEdge = jEdge.next) {
                 if (m_island.m_jointCount == Box2D.Common.b2Settings.b2_maxTOIJointsPerIsland) {
@@ -877,8 +868,8 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
                 continue;
             }
             m_island.m_bodies[i].SynchronizeFixtures();
-            for (var cEdge = m_island.m_bodies[i].m_contactList; cEdge; cEdge = cEdge.next) {
-                cEdge.contact.m_toi = null;
+            for (var contactNode = m_island.m_bodies[i].contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+                contactNode.contact.m_toi = null;
             }
         }
         for (var i = 0; i < m_island.m_contactCount; i++) {

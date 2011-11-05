@@ -119,15 +119,12 @@ Box2D.Dynamics.b2Fixture.prototype.SetSensor = function(sensor) {
     if (this.m_body == null) {
         return;
     }
-    var edge = this.m_body.GetContactList();
-    while (edge) {
-        var contact = edge.contact;
-        var fixtureA = contact.GetFixtureA();
-        var fixtureB = contact.GetFixtureB();
+    for (var contactNode = this.m_body.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+        var fixtureA = contactNode.contact.GetFixtureA();
+        var fixtureB = contactNode.contact.GetFixtureB();
         if (fixtureA == this || fixtureB == this) {
-            contact.SetSensor(fixtureA.IsSensor() || fixtureB.IsSensor());
+            contactNode.contact.SetSensor(fixtureA.IsSensor() || fixtureB.IsSensor());
         }
-        edge = edge.next;
     }
 };
 
@@ -146,15 +143,10 @@ Box2D.Dynamics.b2Fixture.prototype.SetFilterData = function(filter) {
     if (this.m_body == null) {
         return;
     }
-    var edge = this.m_body.GetContactList();
-    while (edge) {
-        var contact = edge.contact;
-        var fixtureA = contact.GetFixtureA();
-        var fixtureB = contact.GetFixtureB();
-        if (fixtureA == this || fixtureB == this) {
-            contact.FlagForFiltering();
+    for (var contactNode = this.m_body.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
+        if (contactNode.contact.GetFixtureA() == this || contactNode.contact.GetFixtureB() == this) {
+            contactNode.contact.FlagForFiltering();
         }
-        edge = edge.next;
     }
 };
 
