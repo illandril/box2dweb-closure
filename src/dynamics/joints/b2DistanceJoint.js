@@ -44,9 +44,9 @@ goog.require('Box2D.Common.Math.b2Math');
  */
 Box2D.Dynamics.Joints.b2DistanceJoint = function(def) {
     Box2D.Dynamics.Joints.b2Joint.call(this, def);
-    this.m_localAnchor1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localAnchor2 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_u = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_localAnchor1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localAnchor2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_u = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_localAnchor1.SetV(def.localAnchorA);
     this.m_localAnchor2.SetV(def.localAnchorB);
     this.m_length = def.length;
@@ -70,7 +70,7 @@ Box2D.Dynamics.Joints.b2DistanceJoint.prototype.GetAnchorB = function() {
  * @param {number} inv_dt
  */
 Box2D.Dynamics.Joints.b2DistanceJoint.prototype.GetReactionForce = function(inv_dt) {
-    return new Box2D.Common.Math.b2Vec2(inv_dt * this.m_impulse * this.m_u.x, inv_dt * this.m_impulse * this.m_u.y);
+    return Box2D.Common.Math.b2Vec2.Get(inv_dt * this.m_impulse * this.m_u.x, inv_dt * this.m_impulse * this.m_u.y);
 };
 
 /**

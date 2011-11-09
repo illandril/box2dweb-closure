@@ -43,10 +43,10 @@ goog.require('Box2D.Common.Math.b2Vec2');
  */
 Box2D.Dynamics.Joints.b2PulleyJointDef = function() {
     Box2D.Dynamics.Joints.b2JointDef.call(this);
-    this.groundAnchorA = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.groundAnchorB = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.localAnchorA = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.localAnchorB = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.groundAnchorA = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.groundAnchorB = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.localAnchorA = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.localAnchorB = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.type = Box2D.Dynamics.Joints.b2Joint.e_pulleyJoint;
     this.groundAnchorA.Set((-1.0), 1.0);
     this.groundAnchorB.Set(1.0, 1.0);

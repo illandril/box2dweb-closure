@@ -40,7 +40,7 @@ goog.require('Box2D.Collision.b2AABB');
  */
 Box2D.Collision.b2DynamicTreeNode = function(fixture) {
     /** @type {!Box2D.Collision.b2AABB} */
-    this.aabb = new Box2D.Collision.b2AABB();
+    this.aabb = Box2D.Collision.b2AABB.Get();
     
     /** @type {Box2D.Collision.b2DynamicTreeNode} */
     this.child1 = null;
@@ -55,6 +55,10 @@ Box2D.Collision.b2DynamicTreeNode = function(fixture) {
     if (typeof(fixture) != "undefined") {
         this.fixture = fixture;
     }
+};
+
+Box2D.Collision.b2DynamicTreeNode.prototype.Destroy = function() {
+    Box2D.Collision.b2AABB.Free(this.aabb);
 };
 
 /**

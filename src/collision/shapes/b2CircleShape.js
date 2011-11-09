@@ -50,7 +50,7 @@ Box2D.Collision.Shapes.b2CircleShape = function(radius) {
     this.m_radiusSquared = radius * radius;
     
     /** @type {!Box2D.Common.Math.b2Vec2} */
-    this.m_p = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_p = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };
 goog.inherits(Box2D.Collision.Shapes.b2CircleShape, Box2D.Collision.Shapes.b2Shape);
 

@@ -62,7 +62,7 @@ Box2D.Dynamics.b2Fixture = function(body, xf, def) {
      * @private
      * @type {!Box2D.Collision.b2AABB}
      */
-    this.m_aabb = new Box2D.Collision.b2AABB();
+    this.m_aabb = Box2D.Collision.b2AABB.Get();
     
     /**
      * @private
@@ -243,6 +243,7 @@ Box2D.Dynamics.b2Fixture.prototype.GetAABB = function() {
 };
 
 Box2D.Dynamics.b2Fixture.prototype.Destroy = function() {
+    Box2D.Collision.b2AABB.Free(this.m_aabb);
 };
 
 /**
@@ -272,13 +273,18 @@ Box2D.Dynamics.b2Fixture.prototype.DestroyProxy = function(broadPhase) {
  */
 Box2D.Dynamics.b2Fixture.prototype.Synchronize = function(broadPhase, transform1, transform2) {
     if (!this.m_proxy) return;
-    var aabb1 = new Box2D.Collision.b2AABB();
-    var aabb2 = new Box2D.Collision.b2AABB();
+    
+    var aabb1 = Box2D.Collision.b2AABB.Get();
+    var aabb2 = Box2D.Collision.b2AABB.Get();
     this.m_shape.ComputeAABB(aabb1, transform1);
     this.m_shape.ComputeAABB(aabb2, transform2);
     this.m_aabb.Combine(aabb1, aabb2);
+    Box2D.Collision.b2AABB.Free(aabb1);
+    Box2D.Collision.b2AABB.Free(aabb2);
+    
     var displacement = Box2D.Common.Math.b2Math.SubtractVV(transform2.position, transform1.position);
     broadPhase.MoveProxy(this.m_proxy, this.m_aabb, displacement);
+    Box2D.Common.Math.b2Vec2.Free(displacement);
 };
 
 /**

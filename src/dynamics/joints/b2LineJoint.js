@@ -45,14 +45,14 @@ goog.require('Box2D.Common.Math.b2Math');
  */
 Box2D.Dynamics.Joints.b2LineJoint = function(def) {
     Box2D.Dynamics.Joints.b2Joint.call(this, def);
-    this.m_localAnchor1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localAnchor2 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localXAxis1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localYAxis1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_axis = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_perp = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_localAnchor1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localAnchor2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localXAxis1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localYAxis1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_axis = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_perp = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_K = new Box2D.Common.Math.b2Mat22();
-    this.m_impulse = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_impulse = Box2D.Common.Math.b2Vec2.Get(0, 0);
     var tMat;
     var tX = 0;
     var tY = 0;
@@ -86,7 +86,7 @@ Box2D.Dynamics.Joints.b2LineJoint.prototype.GetAnchorB = function() {
 
 Box2D.Dynamics.Joints.b2LineJoint.prototype.GetReactionForce = function(inv_dt) {
     if (inv_dt === undefined) inv_dt = 0;
-    return new Box2D.Common.Math.b2Vec2(inv_dt * (this.m_impulse.x * this.m_perp.x + (this.m_motorImpulse + this.m_impulse.y) * this.m_axis.x), inv_dt * (this.m_impulse.x * this.m_perp.y + (this.m_motorImpulse + this.m_impulse.y) * this.m_axis.y));
+    return Box2D.Common.Math.b2Vec2.Get(inv_dt * (this.m_impulse.x * this.m_perp.x + (this.m_motorImpulse + this.m_impulse.y) * this.m_axis.x), inv_dt * (this.m_impulse.x * this.m_perp.y + (this.m_motorImpulse + this.m_impulse.y) * this.m_axis.y));
 };
 
 Box2D.Dynamics.Joints.b2LineJoint.prototype.GetReactionTorque = function(inv_dt) {
@@ -324,7 +324,7 @@ Box2D.Dynamics.Joints.b2LineJoint.prototype.SolveVelocityConstraints = function(
     if (this.m_enableLimit && this.m_limitState != Box2D.Dynamics.Joints.b2Joint.e_inactiveLimit) {
         var Cdot2 = this.m_axis.x * (v2.x - v1.x) + this.m_axis.y * (v2.y - v1.y) + this.m_a2 * w2 - this.m_a1 * w1;
         var f1 = this.m_impulse.Copy();
-        var df = this.m_K.Solve(new Box2D.Common.Math.b2Vec2(0, 0), (-Cdot1), (-Cdot2));
+        var df = this.m_K.Solve(Box2D.Common.Math.b2Vec2.Get(0, 0), (-Cdot1), (-Cdot2));
         this.m_impulse.Add(df);
         if (this.m_limitState == Box2D.Dynamics.Joints.b2Joint.e_atLowerLimit) {
             this.m_impulse.y = Math.max(this.m_impulse.y, 0.0);
@@ -434,7 +434,7 @@ Box2D.Dynamics.Joints.b2LineJoint.prototype.SolvePositionConstraints = function(
     this.m_perp = Box2D.Common.Math.b2Math.MulMV(R1, this.m_localYAxis1);
     this.m_s1 = (dX + r1X) * this.m_perp.y - (dY + r1Y) * this.m_perp.x;
     this.m_s2 = r2X * this.m_perp.y - r2Y * this.m_perp.x;
-    var impulse = new Box2D.Common.Math.b2Vec2(0, 0);
+    var impulse = Box2D.Common.Math.b2Vec2.Get(0, 0);
     var C1 = this.m_perp.x * dX + this.m_perp.y * dY;
     linearError = Math.max(linearError, Math.abs(C1));
     angularError = 0.0;

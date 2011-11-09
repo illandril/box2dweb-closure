@@ -44,10 +44,10 @@ goog.require('Box2D.Dynamics.Joints.b2Jacobian');
  */
 Box2D.Dynamics.Joints.b2GearJoint = function(def) {
     Box2D.Dynamics.Joints.b2Joint.call(this, def);
-    this.m_groundAnchor1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_groundAnchor2 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localAnchor1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localAnchor2 = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_groundAnchor1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_groundAnchor2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localAnchor1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localAnchor2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_J = new Box2D.Dynamics.Joints.b2Jacobian();
     var type1 = def.joint1.m_type;
     var type2 = def.joint2.m_type;
@@ -99,7 +99,7 @@ Box2D.Dynamics.Joints.b2GearJoint.prototype.GetAnchorB = function() {
 
 Box2D.Dynamics.Joints.b2GearJoint.prototype.GetReactionForce = function(inv_dt) {
     if (inv_dt === undefined) inv_dt = 0;
-    return new Box2D.Common.Math.b2Vec2(inv_dt * this.m_impulse * this.m_J.linearB.x, inv_dt * this.m_impulse * this.m_J.linearB.y);
+    return Box2D.Common.Math.b2Vec2.Get(inv_dt * this.m_impulse * this.m_J.linearB.x, inv_dt * this.m_impulse * this.m_J.linearB.y);
 };
 
 Box2D.Dynamics.Joints.b2GearJoint.prototype.GetReactionTorque = function(inv_dt) {

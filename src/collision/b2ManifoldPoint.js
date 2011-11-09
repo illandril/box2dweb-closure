@@ -39,11 +39,9 @@ goog.require('Box2D.Collision.b2ContactID');
  * @constructor
  */
 Box2D.Collision.b2ManifoldPoint = function() {
-    this.m_localPoint = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_localPoint = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_id = new Box2D.Collision.b2ContactID();
-    if (this.constructor === Box2D.Collision.b2ManifoldPoint) {
-        this.Reset();
-    }
+    this.Reset();
 };
 
 Box2D.Collision.b2ManifoldPoint.prototype.Reset = function() {

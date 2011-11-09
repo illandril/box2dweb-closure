@@ -38,7 +38,14 @@ goog.require('Box2D.Common.Math.b2Vec2');
  * @constructor
  */
 Box2D.Dynamics.Contacts.b2ContactConstraintPoint = function() {
-      this.localPoint = new Box2D.Common.Math.b2Vec2(0, 0);
-      this.rA = new Box2D.Common.Math.b2Vec2(0, 0);
-      this.rB = new Box2D.Common.Math.b2Vec2(0, 0);
+      this.localPoint = Box2D.Common.Math.b2Vec2.Get(0, 0);
+      this.rA = Box2D.Common.Math.b2Vec2.Get(0, 0);
+      this.rB = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };
+
+Box2D.Dynamics.Contacts.b2ContactConstraintPoint.prototype.Reset = function() {
+    this.localPoint.Set(0, 0);
+    this.rA.Set(0, 0);
+    this.rB.Set(0, 0);
+}; 
+

@@ -41,7 +41,7 @@ goog.require('Box2D.Common.Math.b2Vec2');
  * @constructor
  */
 Box2D.Common.Math.b2Transform = function(pos, r) {
-    this.position = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.position = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.R = new Box2D.Common.Math.b2Mat22();
     if (pos) {
         this.position.SetV(pos);

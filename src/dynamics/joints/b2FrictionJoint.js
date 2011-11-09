@@ -45,10 +45,10 @@ goog.require('Box2D.Common.Math.b2Math');
  */
 Box2D.Dynamics.Joints.b2FrictionJoint = function(def) {
     Box2D.Dynamics.Joints.b2Joint.call(this, def);
-    this.m_localAnchorA = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localAnchorB = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_localAnchorA = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localAnchorB = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_linearMass = new Box2D.Common.Math.b2Mat22();
-    this.m_linearImpulse = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_linearImpulse = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_localAnchorA.SetV(def.localAnchorA);
     this.m_localAnchorB.SetV(def.localAnchorB);
     this.m_linearMass.SetZero();
@@ -189,7 +189,7 @@ Box2D.Dynamics.Joints.b2FrictionJoint.prototype.SolveVelocityConstraints = funct
     
     var CdotX = vB.x - wB * rBY - vA.x + wA * rAY;
     var CdotY = vB.y + wB * rBX - vA.y - wA * rAX;
-    var impulseV = Box2D.Common.Math.b2Math.MulMV(this.m_linearMass, new Box2D.Common.Math.b2Vec2((-CdotX), (-CdotY)));
+    var impulseV = Box2D.Common.Math.b2Math.MulMV(this.m_linearMass, Box2D.Common.Math.b2Vec2.Get((-CdotX), (-CdotY)));
     var oldImpulseV = this.m_linearImpulse.Copy();
     this.m_linearImpulse.Add(impulseV);
     maxImpulse = step.dt * this.m_maxForce;

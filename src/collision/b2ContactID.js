@@ -32,18 +32,22 @@
  
 goog.provide('Box2D.Collision.b2ContactID');
 
-goog.require('Box2D.Collision.Features');
-
 /**
  * @constructor
  */
 Box2D.Collision.b2ContactID = function() {
-    /** @type {!Box2D.Collision.Features} */
-    this.features = new Box2D.Collision.Features();
-    this.features._m_id = this;
     
     /** @type {number} */
     this._key = 0;
+    
+    /** @type {number} */
+    this._referenceEdge = 0;
+    
+    /** @type {number} */
+    this._incidentEdge = 0;
+    
+    /** @type {number} */
+    this._incidentVertex = 0;
 };
 
 /**
@@ -58,10 +62,10 @@ Box2D.Collision.b2ContactID.prototype.GetKey = function () {
  */
 Box2D.Collision.b2ContactID.prototype.SetKey = function (key) {
     this._key = key;
-    this.features._referenceEdge = this._key & 0x000000ff;
-    this.features._incidentEdge = ((this._key & 0x0000ff00) >> 8) & 0x000000ff;
-    this.features._incidentVertex = ((this._key & 0x00ff0000) >> 16) & 0x000000ff;
-    this.features._flip = ((this._key & 0xff000000) >> 24) & 0x000000ff;
+    this._referenceEdge = this._key & 0x000000ff;
+    this._incidentEdge = ((this._key & 0x0000ff00) >> 8) & 0x000000ff;
+    this._incidentVertex = ((this._key & 0x00ff0000) >> 16) & 0x000000ff;
+    this._flip = ((this._key & 0xff000000) >> 24) & 0x000000ff;
 };
 
 /**
@@ -69,6 +73,39 @@ Box2D.Collision.b2ContactID.prototype.SetKey = function (key) {
  */
 Box2D.Collision.b2ContactID.prototype.Set = function (id) {
     this.SetKey(id._key);
+};
+
+
+/**
+ * @param {number} edge
+ */
+Box2D.Collision.b2ContactID.prototype.SetReferenceEdge = function(edge) {
+    this._referenceEdge = edge;
+    this._key = (this._key & 0xffffff00) | (this._referenceEdge & 0x000000ff);
+};
+
+/**
+ * @param {number} edge
+ */
+Box2D.Collision.b2ContactID.prototype.SetIncidentEdge = function(edge) {
+    this._incidentEdge = edge;
+    this._key = (this._key & 0xffff00ff) | ((this._incidentEdge << 8) & 0x0000ff00);
+};
+
+/**
+ * @param {number} vertex
+ */
+Box2D.Collision.b2ContactID.prototype.SetIncidentVertex = function(vertex) {
+    this._incidentVertex = vertex;
+    this._key = (this._key & 0xff00ffff) | ((this._incidentVertex << 16) & 0x00ff0000);
+};
+
+/**
+ * @param {number} flip
+ */
+Box2D.Collision.b2ContactID.prototype.SetFlip = function(flip) {
+    this._flip = flip;
+    this._key = (this._key & 0x00ffffff) | ((this._flip << 24) & 0xff000000);
 };
 
 Box2D.Collision.b2ContactID.prototype.Copy = function () {

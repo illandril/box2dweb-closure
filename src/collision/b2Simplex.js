@@ -108,7 +108,7 @@ Box2D.Collision.b2Simplex.prototype.GetSearchDirection = function() {
             }
     } else {
         Box2D.Common.b2Settings.b2Assert(false);
-        return new Box2D.Common.Math.b2Vec2(0, 0);
+        return Box2D.Common.Math.b2Vec2.Get(0, 0);
     }
 };
 
@@ -116,10 +116,10 @@ Box2D.Collision.b2Simplex.prototype.GetClosestPoint = function() {
     if (this.m_count == 1) {
         return this.m_v1.w;
     } else if (this.m_count == 2) {
-        return new Box2D.Common.Math.b2Vec2(this.m_v1.a * this.m_v1.w.x + this.m_v2.a * this.m_v2.w.x, this.m_v1.a * this.m_v1.w.y + this.m_v2.a * this.m_v2.w.y);
+        return Box2D.Common.Math.b2Vec2.Get(this.m_v1.a * this.m_v1.w.x + this.m_v2.a * this.m_v2.w.x, this.m_v1.a * this.m_v1.w.y + this.m_v2.a * this.m_v2.w.y);
     } else {
         Box2D.Common.b2Settings.b2Assert(false);
-        return new Box2D.Common.Math.b2Vec2(0, 0);
+        return Box2D.Common.Math.b2Vec2.Get(0, 0);
     }
 };
 

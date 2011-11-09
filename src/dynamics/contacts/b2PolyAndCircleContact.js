@@ -55,10 +55,10 @@ goog.inherits(Box2D.Dynamics.Contacts.b2PolyAndCircleContact, Box2D.Dynamics.Con
  * @param {!Box2D.Dynamics.b2Fixture} fixtureA
  * @param {!Box2D.Dynamics.b2Fixture} fixtureB
  */
-Box2D.Dynamics.Contacts.b2EdgeAndCircleContact.prototype.Reset = function(fixtureA, fixtureB) {
+Box2D.Dynamics.Contacts.b2PolyAndCircleContact.prototype.Reset = function(fixtureA, fixtureB) {
     Box2D.Common.b2Settings.b2Assert(fixtureA.GetShape() instanceof Box2D.Collision.Shapes.b2PolygonShape);
     Box2D.Common.b2Settings.b2Assert(fixtureB.GetShape() instanceof Box2D.Collision.Shapes.b2CircleShape);
-    Box2D.Dynamics.Contacts.b2Contact.Reset.call(this, fixtureA, fixtureB);
+    Box2D.Dynamics.Contacts.b2Contact.prototype.Reset.call(this, fixtureA, fixtureB);
 };
 
 Box2D.Dynamics.Contacts.b2PolyAndCircleContact.prototype.Evaluate = function() {

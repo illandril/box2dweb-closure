@@ -68,12 +68,21 @@
     fixDef.density = 1;
     fixDef.shape.SetAsBox(0.125, 0.125);
     bodyDef.allowSleep = true;
-    
+    doDebug = false;
     var stepsLeft = 800;
+    var fpsStepsLeft = stepsLeft;
     updateCalls.push(function() {
-        if ( stepsLeft > 0 ) {
+        if (stepsLeft > 0) {
             world.CreateBody(bodyDef).CreateFixture(fixDef);
             stepsLeft--;
+            if (stepsLeft == 0) {
+                markFPS();
+            }
+        } else if (fpsStepsLeft > 0) {
+            fpsStepsLeft--;
+            if (fpsStepsLeft == 0) {
+                markFPS();
+            }
         }
     });
 })();

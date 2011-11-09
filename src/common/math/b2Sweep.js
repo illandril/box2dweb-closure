@@ -38,9 +38,9 @@ goog.require('Box2D.Common.Math.b2Vec2');
  * @constructor
  */
 Box2D.Common.Math.b2Sweep = function() {
-    this.localCenter = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.c0 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.c = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.localCenter = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.c0 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.c = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };
 
 Box2D.Common.Math.b2Sweep.prototype.Set = function(other) {

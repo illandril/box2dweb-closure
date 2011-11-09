@@ -38,8 +38,8 @@ goog.require('Box2D.Common.Math.b2Vec2');
  * @constructor
  */
 Box2D.Dynamics.Joints.b2Jacobian = function() {
-    this.linearA = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.linearB = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.linearA = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.linearB = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };
 
 Box2D.Dynamics.Joints.b2Jacobian.prototype.SetZero = function() {

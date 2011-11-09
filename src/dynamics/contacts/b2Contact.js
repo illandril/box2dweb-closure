@@ -32,7 +32,6 @@
  
 goog.provide('Box2D.Dynamics.Contacts.b2Contact');
 
-goog.require('Box2D.Dynamics.Contacts.b2ContactEdge');
 goog.require('Box2D.Collision.b2Manifold');
 goog.require('Box2D.Collision.b2TOIInput');
 goog.require('Box2D.Collision.b2TimeOfImpact');
@@ -140,8 +139,8 @@ Box2D.Dynamics.Contacts.b2Contact = function(fixtureA, fixtureB) {
  * @param {!Box2D.Dynamics.b2Fixture} fixtureB
  */
 Box2D.Dynamics.Contacts.b2Contact.prototype.Reset = function(fixtureA, fixtureB) {
-    this.m_manifold = new Box2D.Collision.b2Manifold();
-    this.m_oldManifold = new Box2D.Collision.b2Manifold();
+    this.m_manifold.Reset();
+    this.m_oldManifold.Reset();
     this.touching = false;
     var bodyA = fixtureA.GetBody();
     var bodyB = fixtureB.GetBody();

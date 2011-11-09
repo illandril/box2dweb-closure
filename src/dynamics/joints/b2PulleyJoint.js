@@ -44,12 +44,12 @@ goog.require('Box2D.Common.Math.b2Math');
  */
 Box2D.Dynamics.Joints.b2PulleyJoint = function(def) {
     Box2D.Dynamics.Joints.b2Joint.call(this, def);
-    this.m_groundAnchor1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_groundAnchor2 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localAnchor1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localAnchor2 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_u1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_u2 = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_groundAnchor1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_groundAnchor2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localAnchor1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localAnchor2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_u1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_u2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_ground = this.m_bodyA.m_world.m_groundBody;
     this.m_groundAnchor1.x = def.groundAnchorA.x - this.m_ground.m_xf.position.x;
     this.m_groundAnchor1.y = def.groundAnchorA.y - this.m_ground.m_xf.position.y;
@@ -78,7 +78,7 @@ Box2D.Dynamics.Joints.b2PulleyJoint.prototype.GetAnchorB = function() {
 
 Box2D.Dynamics.Joints.b2PulleyJoint.prototype.GetReactionForce = function(inv_dt) {
     if (inv_dt === undefined) inv_dt = 0;
-    return new Box2D.Common.Math.b2Vec2(inv_dt * this.m_impulse * this.m_u2.x, inv_dt * this.m_impulse * this.m_u2.y);
+    return Box2D.Common.Math.b2Vec2.Get(inv_dt * this.m_impulse * this.m_u2.x, inv_dt * this.m_impulse * this.m_u2.y);
 };
 
 Box2D.Dynamics.Joints.b2PulleyJoint.prototype.GetReactionTorque = function(inv_dt) {

@@ -47,11 +47,11 @@ Box2D.Dynamics.Joints.b2MouseJoint = function(def) {
     this.K = new Box2D.Common.Math.b2Mat22();
     this.K1 = new Box2D.Common.Math.b2Mat22();
     this.K2 = new Box2D.Common.Math.b2Mat22();
-    this.m_localAnchor = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_target = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_impulse = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_localAnchor = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_target = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_impulse = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_mass = new Box2D.Common.Math.b2Mat22();
-    this.m_C = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_C = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_target.SetV(def.target);
     var tX = this.m_target.x - this.m_bodyB.m_xf.position.x;
     var tY = this.m_target.y - this.m_bodyB.m_xf.position.y;
@@ -77,7 +77,7 @@ Box2D.Dynamics.Joints.b2MouseJoint.prototype.GetAnchorB = function() {
 
 Box2D.Dynamics.Joints.b2MouseJoint.prototype.GetReactionForce = function(inv_dt) {
     if (inv_dt === undefined) inv_dt = 0;
-    return new Box2D.Common.Math.b2Vec2(inv_dt * this.m_impulse.x, inv_dt * this.m_impulse.y);
+    return Box2D.Common.Math.b2Vec2.Get(inv_dt * this.m_impulse.x, inv_dt * this.m_impulse.y);
 };
 
 Box2D.Dynamics.Joints.b2MouseJoint.prototype.GetReactionTorque = function(inv_dt) {

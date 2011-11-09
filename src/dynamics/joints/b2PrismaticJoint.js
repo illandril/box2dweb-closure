@@ -47,12 +47,12 @@ goog.require('Box2D.Common.Math.b2Math');
  */
 Box2D.Dynamics.Joints.b2PrismaticJoint = function(def) {
     Box2D.Dynamics.Joints.b2Joint.call(this, def);
-    this.m_localAnchor1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localAnchor2 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localXAxis1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localYAxis1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_axis = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_perp = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_localAnchor1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localAnchor2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localXAxis1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localYAxis1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_axis = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_perp = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_K = new Box2D.Common.Math.b2Mat33();
     this.m_impulse = new Box2D.Common.Math.b2Vec3(0, 0, 0);
     this.m_localAnchor1.SetV(def.localAnchorA);
@@ -86,7 +86,7 @@ Box2D.Dynamics.Joints.b2PrismaticJoint.prototype.GetAnchorB = function() {
 
 Box2D.Dynamics.Joints.b2PrismaticJoint.prototype.GetReactionForce = function(inv_dt) {
     if (inv_dt === undefined) inv_dt = 0;
-    return new Box2D.Common.Math.b2Vec2(inv_dt * (this.m_impulse.x * this.m_perp.x + (this.m_motorImpulse + this.m_impulse.z) * this.m_axis.x), inv_dt * (this.m_impulse.x * this.m_perp.y + (this.m_motorImpulse + this.m_impulse.z) * this.m_axis.y));
+    return Box2D.Common.Math.b2Vec2.Get(inv_dt * (this.m_impulse.x * this.m_perp.x + (this.m_motorImpulse + this.m_impulse.z) * this.m_axis.x), inv_dt * (this.m_impulse.x * this.m_perp.y + (this.m_motorImpulse + this.m_impulse.z) * this.m_axis.y));
 };
 
 Box2D.Dynamics.Joints.b2PrismaticJoint.prototype.GetReactionTorque = function(inv_dt) {
@@ -335,7 +335,7 @@ Box2D.Dynamics.Joints.b2PrismaticJoint.prototype.SolveVelocityConstraints = func
         }
         var bX = (-Cdot1X) - (this.m_impulse.z - f1.z) * this.m_K.col3.x;
         var bY = (-Cdot1Y) - (this.m_impulse.z - f1.z) * this.m_K.col3.y;
-        var f2r = this.m_K.Solve22(new Box2D.Common.Math.b2Vec2(0, 0), bX, bY);
+        var f2r = this.m_K.Solve22(Box2D.Common.Math.b2Vec2.Get(0, 0), bX, bY);
         f2r.x += f1.x;
         f2r.y += f1.y;
         this.m_impulse.x = f2r.x;
@@ -354,7 +354,7 @@ Box2D.Dynamics.Joints.b2PrismaticJoint.prototype.SolveVelocityConstraints = func
         v2.y += this.m_invMassB * PY;
         w2 += this.m_invIB * L2;
     } else {
-        var df2 = this.m_K.Solve22(new Box2D.Common.Math.b2Vec2(0, 0), (-Cdot1X), (-Cdot1Y));
+        var df2 = this.m_K.Solve22(Box2D.Common.Math.b2Vec2.Get(0, 0), (-Cdot1X), (-Cdot1Y));
         this.m_impulse.x += df2.x;
         this.m_impulse.y += df2.y;
         PX = df2.x * this.m_perp.x;
@@ -462,7 +462,7 @@ Box2D.Dynamics.Joints.b2PrismaticJoint.prototype.SolvePositionConstraints = func
         var k22 = i1 + i2;
         this.m_K.col1.Set(k11, k12, 0.0);
         this.m_K.col2.Set(k12, k22, 0.0);
-        var impulse1 = this.m_K.Solve22(new Box2D.Common.Math.b2Vec2(0, 0), (-C1X), (-C1Y));
+        var impulse1 = this.m_K.Solve22(Box2D.Common.Math.b2Vec2.Get(0, 0), (-C1X), (-C1Y));
         impulse.x = impulse1.x;
         impulse.y = impulse1.y;
         impulse.z = 0.0;

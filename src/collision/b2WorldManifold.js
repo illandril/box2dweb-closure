@@ -41,7 +41,7 @@ goog.require('Box2D.Common.Math.b2Vec2');
  */
 Box2D.Collision.b2WorldManifold = function() {
     /** @type  {!Box2D.Common.Math.b2Vec2} */
-    this.m_normal = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_normal = Box2D.Common.Math.b2Vec2.Get(0, 0);
     
     /** @type {Array.<!Box2D.Common.Math.b2Vec2>} */
     this.m_points = [];
@@ -50,7 +50,7 @@ Box2D.Collision.b2WorldManifold = function() {
     this.m_pointCount = 0;
     
     for (var i = 0; i < Box2D.Common.b2Settings.b2_maxManifoldPoints; i++) {
-        this.m_points[i] = new Box2D.Common.Math.b2Vec2(0, 0);
+        this.m_points[i] = Box2D.Common.Math.b2Vec2.Get(0, 0);
     }
 };
 

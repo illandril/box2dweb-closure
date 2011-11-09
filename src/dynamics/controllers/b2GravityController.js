@@ -75,7 +75,7 @@ Box2D.Dynamics.Controllers.b2GravityController.prototype.Step = function(step) {
                 if (r2 < Number.MIN_VALUE) {
                     continue;
                 }
-                var f = new Box2D.Common.Math.b2Vec2(dx, dy);
+                var f = Box2D.Common.Math.b2Vec2.Get(dx, dy);
                 f.Multiply(this.G / r2 / Math.sqrt(r2) * mass1 * body2.GetMass());
                 if (body1.IsAwake()) {
                     body1.ApplyForce(f, p1);
@@ -84,6 +84,7 @@ Box2D.Dynamics.Controllers.b2GravityController.prototype.Step = function(step) {
                 if (body2.IsAwake()) {
                     body2.ApplyForce(f, p2);
                 }
+                Box2D.Common.Math.b2Vec2.Free(f);
             }
         }
     } else {
@@ -103,7 +104,7 @@ Box2D.Dynamics.Controllers.b2GravityController.prototype.Step = function(step) {
                 if (r2 < Number.MIN_VALUE) {
                     continue;
                 }
-                var f = new Box2D.Common.Math.b2Vec2(dx, dy);
+                var f = Box2D.Common.Math.b2Vec2.Get(dx, dy);
                 f.Multiply(this.G / r2 * mass1 * body2.GetMass());
                 if (body1.IsAwake()) {
                     body1.ApplyForce(f, p1);
@@ -112,6 +113,7 @@ Box2D.Dynamics.Controllers.b2GravityController.prototype.Step = function(step) {
                 if (body2.IsAwake()) {
                     body2.ApplyForce(f, p2);
                 }
+                Box2D.Common.Math.b2Vec2.Free(f);
             }
         }
     }

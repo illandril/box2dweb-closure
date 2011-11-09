@@ -40,8 +40,8 @@ goog.require('Box2D.Common.Math.b2Math');
  * @constructor
  */
 Box2D.Collision.b2SeparationFunction = function() {
-    this.m_localPoint = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_axis = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_localPoint = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_axis = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };
 
 Box2D.Collision.b2SeparationFunction.prototype.Initialize = function(cache, proxyA, transformA, proxyB, transformB) {
@@ -153,10 +153,10 @@ Box2D.Collision.b2SeparationFunction.prototype.Initialize = function(cache, prox
             t = 0.0;
             s = Box2D.Common.Math.b2Math.Clamp((b - c) / a, 0.0, 1.0);
         }
-        localPointA = new Box2D.Common.Math.b2Vec2(0, 0);
+        localPointA = Box2D.Common.Math.b2Vec2.Get(0, 0);
         localPointA.x = localPointA1.x + s * (localPointA2.x - localPointA1.x);
         localPointA.y = localPointA1.y + s * (localPointA2.y - localPointA1.y);
-        localPointB = new Box2D.Common.Math.b2Vec2(0, 0);
+        localPointB = Box2D.Common.Math.b2Vec2.Get(0, 0);
         localPointB.x = localPointB1.x + s * (localPointB2.x - localPointB1.x);
         localPointB.y = localPointB1.y + s * (localPointB2.y - localPointB1.y);
         if (s == 0.0 || s == 1.0) {

@@ -41,7 +41,7 @@ goog.require('Box2D.Common.Math.b2Vec2');
  */
 Box2D.Dynamics.Controllers.b2ConstantForceController = function() {
     Box2D.Dynamics.Controllers.b2Controller.call(this);
-    this.F = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.F = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };
 goog.inherits(Box2D.Dynamics.Controllers.b2ConstantForceController, Box2D.Dynamics.Controllers.b2Controller);
 

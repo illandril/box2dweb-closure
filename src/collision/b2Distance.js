@@ -71,12 +71,16 @@ Box2D.Collision.b2Distance.Distance = function(output, cache, input) {
         if (d.LengthSquared() < Box2D.Common.b2Settings.MIN_VALUE_SQUARED) {
             break;
         }
-        s_simplex.m_vertices[s_simplex.m_count].indexA = input.proxyA.GetSupport(Box2D.Common.Math.b2Math.MulTMV(input.transformA.R, d.GetNegative()));
+        var negD = d.GetNegative();
+        s_simplex.m_vertices[s_simplex.m_count].indexA = input.proxyA.GetSupport(Box2D.Common.Math.b2Math.MulTMV(input.transformA.R, negD));
         s_simplex.m_vertices[s_simplex.m_count].wA = Box2D.Common.Math.b2Math.MulX(input.transformA, input.proxyA.GetVertex(s_simplex.m_vertices[s_simplex.m_count].indexA));
         s_simplex.m_vertices[s_simplex.m_count].indexB = input.proxyB.GetSupport(Box2D.Common.Math.b2Math.MulTMV(input.transformB.R, d));
         s_simplex.m_vertices[s_simplex.m_count].wB = Box2D.Common.Math.b2Math.MulX(input.transformB, input.proxyB.GetVertex(s_simplex.m_vertices[s_simplex.m_count].indexB));
         s_simplex.m_vertices[s_simplex.m_count].w = Box2D.Common.Math.b2Math.SubtractVV(s_simplex.m_vertices[s_simplex.m_count].wB, s_simplex.m_vertices[s_simplex.m_count].wA);
-
+        
+        Box2D.Common.Math.b2Vec2.Free(d);
+        Box2D.Common.Math.b2Vec2.Free(negD);
+        
         iter++;
         var duplicate = false;
         for (var i = 0; i < save.length; i++) {
@@ -104,13 +108,15 @@ Box2D.Collision.b2Distance.Distance = function(output, cache, input) {
             output.pointA.y += rA * normal.y;
             output.pointB.x -= rB * normal.x;
             output.pointB.y -= rB * normal.y;
+            Box2D.Common.Math.b2Vec2.Free(normal);
         } else {
-            var p = new Box2D.Common.Math.b2Vec2(0, 0);
+            var p = Box2D.Common.Math.b2Vec2.Get(0, 0);
             p.x = 0.5 * (output.pointA.x + output.pointB.x);
             p.y = 0.5 * (output.pointA.y + output.pointB.y);
             output.pointA.x = output.pointB.x = p.x;
             output.pointA.y = output.pointB.y = p.y;
             output.distance = 0.0;
+            Box2D.Common.Math.b2Vec2.Free(p);
         }
     }
 };

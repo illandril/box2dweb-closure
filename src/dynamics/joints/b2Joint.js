@@ -44,8 +44,8 @@ goog.require('Box2D.Common.Math.b2Math');
 Box2D.Dynamics.Joints.b2Joint = function(def) {
     this.m_edgeA = new Box2D.Dynamics.Joints.b2JointEdge();
     this.m_edgeB = new Box2D.Dynamics.Joints.b2JointEdge();
-    this.m_localCenterA = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localCenterB = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_localCenterA = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localCenterB = Box2D.Common.Math.b2Vec2.Get(0, 0);
     Box2D.Common.b2Settings.b2Assert(def.bodyA != def.bodyB);
     this.m_type = def.type;
     this.m_prev = null;

@@ -42,6 +42,34 @@ Box2D.Common.Math.b2Vec2 = function(x, y) {
     this.y = y;
 };
 
+
+/**
+ * @private
+ * @type {Array.<!Box2D.Common.Math.b2Vec2>}
+ */
+Box2D.Common.Math.b2Vec2._freeCache = [];
+
+/**
+ * @param {number} x
+ * @param {number} y
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
+Box2D.Common.Math.b2Vec2.Get = function(x, y) {
+    if (Box2D.Common.Math.b2Vec2._freeCache.length > 0) {
+        var vec = Box2D.Common.Math.b2Vec2._freeCache.pop();
+        vec.Set(x, y);
+        return vec;
+    }
+    return new Box2D.Common.Math.b2Vec2(x, y);
+};
+
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} vec
+ */
+Box2D.Common.Math.b2Vec2.Free = function(vec) {
+    Box2D.Common.Math.b2Vec2._freeCache.push(vec);
+};
+
 Box2D.Common.Math.b2Vec2.prototype.SetZero = function() {
     this.x = 0.0;
     this.y = 0.0;
@@ -68,7 +96,7 @@ Box2D.Common.Math.b2Vec2.prototype.SetV = function(v) {
  * @return {!Box2D.Common.Math.b2Vec2}
  */
 Box2D.Common.Math.b2Vec2.prototype.GetNegative = function() {
-    return new Box2D.Common.Math.b2Vec2((-this.x), (-this.y));
+    return Box2D.Common.Math.b2Vec2.Get((-this.x), (-this.y));
 };
 
 Box2D.Common.Math.b2Vec2.prototype.NegativeSelf = function() {
@@ -80,7 +108,7 @@ Box2D.Common.Math.b2Vec2.prototype.NegativeSelf = function() {
  * @return {!Box2D.Common.Math.b2Vec2}
  */
 Box2D.Common.Math.b2Vec2.prototype.Copy = function() {
-    return new Box2D.Common.Math.b2Vec2(this.x, this.y);
+    return Box2D.Common.Math.b2Vec2.Get(this.x, this.y);
 };
 
 /**

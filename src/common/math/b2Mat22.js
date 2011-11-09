@@ -38,8 +38,8 @@ goog.require('Box2D.Common.Math.b2Vec2');
  * @constructor
  */
 Box2D.Common.Math.b2Mat22 = function() {
-    this.col1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.col2 = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.col1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.col2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.SetIdentity();
 };
 

@@ -40,10 +40,10 @@ goog.require('Box2D.Common.Math.b2Vec2');
 Box2D.Dynamics.b2BodyDef = function() {
     
     /** @type {!Box2D.Common.Math.b2Vec2} */
-    this.position = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.position = Box2D.Common.Math.b2Vec2.Get(0, 0);
     
     /** @type {!Box2D.Common.Math.b2Vec2} */
-    this.linearVelocity = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.linearVelocity = Box2D.Common.Math.b2Vec2.Get(0, 0);
     
     /** @type {number} */
     this.angle = 0.0;

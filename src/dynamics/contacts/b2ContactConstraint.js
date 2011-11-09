@@ -40,9 +40,9 @@ goog.require('Box2D.Dynamics.Contacts.b2ContactConstraintPoint');
  * @constructor
  */
 Box2D.Dynamics.Contacts.b2ContactConstraint = function() {
-    this.localPlaneNormal = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.localPoint = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.normal = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.localPlaneNormal = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.localPoint = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.normal = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.normalMass = new Box2D.Common.Math.b2Mat22();
     this.K = new Box2D.Common.Math.b2Mat22();
     this.points = [];

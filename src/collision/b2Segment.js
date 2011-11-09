@@ -38,8 +38,8 @@ goog.require('Box2D.Common.Math.b2Vec2');
  * @constructor
  */
 Box2D.Collision.b2Segment = function() {
-    this.p1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.p2 = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.p1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.p2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };
 
 Box2D.Collision.b2Segment.prototype.TestSegment = function(lambda, normal, segment, maxLambda) {

@@ -262,6 +262,7 @@ Box2D.Dynamics.b2World.prototype.DestroyBody = function(b) {
         }
         b.DestroyFixture(fixtureNode.fixture);
     }
+    b.Destroy();
     this.bodyList.RemoveBody(b);
 };
 
@@ -545,8 +546,12 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
             for (var fixtureNode = b.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
                 var f = fixtureNode.fixture;
                 var aabb = this.m_contactManager.m_broadPhase.GetFatAABB(f.m_proxy);
-                var vs = [new Box2D.Common.Math.b2Vec2(aabb.lowerBound.x, aabb.lowerBound.y), new Box2D.Common.Math.b2Vec2(aabb.upperBound.x, aabb.lowerBound.y), new Box2D.Common.Math.b2Vec2(aabb.upperBound.x, aabb.upperBound.y), new Box2D.Common.Math.b2Vec2(aabb.lowerBound.x, aabb.upperBound.y)];
+                var vs = [Box2D.Common.Math.b2Vec2.Get(aabb.lowerBound.x, aabb.lowerBound.y), Box2D.Common.Math.b2Vec2.Get(aabb.upperBound.x, aabb.lowerBound.y), Box2D.Common.Math.b2Vec2.Get(aabb.upperBound.x, aabb.upperBound.y), Box2D.Common.Math.b2Vec2.Get(aabb.lowerBound.x, aabb.upperBound.y)];
                 this.m_debugDraw.DrawPolygon(vs, 4, aabbColor);
+                Box2D.Common.Math.b2Vec2.Free(vs[0]);
+                Box2D.Common.Math.b2Vec2.Free(vs[1]);
+                Box2D.Common.Math.b2Vec2.Free(vs[2]);
+                Box2D.Common.Math.b2Vec2.Free(vs[3]);
             }
         }
     }
@@ -581,10 +586,11 @@ Box2D.Dynamics.b2World.prototype.QueryPoint = function(callback, p) {
             return true;
         }
     };
-    var aabb = new Box2D.Collision.b2AABB();
+    var aabb = Box2D.Collision.b2AABB.Get();
     aabb.lowerBound.Set(p.x - Box2D.Common.b2Settings.b2_linearSlop, p.y - Box2D.Common.b2Settings.b2_linearSlop);
     aabb.upperBound.Set(p.x + Box2D.Common.b2Settings.b2_linearSlop, p.y + Box2D.Common.b2Settings.b2_linearSlop);
     this.m_contactManager.m_broadPhase.Query(WorldQueryWrapper, aabb);
+    Box2D.Collision.b2AABB.Free(aabb);
 };
 
 /**
@@ -604,8 +610,10 @@ Box2D.Dynamics.b2World.prototype.RayCast = function(callback, point1, point2) {
             var hit = fixture.RayCast(output, input);
             if (hit) {
                 var flipFrac = 1 - output.fraction;
-                var point = new Box2D.Common.Math.b2Vec2(flipFrac * point1.x + output.fraction * point2.x, flipFrac * point1.y + output.fraction * point2.y);
-                return callback(fixture, point, output.normal, output.fraction);
+                var point = Box2D.Common.Math.b2Vec2.Get(flipFrac * point1.x + output.fraction * point2.x, flipFrac * point1.y + output.fraction * point2.y);
+                var retVal = callback(fixture, point, output.normal, output.fraction);
+                Box2D.Common.Math.b2Vec2.Free(point);
+                return retVal;
             } else {
                 return input.maxFraction;
             }

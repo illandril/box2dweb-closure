@@ -199,14 +199,14 @@ Box2D.Collision.b2Collision.FindIncidentEdge = function(c, poly1, xf1, edge1, po
     }
     c[0].v.x = xf2.position.x + (xf2.R.col1.x * poly2.m_vertices[i1].x + xf2.R.col2.x * poly2.m_vertices[i1].y);
     c[0].v.y = xf2.position.y + (xf2.R.col1.y * poly2.m_vertices[i1].x + xf2.R.col2.y * poly2.m_vertices[i1].y);
-    c[0].id.features.SetReferenceEdge(edge1);
-    c[0].id.features.SetIncidentEdge(i1);
-    c[0].id.features.SetIncidentVertex(0);
+    c[0].id.SetReferenceEdge(edge1);
+    c[0].id.SetIncidentEdge(i1);
+    c[0].id.SetIncidentVertex(0);
     c[1].v.x = xf2.position.x + (xf2.R.col1.x * poly2.m_vertices[i2].x + xf2.R.col2.x * poly2.m_vertices[i2].y);
     c[1].v.y = xf2.position.y + (xf2.R.col1.y * poly2.m_vertices[i2].x + xf2.R.col2.y * poly2.m_vertices[i2].y);
-    c[1].id.features.SetReferenceEdge(edge1);
-    c[1].id.features.SetIncidentEdge(i2);
-    c[1].id.features.SetIncidentVertex(1);
+    c[1].id.SetReferenceEdge(edge1);
+    c[1].id.SetIncidentEdge(i2);
+    c[1].id.SetIncidentVertex(1);
 };
 
 Box2D.Collision.b2Collision.MakeClipPointVector = function() {
@@ -287,7 +287,7 @@ Box2D.Collision.b2Collision.CollidePolygons = function(manifold, polyA, xfA, pol
             manifold.m_points[pointCount].m_localPoint.x = (tX * xf2.R.col1.x + tY * xf2.R.col1.y);
             manifold.m_points[pointCount].m_localPoint.y = (tX * xf2.R.col2.x + tY * xf2.R.col2.y);
             manifold.m_points[pointCount].m_id.Set(Box2D.Collision.b2Collision.s_clipPoints2[i].id);
-            manifold.m_points[pointCount].m_id.features.SetFlip(flip);
+            manifold.m_points[pointCount].m_id.SetFlip(flip);
             pointCount++;
         }
     }
@@ -409,11 +409,11 @@ Box2D.Collision.b2Collision.TestOverlap = function(a, b) {
 Box2D.Collision.b2Collision.s_incidentEdge = Box2D.Collision.b2Collision.MakeClipPointVector();
 Box2D.Collision.b2Collision.s_clipPoints1 = Box2D.Collision.b2Collision.MakeClipPointVector();
 Box2D.Collision.b2Collision.s_clipPoints2 = Box2D.Collision.b2Collision.MakeClipPointVector();
-Box2D.Collision.b2Collision.s_localTangent = new Box2D.Common.Math.b2Vec2(0, 0);
-Box2D.Collision.b2Collision.s_localNormal = new Box2D.Common.Math.b2Vec2(0, 0);
-Box2D.Collision.b2Collision.s_planePoint = new Box2D.Common.Math.b2Vec2(0, 0);
-Box2D.Collision.b2Collision.s_normal = new Box2D.Common.Math.b2Vec2(0, 0);
-Box2D.Collision.b2Collision.s_tangent = new Box2D.Common.Math.b2Vec2(0, 0);
-Box2D.Collision.b2Collision.s_tangent2 = new Box2D.Common.Math.b2Vec2(0, 0);
-Box2D.Collision.b2Collision.s_v11 = new Box2D.Common.Math.b2Vec2(0, 0);
-Box2D.Collision.b2Collision.s_v12 = new Box2D.Common.Math.b2Vec2(0, 0);
+Box2D.Collision.b2Collision.s_localTangent = Box2D.Common.Math.b2Vec2.Get(0, 0);
+Box2D.Collision.b2Collision.s_localNormal = Box2D.Common.Math.b2Vec2.Get(0, 0);
+Box2D.Collision.b2Collision.s_planePoint = Box2D.Common.Math.b2Vec2.Get(0, 0);
+Box2D.Collision.b2Collision.s_normal = Box2D.Common.Math.b2Vec2.Get(0, 0);
+Box2D.Collision.b2Collision.s_tangent = Box2D.Common.Math.b2Vec2.Get(0, 0);
+Box2D.Collision.b2Collision.s_tangent2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+Box2D.Collision.b2Collision.s_v11 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+Box2D.Collision.b2Collision.s_v12 = Box2D.Common.Math.b2Vec2.Get(0, 0);

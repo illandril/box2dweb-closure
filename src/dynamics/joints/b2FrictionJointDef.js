@@ -43,8 +43,8 @@ goog.require('Box2D.Common.Math.b2Vec2');
  */
 Box2D.Dynamics.Joints.b2FrictionJointDef = function() {
     Box2D.Dynamics.Joints.b2JointDef.call(this);
-    this.localAnchorA = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.localAnchorB = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.localAnchorA = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.localAnchorB = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.type = Box2D.Dynamics.Joints.b2Joint.e_frictionJoint;
     this.maxForce = 0.0;
     this.maxTorque = 0.0;

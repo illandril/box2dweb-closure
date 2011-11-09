@@ -40,11 +40,11 @@ goog.require('Box2D.Collision.b2Manifold');
  * @constructor
  */
 Box2D.Dynamics.Contacts.b2PositionSolverManifold = function() {
-    this.m_normal = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_normal = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_separations = [];
     this.m_points = [];
     for (var i = 0; i < Box2D.Common.b2Settings.b2_maxManifoldPoints; i++) {
-        this.m_points[i] = new Box2D.Common.Math.b2Vec2(0, 0);
+        this.m_points[i] = Box2D.Common.Math.b2Vec2.Get(0, 0);
     }
 };
 

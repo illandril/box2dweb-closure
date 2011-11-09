@@ -52,10 +52,10 @@ Box2D.Dynamics.Joints.b2RevoluteJoint = function(def) {
     this.K2 = new Box2D.Common.Math.b2Mat22();
     this.K3 = new Box2D.Common.Math.b2Mat22();
     this.impulse3 = new Box2D.Common.Math.b2Vec3(0, 0, 0);
-    this.impulse2 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.reduced = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localAnchor1 = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.m_localAnchor2 = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.impulse2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.reduced = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localAnchor1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.m_localAnchor2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_impulse = new Box2D.Common.Math.b2Vec3(0, 0, 0);
     this.m_mass = new Box2D.Common.Math.b2Mat33();
     this.m_localAnchor1.SetV(def.localAnchorA);
@@ -84,7 +84,7 @@ Box2D.Dynamics.Joints.b2RevoluteJoint.prototype.GetAnchorB = function() {
 
 Box2D.Dynamics.Joints.b2RevoluteJoint.prototype.GetReactionForce = function(inv_dt) {
     if (inv_dt === undefined) inv_dt = 0;
-    return new Box2D.Common.Math.b2Vec2(inv_dt * this.m_impulse.x, inv_dt * this.m_impulse.y);
+    return Box2D.Common.Math.b2Vec2.Get(inv_dt * this.m_impulse.x, inv_dt * this.m_impulse.y);
 };
 
 Box2D.Dynamics.Joints.b2RevoluteJoint.prototype.GetReactionTorque = function(inv_dt) {
@@ -434,4 +434,4 @@ Box2D.Dynamics.Joints.b2RevoluteJoint.prototype.SolvePositionConstraints = funct
     return positionError <= Box2D.Common.b2Settings.b2_linearSlop && angularError <= Box2D.Common.b2Settings.b2_angularSlop;
 };
 
-Box2D.Dynamics.Joints.b2RevoluteJoint.tImpulse = new Box2D.Common.Math.b2Vec2(0, 0);
+Box2D.Dynamics.Joints.b2RevoluteJoint.tImpulse = Box2D.Common.Math.b2Vec2.Get(0, 0);

@@ -90,7 +90,7 @@ Box2D.Dynamics.b2Body = function(bd, world) {
       * @private
       * @type {!Box2D.Common.Math.b2Vec2}
       */
-    this.m_force = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_force = Box2D.Common.Math.b2Vec2.Get(0, 0);
     
     /**
      * @private
@@ -256,6 +256,14 @@ Box2D.Dynamics.b2Body.prototype.CreateFixture2 = function(shape, density) {
     def.shape = shape;
     def.density = density;
     return this.CreateFixture(def);
+};
+
+Box2D.Dynamics.b2Body.prototype.Destroy = function() {
+    // These should also be freed
+    //this.m_xf = new Box2D.Common.Math.b2Transform();
+    //this.m_sweep = new Box2D.Common.Math.b2Sweep();
+    Box2D.Common.Math.b2Vec2.Free(this.m_linearVelocity);
+    Box2D.Common.Math.b2Vec2.Free(this.m_force);
 };
 
 Box2D.Dynamics.b2Body.prototype.DestroyFixture = function(fixture) {
@@ -519,7 +527,7 @@ Box2D.Dynamics.b2Body.prototype.ResetMassData = function() {
     if (this.m_type == Box2D.Dynamics.b2BodyDef.b2_staticBody || this.m_type == Box2D.Dynamics.b2BodyDef.b2_kinematicBody) {
         return;
     }
-    var center = new Box2D.Common.Math.b2Vec2(0, 0);
+    var center = Box2D.Common.Math.b2Vec2.Get(0, 0);
     for (var node = this.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
         var f = node.fixture;
         if (f.m_density == 0.0) {
@@ -554,11 +562,13 @@ Box2D.Dynamics.b2Body.prototype.ResetMassData = function() {
     this.m_sweep.c.SetV(this.m_sweep.c0);
     this.m_linearVelocity.x += this.m_angularVelocity * (-(this.m_sweep.c.y - oldCenter.y));
     this.m_linearVelocity.y += this.m_angularVelocity * (+(this.m_sweep.c.x - oldCenter.x));
+    Box2D.Common.Math.b2Vec2.Free(center);
+    Box2D.Common.Math.b2Vec2.Free(oldCenter);
 };
 
 Box2D.Dynamics.b2Body.prototype.GetWorldPoint = function(localPoint) {
     var A = this.m_xf.R;
-    var u = new Box2D.Common.Math.b2Vec2(A.col1.x * localPoint.x + A.col2.x * localPoint.y, A.col1.y * localPoint.x + A.col2.y * localPoint.y);
+    var u = Box2D.Common.Math.b2Vec2.Get(A.col1.x * localPoint.x + A.col2.x * localPoint.y, A.col1.y * localPoint.x + A.col2.y * localPoint.y);
     u.x += this.m_xf.position.x;
     u.y += this.m_xf.position.y;
     return u;
@@ -577,15 +587,17 @@ Box2D.Dynamics.b2Body.prototype.GetLocalVector = function(worldVector) {
 };
 
 Box2D.Dynamics.b2Body.prototype.GetLinearVelocityFromWorldPoint = function(worldPoint) {
-    return new Box2D.Common.Math.b2Vec2(this.m_linearVelocity.x - this.m_angularVelocity * (worldPoint.y - this.m_sweep.c.y), this.m_linearVelocity.y + this.m_angularVelocity * (worldPoint.x - this.m_sweep.c.x));
+    return Box2D.Common.Math.b2Vec2.Get(this.m_linearVelocity.x - this.m_angularVelocity * (worldPoint.y - this.m_sweep.c.y), this.m_linearVelocity.y + this.m_angularVelocity * (worldPoint.x - this.m_sweep.c.x));
 };
 
 Box2D.Dynamics.b2Body.prototype.GetLinearVelocityFromLocalPoint = function(localPoint) {
     var A = this.m_xf.R;
-    var worldPoint = new Box2D.Common.Math.b2Vec2(A.col1.x * localPoint.x + A.col2.x * localPoint.y, A.col1.y * localPoint.x + A.col2.y * localPoint.y);
+    var worldPoint = Box2D.Common.Math.b2Vec2.Get(A.col1.x * localPoint.x + A.col2.x * localPoint.y, A.col1.y * localPoint.x + A.col2.y * localPoint.y);
     worldPoint.x += this.m_xf.position.x;
     worldPoint.y += this.m_xf.position.y;
-    return new Box2D.Common.Math.b2Vec2(this.m_linearVelocity.x - this.m_angularVelocity * (worldPoint.y - this.m_sweep.c.y), this.m_linearVelocity.y + this.m_angularVelocity * (worldPoint.x - this.m_sweep.c.x));
+    var velocity = Box2D.Common.Math.b2Vec2.Get(this.m_linearVelocity.x - this.m_angularVelocity * (worldPoint.y - this.m_sweep.c.y), this.m_linearVelocity.y + this.m_angularVelocity * (worldPoint.x - this.m_sweep.c.x));
+    Box2D.Common.Math.b2Vec2.Free(worldPoint);
+    return velocity;
 };
 
 /**

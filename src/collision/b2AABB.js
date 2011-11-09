@@ -38,8 +38,36 @@ goog.require('Box2D.Common.Math.b2Vec2');
  * @constructor
  */
 Box2D.Collision.b2AABB = function() {
-    this.lowerBound = new Box2D.Common.Math.b2Vec2(0, 0);
-    this.upperBound = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.lowerBound = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    this.upperBound = Box2D.Common.Math.b2Vec2.Get(0, 0);
+};
+
+
+
+/**
+ * @private
+ * @type {Array.<!Box2D.Collision.b2AABB>}
+ */
+Box2D.Collision.b2AABB._freeCache = [];
+
+/**
+ * @return {!Box2D.Collision.b2AABB}
+ */
+Box2D.Collision.b2AABB.Get = function(x, y) {
+    if (Box2D.Collision.b2AABB._freeCache.length > 0) {
+        var aabb = Box2D.Collision.b2AABB._freeCache.pop();
+        aabb.lowerBound.Set(0, 0);
+        aabb.upperBound.Set(0, 0);
+        return aabb;
+    }
+    return new Box2D.Collision.b2AABB();
+};
+
+/**
+ * @param {!Box2D.Collision.b2AABB} aabb
+ */
+Box2D.Collision.b2AABB.Free = function(aabb) {
+    Box2D.Collision.b2AABB._freeCache.push(aabb);
 };
 
 /**
@@ -61,7 +89,7 @@ Box2D.Collision.b2AABB.prototype.IsValid = function() {
  * @return {!Box2D.Common.Math.b2Vec2}
  */
 Box2D.Collision.b2AABB.prototype.GetCenter = function() {
-    return new Box2D.Common.Math.b2Vec2((this.lowerBound.x + this.upperBound.x) / 2, (this.lowerBound.y + this.upperBound.y) / 2);
+    return Box2D.Common.Math.b2Vec2.Get((this.lowerBound.x + this.upperBound.x) / 2, (this.lowerBound.y + this.upperBound.y) / 2);
 };
 
 
@@ -74,13 +102,14 @@ Box2D.Collision.b2AABB.prototype.SetCenter = function(newCenter) {
     this.upperBound.Subtract(oldCenter);
     this.lowerBound.Add(newCenter);
     this.upperBound.Add(newCenter);
+    Box2D.Common.Math.b2Vec2.Free(oldCenter);
 };
 
 /**
  * @return {!Box2D.Common.Math.b2Vec2}
  */
 Box2D.Collision.b2AABB.prototype.GetExtents = function() {
-    return new Box2D.Common.Math.b2Vec2((this.upperBound.x - this.lowerBound.x) / 2, (this.upperBound.y - this.lowerBound.y) / 2);
+    return Box2D.Common.Math.b2Vec2.Get((this.upperBound.x - this.lowerBound.x) / 2, (this.upperBound.y - this.lowerBound.y) / 2);
 };
 
 /**
@@ -180,7 +209,7 @@ Box2D.Collision.b2AABB.prototype.TestOverlap = function(other) {
  * @return {!Box2D.Collision.b2AABB}
  */
 Box2D.Collision.b2AABB.Combine = function(aabb1, aabb2) {
-    var aabb = new Box2D.Collision.b2AABB();
+    var aabb = Box2D.Collision.b2AABB.Get();
     aabb.Combine(aabb1, aabb2);
     return aabb;
 };

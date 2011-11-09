@@ -48,7 +48,7 @@ Box2D.Collision.Shapes.b2PolygonShape = function() {
     Box2D.Collision.Shapes.b2Shape.call(this);
     
     /** @type {!Box2D.Common.Math.b2Vec2} */
-    this.m_centroid = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.m_centroid = Box2D.Common.Math.b2Vec2.Get(0, 0);
     
     /** @type {Array.<!Box2D.Common.Math.b2Vec2>} */
     this.m_vertices = [];
@@ -453,10 +453,10 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeSubmergedArea = function(
     var outoIndex2 = ((outoIndex + 1) % this.m_vertexCount);
     var intoLamdda = (0 - depths[intoIndex]) / (depths[intoIndex2] - depths[intoIndex]);
     var outoLamdda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
-    var intoVec = new Box2D.Common.Math.b2Vec2(this.m_vertices[intoIndex].x * (1 - intoLamdda) + this.m_vertices[intoIndex2].x * intoLamdda, this.m_vertices[intoIndex].y * (1 - intoLamdda) + this.m_vertices[intoIndex2].y * intoLamdda);
-    var outoVec = new Box2D.Common.Math.b2Vec2(this.m_vertices[outoIndex].x * (1 - outoLamdda) + this.m_vertices[outoIndex2].x * outoLamdda, this.m_vertices[outoIndex].y * (1 - outoLamdda) + this.m_vertices[outoIndex2].y * outoLamdda);
+    var intoVec = Box2D.Common.Math.b2Vec2.Get(this.m_vertices[intoIndex].x * (1 - intoLamdda) + this.m_vertices[intoIndex2].x * intoLamdda, this.m_vertices[intoIndex].y * (1 - intoLamdda) + this.m_vertices[intoIndex2].y * intoLamdda);
+    var outoVec = Box2D.Common.Math.b2Vec2.Get(this.m_vertices[outoIndex].x * (1 - outoLamdda) + this.m_vertices[outoIndex2].x * outoLamdda, this.m_vertices[outoIndex].y * (1 - outoLamdda) + this.m_vertices[outoIndex2].y * outoLamdda);
     var area = 0;
-    var center = new Box2D.Common.Math.b2Vec2(0, 0);
+    var center = Box2D.Common.Math.b2Vec2.Get(0, 0);
     var p2 = this.m_vertices[intoIndex2];
     var p3;
     i = intoIndex2;
@@ -546,8 +546,8 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.Reserve = function(count) {
     this.m_vertices = [];
     this.m_normals = [];
     for (var i = this.m_vertices.length; i < count; i++) {
-        this.m_vertices[i] = new Box2D.Common.Math.b2Vec2(0, 0);
-        this.m_normals[i] = new Box2D.Common.Math.b2Vec2(0, 0);
+        this.m_vertices[i] = Box2D.Common.Math.b2Vec2.Get(0, 0);
+        this.m_normals[i] = Box2D.Common.Math.b2Vec2.Get(0, 0);
     }
 };
 
@@ -557,7 +557,7 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.Reserve = function(count) {
  * return {!Box2D.Common.Math.b2Vec2}
  */
 Box2D.Collision.Shapes.b2PolygonShape.ComputeCentroid = function(vs, count) {
-    var c = new Box2D.Common.Math.b2Vec2(0, 0);
+    var c = Box2D.Common.Math.b2Vec2.Get(0, 0);
     var area = 0.0;
     var p1X = 0.0;
     var p1Y = 0.0;

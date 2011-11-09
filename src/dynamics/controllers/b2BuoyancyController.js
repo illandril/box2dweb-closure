@@ -42,10 +42,10 @@ goog.require('Box2D.Common.b2Color');
  */
 Box2D.Dynamics.Controllers.b2BuoyancyController = function() {
     Box2D.Dynamics.Controllers.b2Controller.call(this);
-    this.normal = new Box2D.Common.Math.b2Vec2(0, -1);
+    this.normal = Box2D.Common.Math.b2Vec2.Get(0, -1);
     this.offset = 0;
     this.density = 0;
-    this.velocity = new Box2D.Common.Math.b2Vec2(0, 0);
+    this.velocity = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.linearDrag = 2;
     this.angularDrag = 1;
     this.useDensity = false;
@@ -60,12 +60,12 @@ Box2D.Dynamics.Controllers.b2BuoyancyController.prototype.Step = function(step) 
     }
     for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.awakeBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
         var body = bodyNode.body;
-        var areac = new Box2D.Common.Math.b2Vec2(0, 0);
-        var massc = new Box2D.Common.Math.b2Vec2(0, 0);
+        var areac = Box2D.Common.Math.b2Vec2.Get(0, 0);
+        var massc = Box2D.Common.Math.b2Vec2.Get(0, 0);
         var area = 0.0;
         var mass = 0.0;
         for (var fixtureNode = body.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
-            var sc = new Box2D.Common.Math.b2Vec2(0, 0);
+            var sc = Box2D.Common.Math.b2Vec2.Get(0, 0);
             var sarea = fixtureNode.fixture.GetShape().ComputeSubmergedArea(this.normal, this.offset, body.GetTransform(), sc);
             area += sarea;
             areac.x += sarea * sc.x;
@@ -95,13 +95,15 @@ Box2D.Dynamics.Controllers.b2BuoyancyController.prototype.Step = function(step) 
         dragForce.Multiply((-this.linearDrag * area));
         body.ApplyForce(dragForce, areac);
         body.ApplyTorque((-body.GetInertia() / body.GetMass() * area * body.GetAngularVelocity() * this.angularDrag));
+        Box2D.Common.Math.b2Vec2.Free(areac);
+        Box2D.Common.Math.b2Vec2.Free(massc);
     }
 };
 
 Box2D.Dynamics.Controllers.b2BuoyancyController.prototype.Draw = function(debugDraw) {
     var r = 1000;
-    var p1 = new Box2D.Common.Math.b2Vec2(this.normal.x * this.offset + this.normal.y * r, this.normal.y * this.offset - this.normal.x * r);
-    var p2 = new Box2D.Common.Math.b2Vec2(this.normal.x * this.offset - this.normal.y * r, this.normal.y * this.offset + this.normal.x * r);
+    var p1 = Box2D.Common.Math.b2Vec2.Get(this.normal.x * this.offset + this.normal.y * r, this.normal.y * this.offset - this.normal.x * r);
+    var p2 = Box2D.Common.Math.b2Vec2.Get(this.normal.x * this.offset - this.normal.y * r, this.normal.y * this.offset + this.normal.x * r);
     var color = new Box2D.Common.b2Color(0, 0, 1);
     debugDraw.DrawSegment(p1, p2, color);
 };

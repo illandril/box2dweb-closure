@@ -74,6 +74,7 @@ Box2D.Collision.b2DynamicTree.prototype.CreateProxy = function(aabb, fixture) {
  */
 Box2D.Collision.b2DynamicTree.prototype.DestroyProxy = function(proxy) {
     this.RemoveLeaf(proxy);
+    proxy.Destroy();
 };
 
 /**
@@ -166,7 +167,7 @@ Box2D.Collision.b2DynamicTree.prototype.RayCast = function(callback, input) {
     var tX = input.p1.x + maxFraction * (input.p2.x - input.p1.x);
     var tY = input.p1.y + maxFraction * (input.p2.y - input.p1.y);
     
-    var segmentAABB = new Box2D.Collision.b2AABB();
+    var segmentAABB = Box2D.Collision.b2AABB.Get();
     segmentAABB.lowerBound.x = Math.min(input.p1.x, tX);
     segmentAABB.lowerBound.y = Math.min(input.p1.y, tY);
     segmentAABB.upperBound.x = Math.max(input.p1.x, tX);
@@ -189,7 +190,7 @@ Box2D.Collision.b2DynamicTree.prototype.RayCast = function(callback, input) {
             var subInput = new Box2D.Collision.b2RayCastInput(input.p1, input.p2, input.maxFraction);
             maxFraction = callback(input, node.fixture);
             if (maxFraction == 0.0) {
-                return;
+                break;
             }
             if (maxFraction > 0.0) {
                 tX = input.p1.x + maxFraction * (input.p2.x - input.p1.x);
@@ -204,6 +205,7 @@ Box2D.Collision.b2DynamicTree.prototype.RayCast = function(callback, input) {
             stack.push(node.child2);
         }
     }
+    Box2D.Collision.b2AABB.Free(segmentAABB);
 };
 
 /**
@@ -267,6 +269,7 @@ Box2D.Collision.b2DynamicTree.prototype.GetBestSibling = function(leaf) {
             sibling = child2;
         }
     }
+    Box2D.Common.Math.b2Vec2.Free(center);
     return sibling;
 };
 
@@ -295,7 +298,7 @@ Box2D.Collision.b2DynamicTree.prototype.RemoveLeaf = function(leaf) {
         sibling.parent = node1;
         while (node1) {
             var oldAABB = node1.aabb;
-            node1.aabb = Box2D.Collision.b2AABB.Combine(node1.child1.aabb, node1.child2.aabb);
+            node1.aabb.Combine(node1.child1.aabb, node1.child2.aabb);
             if (oldAABB.Contains(node1.aabb)) {
                 break;
             }
@@ -305,4 +308,5 @@ Box2D.Collision.b2DynamicTree.prototype.RemoveLeaf = function(leaf) {
         this.m_root = sibling;
         sibling.parent = null;
     }
+    node2.Destroy();
 };
