@@ -35,14 +35,13 @@ goog.provide('Box2D.Collision.b2AABB');
 goog.require('Box2D.Common.Math.b2Vec2');
 
 /**
+ * @private
  * @constructor
  */
 Box2D.Collision.b2AABB = function() {
     this.lowerBound = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.upperBound = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };
-
-
 
 /**
  * @private
@@ -53,11 +52,10 @@ Box2D.Collision.b2AABB._freeCache = [];
 /**
  * @return {!Box2D.Collision.b2AABB}
  */
-Box2D.Collision.b2AABB.Get = function(x, y) {
+Box2D.Collision.b2AABB.Get = function() {
     if (Box2D.Collision.b2AABB._freeCache.length > 0) {
         var aabb = Box2D.Collision.b2AABB._freeCache.pop();
-        aabb.lowerBound.Set(0, 0);
-        aabb.upperBound.Set(0, 0);
+        aabb.SetZero();
         return aabb;
     }
     return new Box2D.Collision.b2AABB();
@@ -68,6 +66,11 @@ Box2D.Collision.b2AABB.Get = function(x, y) {
  */
 Box2D.Collision.b2AABB.Free = function(aabb) {
     Box2D.Collision.b2AABB._freeCache.push(aabb);
+};
+
+Box2D.Collision.b2AABB.prototype.SetZero = function() {
+    this.lowerBound.Set(0, 0);
+    this.upperBound.Set(0, 0);
 };
 
 /**

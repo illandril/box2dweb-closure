@@ -120,7 +120,7 @@ Box2D.Dynamics.Contacts.b2ContactList.prototype.RemoveContact = function(contact
         for(var i = 0; i <= Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts; i++) {
             this.RemoveNode(contactID, i);
         }
-        this.contactNodeLookup[contactID] = null;
+        delete this.contactNodeLookup[contactID];
         this.contactCount--;
     }
 };

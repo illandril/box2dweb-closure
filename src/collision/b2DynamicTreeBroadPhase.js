@@ -42,10 +42,17 @@ goog.require('goog.array');
  * @constructor
  */
 Box2D.Collision.b2DynamicTreeBroadPhase = function() {
-    /** @type {!Box2D.Collision.b2DynamicTree} */
+    
+    /**
+     * @private
+     * @type {!Box2D.Collision.b2DynamicTree}
+     */
     this.m_tree = new Box2D.Collision.b2DynamicTree();
     
-    /** @type {Array.<!Box2D.Collision.b2DynamicTreeNode>} */
+    /**
+     * @private
+     * @type {Array.<!Box2D.Collision.b2DynamicTreeNode>}
+     */
     this.m_moveBuffer = [];
 };
 
@@ -112,8 +119,8 @@ Box2D.Collision.b2DynamicTreeBroadPhase.prototype.GetProxyCount = function() {
 Box2D.Collision.b2DynamicTreeBroadPhase.prototype.UpdatePairs = function(callback) {
     var __this = this;
     var pairs = [];
-    for (var i = 0; i < this.m_moveBuffer.length; i++) {
-        var queryProxy = this.m_moveBuffer[i];
+    while (this.m_moveBuffer.length > 0) {
+        var queryProxy = this.m_moveBuffer.pop();
         
         var QueryCallback = function(fixture) {
             if (fixture != queryProxy.fixture) {
@@ -124,7 +131,6 @@ Box2D.Collision.b2DynamicTreeBroadPhase.prototype.UpdatePairs = function(callbac
         var fatAABB = this.m_tree.GetFatAABB(queryProxy);
         this.m_tree.Query(QueryCallback, fatAABB);
     }
-    this.m_moveBuffer = [];
     var i = 0;
     while(i < pairs.length) {
         var primaryPair = pairs[i];

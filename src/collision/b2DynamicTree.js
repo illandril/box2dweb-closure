@@ -58,7 +58,7 @@ Box2D.Collision.b2DynamicTree = function() {
  * @return {!Box2D.Collision.b2DynamicTreeNode}
  */
 Box2D.Collision.b2DynamicTree.prototype.CreateProxy = function(aabb, fixture) {
-    var node = new Box2D.Collision.b2DynamicTreeNode(fixture);
+    var node = Box2D.Collision.b2DynamicTreeNode.Get(fixture);
     var extendX = Box2D.Common.b2Settings.b2_aabbExtension;
     var extendY = Box2D.Common.b2Settings.b2_aabbExtension;
     node.aabb.lowerBound.x = aabb.lowerBound.x - extendX;
@@ -221,7 +221,7 @@ Box2D.Collision.b2DynamicTree.prototype.InsertLeaf = function(leaf) {
     var sibling = this.GetBestSibling(leaf);
     
     var parent = sibling.parent;
-    var node2 = new Box2D.Collision.b2DynamicTreeNode();
+    var node2 = Box2D.Collision.b2DynamicTreeNode.Get();
     node2.parent = parent;
     node2.aabb.Combine(leaf.aabb, sibling.aabb);
     if (parent) {

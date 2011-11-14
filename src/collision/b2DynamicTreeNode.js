@@ -35,6 +35,7 @@ goog.provide('Box2D.Collision.b2DynamicTreeNode');
 goog.require('Box2D.Collision.b2AABB');
 
 /**
+ * @private
  * @param {Box2D.Dynamics.b2Fixture=} fixture
  * @constructor
  */
@@ -52,13 +53,41 @@ Box2D.Collision.b2DynamicTreeNode = function(fixture) {
     this.parent = null;
     
     /** @type {Box2D.Dynamics.b2Fixture} */
+    this.fixture = null;
+    
     if (typeof(fixture) != "undefined") {
         this.fixture = fixture;
     }
 };
 
+/**
+ * @private
+ * @type {Array.<!Box2D.Collision.b2DynamicTreeNode>}
+ */
+Box2D.Collision.b2DynamicTreeNode._freeCache = [];
+
+/**
+ * @param {Box2D.Dynamics.b2Fixture=} fixture
+ * @return {!Box2D.Collision.b2DynamicTreeNode}
+ */
+Box2D.Collision.b2DynamicTreeNode.Get = function(fixture) {
+    if (Box2D.Collision.b2DynamicTreeNode._freeCache.length > 0) {
+        var node = Box2D.Collision.b2DynamicTreeNode._freeCache.pop();
+        if (typeof(fixture) != "undefined") {
+            node.fixture = fixture;
+        }
+        node.aabb.SetZero();
+        return node;
+    }
+    return new Box2D.Collision.b2DynamicTreeNode(fixture);
+};
+
 Box2D.Collision.b2DynamicTreeNode.prototype.Destroy = function() {
-    Box2D.Collision.b2AABB.Free(this.aabb);
+    this.child1 = null;
+    this.child2 = null;
+    this.parent = null;
+    this.fixture = null;
+    Box2D.Collision.b2DynamicTreeNode._freeCache.push(this);
 };
 
 /**
