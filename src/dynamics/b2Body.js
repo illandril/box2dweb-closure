@@ -516,6 +516,7 @@ Box2D.Dynamics.b2Body.prototype.SetMassData = function(massData) {
     this.m_sweep.c.SetV(this.m_sweep.c0);
     this.m_linearVelocity.x += this.m_angularVelocity * (-(this.m_sweep.c.y - oldCenter.y));
     this.m_linearVelocity.y += this.m_angularVelocity * (+(this.m_sweep.c.x - oldCenter.x));
+    Box2D.Common.Math.b2Vec2.Free(oldCenter);
 };
 
 Box2D.Dynamics.b2Body.prototype.ResetMassData = function() {

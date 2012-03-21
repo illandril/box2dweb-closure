@@ -205,39 +205,50 @@ Box2D.Collision.b2SeparationFunction.prototype.Initialize = function(cache, prox
 };
 
 Box2D.Collision.b2SeparationFunction.prototype.Evaluate = function(transformA, transformB) {
-    var axisA;
-    var axisB;
-    var localPointA;
-    var localPointB;
-    var pointA;
-    var pointB;
     var seperation = 0;
-    var normal;
     switch (this.m_type) {
     case Box2D.Collision.b2SeparationFunction.e_points:
-        axisA = Box2D.Common.Math.b2Math.MulTMV(transformA.R, this.m_axis);
-        axisB = Box2D.Common.Math.b2Math.MulTMV(transformB.R, this.m_axis.GetNegative());
-        localPointA = this.m_proxyA.GetSupportVertex(axisA);
-        localPointB = this.m_proxyB.GetSupportVertex(axisB);
-        pointA = Box2D.Common.Math.b2Math.MulX(transformA, localPointA);
-        pointB = Box2D.Common.Math.b2Math.MulX(transformB, localPointB);
+        var axisA = Box2D.Common.Math.b2Math.MulTMV(transformA.R, this.m_axis);
+        var negMAxis = this.m_axis.GetNegative();
+        var axisB = Box2D.Common.Math.b2Math.MulTMV(transformB.R, negMAxis);
+        Box2D.Common.Math.b2Vec2.Free(negMAxis);
+        var localPointA = this.m_proxyA.GetSupportVertex(axisA);
+        Box2D.Common.Math.b2Vec2.Free(axisA)
+        var localPointB = this.m_proxyB.GetSupportVertex(axisB);
+        Box2D.Common.Math.b2Vec2.Free(axisB)
+        var pointA = Box2D.Common.Math.b2Math.MulX(transformA, localPointA);
+        var pointB = Box2D.Common.Math.b2Math.MulX(transformB, localPointB);
         seperation = (pointB.x - pointA.x) * this.m_axis.x + (pointB.y - pointA.y) * this.m_axis.y;
+        Box2D.Common.Math.b2Vec2.Free(pointA)
+        Box2D.Common.Math.b2Vec2.Free(pointB)
         break;
     case Box2D.Collision.b2SeparationFunction.e_faceA:
-        normal = Box2D.Common.Math.b2Math.MulMV(transformA.R, this.m_axis);
-        pointA = Box2D.Common.Math.b2Math.MulX(transformA, this.m_localPoint);
-        axisB = Box2D.Common.Math.b2Math.MulTMV(transformB.R, normal.GetNegative());
-        localPointB = this.m_proxyB.GetSupportVertex(axisB);
-        pointB = Box2D.Common.Math.b2Math.MulX(transformB, localPointB);
+        var normal = Box2D.Common.Math.b2Math.MulMV(transformA.R, this.m_axis);
+        var negNormal = normal.GetNegative();
+        var axisB = Box2D.Common.Math.b2Math.MulTMV(transformB.R, negNormal);
+        Box2D.Common.Math.b2Vec2.Free(negNormal)
+        var localPointB = this.m_proxyB.GetSupportVertex(axisB);
+        Box2D.Common.Math.b2Vec2.Free(axisB)
+        var pointA = Box2D.Common.Math.b2Math.MulX(transformA, this.m_localPoint);
+        var pointB = Box2D.Common.Math.b2Math.MulX(transformB, localPointB);
         seperation = (pointB.x - pointA.x) * normal.x + (pointB.y - pointA.y) * normal.y;
+        Box2D.Common.Math.b2Vec2.Free(normal)
+        Box2D.Common.Math.b2Vec2.Free(pointA)
+        Box2D.Common.Math.b2Vec2.Free(pointB)
         break;
     case Box2D.Collision.b2SeparationFunction.e_faceB:
-        normal = Box2D.Common.Math.b2Math.MulMV(transformB.R, this.m_axis);
-        pointB = Box2D.Common.Math.b2Math.MulX(transformB, this.m_localPoint);
-        axisA = Box2D.Common.Math.b2Math.MulTMV(transformA.R, normal.GetNegative());
-        localPointA = this.m_proxyA.GetSupportVertex(axisA);
-        pointA = Box2D.Common.Math.b2Math.MulX(transformA, localPointA);
+        var normal = Box2D.Common.Math.b2Math.MulMV(transformB.R, this.m_axis);
+        var negNormal = normal.GetNegative();
+        var axisA = Box2D.Common.Math.b2Math.MulTMV(transformA.R, negNormal);
+        Box2D.Common.Math.b2Vec2.Free(negNormal)
+        var localPointA = this.m_proxyA.GetSupportVertex(axisA);
+        Box2D.Common.Math.b2Vec2.Free(axisA)
+        var pointA = Box2D.Common.Math.b2Math.MulX(transformA, localPointA);
+        var pointB = Box2D.Common.Math.b2Math.MulX(transformB, this.m_localPoint);
         seperation = (pointA.x - pointB.x) * normal.x + (pointA.y - pointB.y) * normal.y;
+        Box2D.Common.Math.b2Vec2.Free(normal)
+        Box2D.Common.Math.b2Vec2.Free(pointA)
+        Box2D.Common.Math.b2Vec2.Free(pointB)
         break;
     default:
         Box2D.Common.b2Settings.b2Assert(false);

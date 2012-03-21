@@ -69,17 +69,24 @@ Box2D.Collision.b2Distance.Distance = function(output, cache, input) {
         }
         var d = s_simplex.GetSearchDirection();
         if (d.LengthSquared() < Box2D.Common.b2Settings.MIN_VALUE_SQUARED) {
+            Box2D.Common.Math.b2Vec2.Free(d);
             break;
         }
+        Box2D.Common.Math.b2Vec2.Free(s_simplex.m_vertices[s_simplex.m_count].wA);
+        Box2D.Common.Math.b2Vec2.Free(s_simplex.m_vertices[s_simplex.m_count].wB);
+        Box2D.Common.Math.b2Vec2.Free(s_simplex.m_vertices[s_simplex.m_count].w);
         var negD = d.GetNegative();
-        s_simplex.m_vertices[s_simplex.m_count].indexA = input.proxyA.GetSupport(Box2D.Common.Math.b2Math.MulTMV(input.transformA.R, negD));
+        var aNegD = Box2D.Common.Math.b2Math.MulTMV(input.transformA.R, negD);
+        Box2D.Common.Math.b2Vec2.Free(negD);
+        s_simplex.m_vertices[s_simplex.m_count].indexA = input.proxyA.GetSupport(aNegD);
+        Box2D.Common.Math.b2Vec2.Free(aNegD);
         s_simplex.m_vertices[s_simplex.m_count].wA = Box2D.Common.Math.b2Math.MulX(input.transformA, input.proxyA.GetVertex(s_simplex.m_vertices[s_simplex.m_count].indexA));
-        s_simplex.m_vertices[s_simplex.m_count].indexB = input.proxyB.GetSupport(Box2D.Common.Math.b2Math.MulTMV(input.transformB.R, d));
+        var bD = Box2D.Common.Math.b2Math.MulTMV(input.transformB.R, d);
+        Box2D.Common.Math.b2Vec2.Free(d);
+        s_simplex.m_vertices[s_simplex.m_count].indexB = input.proxyB.GetSupport(bD);
+        Box2D.Common.Math.b2Vec2.Free(bD);
         s_simplex.m_vertices[s_simplex.m_count].wB = Box2D.Common.Math.b2Math.MulX(input.transformB, input.proxyB.GetVertex(s_simplex.m_vertices[s_simplex.m_count].indexB));
         s_simplex.m_vertices[s_simplex.m_count].w = Box2D.Common.Math.b2Math.SubtractVV(s_simplex.m_vertices[s_simplex.m_count].wB, s_simplex.m_vertices[s_simplex.m_count].wA);
-        
-        Box2D.Common.Math.b2Vec2.Free(d);
-        Box2D.Common.Math.b2Vec2.Free(negD);
         
         iter++;
         var duplicate = false;

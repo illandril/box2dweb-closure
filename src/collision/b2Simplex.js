@@ -99,13 +99,17 @@ Box2D.Collision.b2Simplex.prototype.GetSearchDirection = function() {
         return this.m_v1.w.GetNegative();
     } else if (this.m_count == 2) {
             var e12 = Box2D.Common.Math.b2Math.SubtractVV(this.m_v2.w, this.m_v1.w);
-            var sgn = Box2D.Common.Math.b2Math.CrossVV(e12, this.m_v1.w.GetNegative());
+            var neg = this.m_v1.w.GetNegative();
+            var sgn = Box2D.Common.Math.b2Math.CrossVV(e12, neg);
+            Box2D.Common.Math.b2Vec2.Free(neg);
+            var ret = null;
             if (sgn > 0.0) {
-                return Box2D.Common.Math.b2Math.CrossFV(1.0, e12);
+                ret = Box2D.Common.Math.b2Math.CrossFV(1.0, e12);
+            } else {
+                ret = Box2D.Common.Math.b2Math.CrossVF(e12, 1.0);
             }
-            else {
-                return Box2D.Common.Math.b2Math.CrossVF(e12, 1.0);
-            }
+            Box2D.Common.Math.b2Vec2.Free(e12);
+            return ret;
     } else {
         Box2D.Common.b2Settings.b2Assert(false);
         return Box2D.Common.Math.b2Vec2.Get(0, 0);
@@ -159,11 +163,13 @@ Box2D.Collision.b2Simplex.prototype.Solve2 = function() {
     var e12 = Box2D.Common.Math.b2Math.SubtractVV(w2, w1);
     var d12_2 = (-(w1.x * e12.x + w1.y * e12.y));
     if (d12_2 <= 0.0) {
+        Box2D.Common.Math.b2Vec2.Free(e12);
         this.m_v1.a = 1.0;
         this.m_count = 1;
         return;
     }
     var d12_1 = (w2.x * e12.x + w2.y * e12.y);
+    Box2D.Common.Math.b2Vec2.Free(e12);
     if (d12_1 <= 0.0) {
         this.m_v2.a = 1.0;
         this.m_count = 1;
@@ -196,6 +202,8 @@ Box2D.Collision.b2Simplex.prototype.Solve3 = function() {
     var d23_1 = w3e23;
     var d23_2 = (-w2e23);
     var n123 = Box2D.Common.Math.b2Math.CrossVV(e12, e13);
+    Box2D.Common.Math.b2Vec2.Free(e12);
+    Box2D.Common.Math.b2Vec2.Free(e13);
     var d123_1 = n123 * Box2D.Common.Math.b2Math.CrossVV(w2, w3);
     var d123_2 = n123 * Box2D.Common.Math.b2Math.CrossVV(w3, w1);
     var d123_3 = n123 * Box2D.Common.Math.b2Math.CrossVV(w1, w2);

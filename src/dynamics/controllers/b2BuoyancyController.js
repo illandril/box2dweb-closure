@@ -56,7 +56,7 @@ goog.inherits(Box2D.Dynamics.Controllers.b2BuoyancyController, Box2D.Dynamics.Co
 
 Box2D.Dynamics.Controllers.b2BuoyancyController.prototype.Step = function(step) {
     if (this.useWorldGravity) {
-        this.gravity = this.m_world.GetGravity().Copy();
+        this.gravity = this.m_world.GetGravity();
     }
     for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.awakeBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
         var body = bodyNode.body;
@@ -90,13 +90,14 @@ Box2D.Dynamics.Controllers.b2BuoyancyController.prototype.Step = function(step) 
         var buoyancyForce = this.gravity.GetNegative();
         buoyancyForce.Multiply(this.density * area);
         body.ApplyForce(buoyancyForce, massc);
+        Box2D.Common.Math.b2Vec2.Free(massc);
         var dragForce = body.GetLinearVelocityFromWorldPoint(areac);
         dragForce.Subtract(this.velocity);
         dragForce.Multiply((-this.linearDrag * area));
         body.ApplyForce(dragForce, areac);
-        body.ApplyTorque((-body.GetInertia() / body.GetMass() * area * body.GetAngularVelocity() * this.angularDrag));
+        Box2D.Common.Math.b2Vec2.Free(dragForce);
         Box2D.Common.Math.b2Vec2.Free(areac);
-        Box2D.Common.Math.b2Vec2.Free(massc);
+        body.ApplyTorque((-body.GetInertia() / body.GetMass() * area * body.GetAngularVelocity() * this.angularDrag));
     }
 };
 

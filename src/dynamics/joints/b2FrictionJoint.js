@@ -189,22 +189,27 @@ Box2D.Dynamics.Joints.b2FrictionJoint.prototype.SolveVelocityConstraints = funct
     
     var CdotX = vB.x - wB * rBY - vA.x + wA * rAY;
     var CdotY = vB.y + wB * rBX - vA.y - wA * rAX;
-    var impulseV = Box2D.Common.Math.b2Math.MulMV(this.m_linearMass, Box2D.Common.Math.b2Vec2.Get((-CdotX), (-CdotY)));
+    
+    var impulseV = Box2D.Common.Math.b2Vec2.Get((-CdotX), (-CdotY));
+    impulseV.MulM(this.m_linearMass);
     var oldImpulseV = this.m_linearImpulse.Copy();
     this.m_linearImpulse.Add(impulseV);
+    Box2D.Common.Math.b2Vec2.Free(impulseV);
     maxImpulse = step.dt * this.m_maxForce;
     if (this.m_linearImpulse.LengthSquared() > maxImpulse * maxImpulse) {
         this.m_linearImpulse.Normalize();
         this.m_linearImpulse.Multiply(maxImpulse);
     }
     impulseV = Box2D.Common.Math.b2Math.SubtractVV(this.m_linearImpulse, oldImpulseV);
+    Box2D.Common.Math.b2Vec2.Free(oldImpulseV);
     vA.x -= mA * impulseV.x;
     vA.y -= mA * impulseV.y;
     wA -= iA * (rAX * impulseV.y - rAY * impulseV.x);
     vB.x += mB * impulseV.x;
     vB.y += mB * impulseV.y;
     wB += iB * (rBX * impulseV.y - rBY * impulseV.x);
-    
+    Box2D.Common.Math.b2Vec2.Free(impulseV);
+
     bA.m_angularVelocity = wA;
     bB.m_angularVelocity = wB;
 };

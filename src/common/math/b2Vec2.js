@@ -68,7 +68,9 @@ Box2D.Common.Math.b2Vec2.Get = function(x, y) {
  * @param {!Box2D.Common.Math.b2Vec2} vec
  */
 Box2D.Common.Math.b2Vec2.Free = function(vec) {
-    Box2D.Common.Math.b2Vec2._freeCache.push(vec);
+    if (vec != null) {
+        Box2D.Common.Math.b2Vec2._freeCache.push(vec);
+    }
 };
 
 Box2D.Common.Math.b2Vec2.prototype.SetZero = function() {

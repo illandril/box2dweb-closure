@@ -324,7 +324,9 @@ Box2D.Dynamics.Joints.b2LineJoint.prototype.SolveVelocityConstraints = function(
     if (this.m_enableLimit && this.m_limitState != Box2D.Dynamics.Joints.b2Joint.e_inactiveLimit) {
         var Cdot2 = this.m_axis.x * (v2.x - v1.x) + this.m_axis.y * (v2.y - v1.y) + this.m_a2 * w2 - this.m_a1 * w1;
         var f1 = this.m_impulse.Copy();
-        var df = this.m_K.Solve(Box2D.Common.Math.b2Vec2.Get(0, 0), (-Cdot1), (-Cdot2));
+        var tempOriginVec = Box2D.Common.Math.b2Vec2.Get(0, 0);
+        var df = this.m_K.Solve(tempOriginVec, (-Cdot1), (-Cdot2));
+        Box2D.Common.Math.b2Vec2.Free(tempOriginVec);
         this.m_impulse.Add(df);
         if (this.m_limitState == Box2D.Dynamics.Joints.b2Joint.e_atLowerLimit) {
             this.m_impulse.y = Math.max(this.m_impulse.y, 0.0);
@@ -341,6 +343,7 @@ Box2D.Dynamics.Joints.b2LineJoint.prototype.SolveVelocityConstraints = function(
         this.m_impulse.x = f2r;
         df.x = this.m_impulse.x - f1.x;
         df.y = this.m_impulse.y - f1.y;
+        Box2D.Common.Math.b2Vec2.Free(f1);
         PX = df.x * this.m_perp.x + df.y * this.m_axis.x;
         PY = df.x * this.m_perp.y + df.y * this.m_axis.y;
         L1 = df.x * this.m_s1 + df.y * this.m_a1;

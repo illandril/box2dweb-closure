@@ -41,6 +41,9 @@ Box2D.Common.Math.b2Sweep = function() {
     this.localCenter = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.c0 = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.c = Box2D.Common.Math.b2Vec2.Get(0, 0);
+	this.a0 = null;
+	this.a = null;
+	this.t0 = null;
 };
 
 Box2D.Common.Math.b2Sweep.prototype.Set = function(other) {
