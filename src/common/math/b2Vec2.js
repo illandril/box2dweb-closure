@@ -41,8 +41,10 @@ goog.provide('Box2D.Common.Math.b2Vec2');
 Box2D.Common.Math.b2Vec2 = function(x, y) {
     this.x = x;
     this.y = y;
+    vc++;
 };
 
+var vc = 0;
 
 /**
  * @private

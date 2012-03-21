@@ -87,7 +87,10 @@ Box2D.Collision.b2SeparationFunction.prototype.Initialize = function(cache, prox
         localPointB = this.m_proxyB.GetVertex(cache.indexB[0]);
         this.m_localPoint.x = 0.5 * (localPointA1.x + localPointA2.x);
         this.m_localPoint.y = 0.5 * (localPointA1.y + localPointA2.y);
-        this.m_axis = Box2D.Common.Math.b2Math.CrossVF(Box2D.Common.Math.b2Math.SubtractVV(localPointA2, localPointA1), 1.0);
+        var tempVec = Box2D.Common.Math.b2Math.SubtractVV(localPointA2, localPointA1);
+        Box2D.Common.Math.b2Vec2.Free(this.m_axis);
+        this.m_axis = Box2D.Common.Math.b2Math.CrossVF(tempVec, 1.0);
+        Box2D.Common.Math.b2Vec2.Free(tempVec);
         this.m_axis.Normalize();
         tVec = this.m_axis;
         tMat = transformA.R;
@@ -112,7 +115,10 @@ Box2D.Collision.b2SeparationFunction.prototype.Initialize = function(cache, prox
         localPointA = this.m_proxyA.GetVertex(cache.indexA[0]);
         this.m_localPoint.x = 0.5 * (localPointB1.x + localPointB2.x);
         this.m_localPoint.y = 0.5 * (localPointB1.y + localPointB2.y);
-        this.m_axis = Box2D.Common.Math.b2Math.CrossVF(Box2D.Common.Math.b2Math.SubtractVV(localPointB2, localPointB1), 1.0);
+        var tempVec = Box2D.Common.Math.b2Math.SubtractVV(localPointB2, localPointB1);
+        Box2D.Common.Math.b2Vec2.Free(this.m_axis);
+        this.m_axis = Box2D.Common.Math.b2Math.CrossVF(tempVec, 1.0);
+        Box2D.Common.Math.b2Vec2.Free(tempVec);
         this.m_axis.Normalize();
         tVec = this.m_axis;
         tMat = transformB.R;
@@ -135,13 +141,18 @@ Box2D.Collision.b2SeparationFunction.prototype.Initialize = function(cache, prox
         localPointA2 = this.m_proxyA.GetVertex(cache.indexA[1]);
         localPointB1 = this.m_proxyB.GetVertex(cache.indexB[0]);
         localPointB2 = this.m_proxyB.GetVertex(cache.indexB[1]);
-        var dA = Box2D.Common.Math.b2Math.MulMV(transformA.R, Box2D.Common.Math.b2Math.SubtractVV(localPointA2, localPointA1));
-        var dB = Box2D.Common.Math.b2Math.MulMV(transformB.R, Box2D.Common.Math.b2Math.SubtractVV(localPointB2, localPointB1));
+        var tempVec = Box2D.Common.Math.b2Math.SubtractVV(localPointA2,localPointA1);
+        var dA = Box2D.Common.Math.b2Math.MulMV(transformA.R, tempVec);
+        Box2D.Common.Math.b2Vec2.Free(tempVec);
+        tempVec = Box2D.Common.Math.b2Math.SubtractVV(localPointB2, localPointB1);
+        var dB = Box2D.Common.Math.b2Math.MulMV(transformB.R, tempVec);
+        Box2D.Common.Math.b2Vec2.Free(tempVec);
         var a = dA.x * dA.x + dA.y * dA.y;
         var e = dB.x * dB.x + dB.y * dB.y;
         var r = Box2D.Common.Math.b2Math.SubtractVV(dB, dA);
         var c = dA.x * r.x + dA.y * r.y;
         var f = dB.x * r.x + dB.y * r.y;
+        Box2D.Common.Math.b2Vec2.Free(r);
         var b = dA.x * dB.x + dA.y * dB.y;
         var denom = a * e - b * b;
         s = 0.0;
@@ -161,7 +172,10 @@ Box2D.Collision.b2SeparationFunction.prototype.Initialize = function(cache, prox
         localPointB.y = localPointB1.y + s * (localPointB2.y - localPointB1.y);
         if (s == 0.0 || s == 1.0) {
             this.m_type = Box2D.Collision.b2SeparationFunction.e_faceB;
-            this.m_axis = Box2D.Common.Math.b2Math.CrossVF(Box2D.Common.Math.b2Math.SubtractVV(localPointB2, localPointB1), 1.0);
+            var tempVec = Box2D.Common.Math.b2Math.SubtractVV(localPointB2, localPointB1);
+            Box2D.Common.Math.b2Vec2.Free(this.m_axis);
+            this.m_axis = Box2D.Common.Math.b2Math.CrossVF(tempVec, 1.0);
+            Box2D.Common.Math.b2Vec2.Free(tempVec);
             this.m_axis.Normalize();
             this.m_localPoint = localPointB;
             tVec = this.m_axis;
@@ -182,7 +196,10 @@ Box2D.Collision.b2SeparationFunction.prototype.Initialize = function(cache, prox
             }
         } else {
             this.m_type = Box2D.Collision.b2SeparationFunction.e_faceA;
-            this.m_axis = Box2D.Common.Math.b2Math.CrossVF(Box2D.Common.Math.b2Math.SubtractVV(localPointA2, localPointA1), 1.0);
+            var tempVec = Box2D.Common.Math.b2Math.SubtractVV(localPointA2, localPointA1);
+            Box2D.Common.Math.b2Vec2.Free(this.m_axis);
+            this.m_axis = Box2D.Common.Math.b2Math.CrossVF(tempVec, 1.0);
+            Box2D.Common.Math.b2Vec2.Free(tempVec);
             this.m_localPoint = localPointA;
             tVec = this.m_axis;
             tMat = transformA.R;
@@ -201,6 +218,8 @@ Box2D.Collision.b2SeparationFunction.prototype.Initialize = function(cache, prox
                 this.m_axis.NegativeSelf();
             }
         }
+        Box2D.Common.Math.b2Vec2.Free(localPointA);
+        Box2D.Common.Math.b2Vec2.Free(localPointB);
     }
 };
 

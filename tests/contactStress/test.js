@@ -31,6 +31,7 @@
  */
  
  (function(){
+     doDebug = false;
     var bodyDef = new Box2D.Dynamics.b2BodyDef();
     bodyDef.type = Box2D.Dynamics.b2BodyDef.b2_staticBody;
     
