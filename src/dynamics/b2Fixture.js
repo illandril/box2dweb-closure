@@ -66,6 +66,12 @@ Box2D.Dynamics.b2Fixture = function(body, xf, def) {
     
     /**
      * @private
+     * @type {!Box2D.Collision.b2AABB}
+     */
+    this.m_aabb_temp = Box2D.Collision.b2AABB.Get();
+    
+    /**
+     * @private
      * @type {!Box2D.Dynamics.b2Body}
      */
     this.m_body = body;
@@ -274,13 +280,9 @@ Box2D.Dynamics.b2Fixture.prototype.DestroyProxy = function(broadPhase) {
 Box2D.Dynamics.b2Fixture.prototype.Synchronize = function(broadPhase, transform1, transform2) {
     if (!this.m_proxy) return;
     
-    var aabb1 = Box2D.Collision.b2AABB.Get();
-    var aabb2 = Box2D.Collision.b2AABB.Get();
-    this.m_shape.ComputeAABB(aabb1, transform1);
-    this.m_shape.ComputeAABB(aabb2, transform2);
-    this.m_aabb.Combine(aabb1, aabb2);
-    Box2D.Collision.b2AABB.Free(aabb1);
-    Box2D.Collision.b2AABB.Free(aabb2);
+    this.m_shape.ComputeAABB(this.m_aabb, transform1);
+    this.m_shape.ComputeAABB(this.m_aabb_temp, transform2);
+    this.m_aabb.Combine(this.m_aabb, this.m_aabb_temp);
     
     var displacement = Box2D.Common.Math.b2Math.SubtractVV(transform2.position, transform1.position);
     broadPhase.MoveProxy(this.m_proxy, this.m_aabb, displacement);

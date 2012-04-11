@@ -70,16 +70,15 @@ var getBodyCB = function(fixture) {
     return true;
 };
 
+var mjAABB = Box2D.Collision.b2AABB.Get()
 var getBodyAtMouse = function() {
     mousePVec.x = mouseX;
     mousePVec.y = mouseY;
-    var aabb = Box2D.Collision.b2AABB.Get();
-    aabb.lowerBound.Set(mouseX - 0.001, mouseY - 0.001);
-    aabb.upperBound.Set(mouseX + 0.001, mouseY + 0.001);
+    mjAABB.lowerBound.Set(mouseX - 0.001, mouseY - 0.001);
+    mjAABB.upperBound.Set(mouseX + 0.001, mouseY + 0.001);
     
     selectedBody = null;
-    world.QueryAABB(getBodyCB, aabb);
-    Box2D.Collision.b2AABB.Free(aabb);
+    world.QueryAABB(getBodyCB, mjAABB);
     return selectedBody;
 };
 
