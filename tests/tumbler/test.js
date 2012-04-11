@@ -68,7 +68,7 @@
     fixDef.density = 1;
     fixDef.shape.SetAsBox(0.125, 0.125);
     bodyDef.allowSleep = true;
-    doDebug = false;
+    
     var stepsLeft = 800;
     var fpsStepsLeft = stepsLeft;
     updateCalls.push(function() {
@@ -77,6 +77,7 @@
             stepsLeft--;
             if (stepsLeft == 0) {
                 markFPS();
+                resetMinMaxFPS();
             }
         } else if (fpsStepsLeft > 0) {
             fpsStepsLeft--;

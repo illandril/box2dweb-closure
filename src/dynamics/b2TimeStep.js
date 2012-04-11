@@ -32,6 +32,10 @@
  
 goog.provide('Box2D.Dynamics.b2TimeStep');
 
+goog.require('UsageTracker');
+
+tStepTrack = new UsageTracker('b2TimeStep', false);
+
 /**
  * @param {number} dt
  * @param {number} dtRatio
@@ -39,8 +43,22 @@ goog.provide('Box2D.Dynamics.b2TimeStep');
  * @param {number} velocityIterations
  * @param {boolean} warmStarting
  * @constructor
+ * @private
  */
 Box2D.Dynamics.b2TimeStep = function(dt, dtRatio, positionIterations, velocityIterations, warmStarting) {
+    tStepTrack.trackCreate();
+    this._reset(dt, dtRatio, positionIterations, velocityIterations, warmStarting);
+};
+
+/**
+ * @param {number} dt
+ * @param {number} dtRatio
+ * @param {number} positionIterations
+ * @param {number} velocityIterations
+ * @param {boolean} warmStarting
+ * @private
+ */
+Box2D.Dynamics.b2TimeStep.prototype._reset = function(dt, dtRatio, positionIterations, velocityIterations, warmStarting) {
     /**
      * @const
      * @type {number}
@@ -81,4 +99,38 @@ Box2D.Dynamics.b2TimeStep = function(dt, dtRatio, positionIterations, velocityIt
      * @type {boolean}
      */
     this.warmStarting = warmStarting;
+};
+
+/**
+ * @private
+ * @type {Array.<!Box2D.Dynamics.b2TimeStep>}
+ */
+Box2D.Dynamics.b2TimeStep._freeCache = [];
+
+/**
+ * @param {number} dt
+ * @param {number} dtRatio
+ * @param {number} positionIterations
+ * @param {number} velocityIterations
+ * @param {boolean} warmStarting
+ * @return {!Box2D.Dynamics.b2TimeStep}
+ */
+Box2D.Dynamics.b2TimeStep.Get = function(dt, dtRatio, positionIterations, velocityIterations, warmStarting) {
+    tStepTrack.trackGet();
+    if (Box2D.Dynamics.b2TimeStep._freeCache.length > 0) {
+        var step = Box2D.Dynamics.b2TimeStep._freeCache.pop();
+        step._reset(dt, dtRatio, positionIterations, velocityIterations, warmStarting);
+        return step;
+    }
+    return new Box2D.Dynamics.b2TimeStep(dt, dtRatio, positionIterations, velocityIterations, warmStarting);
+};
+
+/**
+ * @param {!Box2D.Dynamics.b2TimeStep} step
+ */
+Box2D.Dynamics.b2TimeStep.Free = function(step) {
+    if (step != null) {
+        tStepTrack.trackFree();
+        Box2D.Dynamics.b2TimeStep._freeCache.push(step);
+    }
 };

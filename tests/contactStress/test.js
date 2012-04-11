@@ -222,7 +222,7 @@
         createSpinner(getRandomPos(), new Box2D.Common.Math.b2Vec2(1, 1));
         createSnake(getRandomPos(), new Box2D.Common.Math.b2Vec2(1.25, 0.25));
     }
-    addContactStressTestObjects(250);
+    //addContactStressTestObjects(250);
     /*
     updateCalls.push(function(){
         if (Math.random() < 0.1) {

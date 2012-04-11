@@ -140,8 +140,6 @@ Box2D.Common.Math.b2Math.SubtractVV = function (a, b) {
  * @return {number}
  */
 Box2D.Common.Math.b2Math.Distance = function (a, b) {
-  var cX = a.x - b.x;
-  var cY = a.y - b.y;
   return Math.sqrt(Box2D.Common.Math.b2Math.DistanceSquared(a,b));
 };
 
@@ -171,7 +169,12 @@ Box2D.Common.Math.b2Math.MulFV = function (s, a) {
  * @return {!Box2D.Common.Math.b2Mat22}
  */
 Box2D.Common.Math.b2Math.AddMM = function (A, B) {
-  return Box2D.Common.Math.b2Mat22.FromVV(Box2D.Common.Math.b2Math.AddVV(A.col1, B.col1), Box2D.Common.Math.b2Math.AddVV(A.col2, B.col2));
+  var v1 = Box2D.Common.Math.b2Math.AddVV(A.col1, B.col1);
+  var v2 = Box2D.Common.Math.b2Math.AddVV(A.col2, B.col2);
+  var m = Box2D.Common.Math.b2Mat22.FromVV(v1, v2);
+  Box2D.Common.Math.b2Vec2.Free(v1);
+  Box2D.Common.Math.b2Vec2.Free(v2);
+  return m;
 };
 
 /**
@@ -180,7 +183,12 @@ Box2D.Common.Math.b2Math.AddMM = function (A, B) {
  * @return {!Box2D.Common.Math.b2Mat22}
  */
 Box2D.Common.Math.b2Math.MulMM = function (A, B) {
-  return Box2D.Common.Math.b2Mat22.FromVV(Box2D.Common.Math.b2Math.MulMV(A, B.col1), Box2D.Common.Math.b2Math.MulMV(A, B.col2));
+  var v1 = Box2D.Common.Math.b2Math.MulMV(A, B.col1);
+  var v2 = Box2D.Common.Math.b2Math.MulMV(A, B.col2);
+  var m = Box2D.Common.Math.b2Mat22.FromVV(v1, v2);
+  Box2D.Common.Math.b2Vec2.Free(v1);
+  Box2D.Common.Math.b2Vec2.Free(v2);
+  return m;
 };
 
 /**
@@ -191,7 +199,10 @@ Box2D.Common.Math.b2Math.MulMM = function (A, B) {
 Box2D.Common.Math.b2Math.MulTMM = function (A, B) {
   var c1 = Box2D.Common.Math.b2Vec2.Get(Box2D.Common.Math.b2Math.Dot(A.col1, B.col1), Box2D.Common.Math.b2Math.Dot(A.col2, B.col1));
   var c2 = Box2D.Common.Math.b2Vec2.Get(Box2D.Common.Math.b2Math.Dot(A.col1, B.col2), Box2D.Common.Math.b2Math.Dot(A.col2, B.col2));
-  return Box2D.Common.Math.b2Mat22.FromVV(c1, c2);
+  var m = Box2D.Common.Math.b2Mat22.FromVV(c1, c2);
+  Box2D.Common.Math.b2Vec2.Free(c1);
+  Box2D.Common.Math.b2Vec2.Free(c2);
+  return m;
 };
 
 /**
@@ -207,7 +218,12 @@ Box2D.Common.Math.b2Math.AbsV = function (a) {
  * @return {!Box2D.Common.Math.b2Mat22}
  */
 Box2D.Common.Math.b2Math.AbsM = function (A) {
-  return Box2D.Common.Math.b2Mat22.FromVV(Box2D.Common.Math.b2Math.AbsV(A.col1), Box2D.Common.Math.b2Math.AbsV(A.col2));
+  var v1 = Box2D.Common.Math.b2Math.AbsV(A.col1);
+  var v2 = Box2D.Common.Math.b2Math.AbsV(A.col2)
+  var m = Box2D.Common.Math.b2Mat22.FromVV(v1, v2);
+  Box2D.Common.Math.b2Vec2.Free(v1);
+  Box2D.Common.Math.b2Vec2.Free(v2);
+  return m;
 };
 
 /**
@@ -227,7 +243,7 @@ Box2D.Common.Math.b2Math.Clamp = function (a, low, high) {
  * @return {!Box2D.Common.Math.b2Vec2}
  */
 Box2D.Common.Math.b2Math.ClampV = function (a, low, high) {
-    var x = Box2D.Common.Math.b2Math.Clamp(a.x, low.x, high.x);
-    var y = Box2D.Common.Math.b2Math.Clamp(a.y, low.y, high.y);
+  var x = Box2D.Common.Math.b2Math.Clamp(a.x, low.x, high.x);
+  var y = Box2D.Common.Math.b2Math.Clamp(a.y, low.y, high.y);
   return Box2D.Common.Math.b2Vec2.Get(x, y);
 };

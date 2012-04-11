@@ -30,7 +30,8 @@
  * https://github.com/illandril/box2dweb-closure
  */
  
- var mouseX, mouseY, mousePVec, isMouseDown, selectedBody, mouseJoint;
+ var mouseX, mouseY, isMouseDown, selectedBody, mouseJoint;
+var mousePVec = Box2D.Common.Math.b2Vec2.Get(0,0);
 
 var getElementPosition = function(element) {
     var elem = element,
@@ -70,13 +71,15 @@ var getBodyCB = function(fixture) {
 };
 
 var getBodyAtMouse = function() {
-    mousePVec = new Box2D.Common.Math.b2Vec2(mouseX, mouseY);
-    var aabb = new Box2D.Collision.b2AABB();
+    mousePVec.x = mouseX;
+    mousePVec.y = mouseY;
+    var aabb = Box2D.Collision.b2AABB.Get();
     aabb.lowerBound.Set(mouseX - 0.001, mouseY - 0.001);
     aabb.upperBound.Set(mouseX + 0.001, mouseY + 0.001);
     
     selectedBody = null;
     world.QueryAABB(getBodyCB, aabb);
+    Box2D.Collision.b2AABB.Free(aabb);
     return selectedBody;
 };
 

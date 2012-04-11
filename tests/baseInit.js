@@ -32,9 +32,9 @@
  
  var updateCalls = [];
 var world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 9.8) /* gravity */, true /* allowSleep */);
-var doDebug = true;
+var doDebug = false;
 (function(){
-    var targetFPS = 200;
+    var targetFPS = 300;
     var fixDef = new Box2D.Dynamics.b2FixtureDef();
     fixDef.density = 1.0;
     fixDef.friction = 0.5;

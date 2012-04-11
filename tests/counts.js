@@ -30,15 +30,10 @@
  * https://github.com/illandril/box2dweb-closure
  */
  
- document.write('<div id="counts">???</div>');
+ document.write('<pre id="counts">???</pre>');
 updateCalls.push(function() {
     var bodyCount = world.GetBodyCount();
     var jointCount = world.m_jointCount;
     var contactCount = world.GetContactCount();
-    document.getElementById('counts').innerHTML =
-    "<table>"
-    + "<tr><td align='right'>" + bodyCount + "</td><td>&nbsp;bodies</td></tr>"
-    + "<tr><td align='right'>" + jointCount + "</td><td>&nbsp;joints</td></tr>"
-    + "<tr><td align='right'>" + contactCount + "</td><td>&nbsp;contacts</td></tr>"
-    + "</table>";
+    document.getElementById('counts').innerHTML = bodyCount + " bodies\n" + jointCount + " joints\n" + contactCount + " contacts";
 });

@@ -32,6 +32,10 @@
  
 goog.provide('Box2D.Common.Math.b2Vec2');
 
+goog.require('UsageTracker');
+
+v2Track = new UsageTracker('b2Vec2', false);
+
 /**
  * @private
  * @param {number} x
@@ -39,12 +43,10 @@ goog.provide('Box2D.Common.Math.b2Vec2');
  * @constructor
  */
 Box2D.Common.Math.b2Vec2 = function(x, y) {
+    v2Track.trackCreate();
     this.x = x;
     this.y = y;
-    vc++;
 };
-
-var vc = 0;
 
 /**
  * @private
@@ -58,6 +60,7 @@ Box2D.Common.Math.b2Vec2._freeCache = [];
  * @return {!Box2D.Common.Math.b2Vec2}
  */
 Box2D.Common.Math.b2Vec2.Get = function(x, y) {
+    v2Track.trackGet();
     if (Box2D.Common.Math.b2Vec2._freeCache.length > 0) {
         var vec = Box2D.Common.Math.b2Vec2._freeCache.pop();
         vec.Set(x, y);
@@ -71,6 +74,7 @@ Box2D.Common.Math.b2Vec2.Get = function(x, y) {
  */
 Box2D.Common.Math.b2Vec2.Free = function(vec) {
     if (vec != null) {
+        v2Track.trackFree();
         Box2D.Common.Math.b2Vec2._freeCache.push(vec);
     }
 };

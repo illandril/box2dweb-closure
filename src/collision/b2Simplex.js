@@ -39,12 +39,54 @@ goog.require('Box2D.Common.Math.b2Vec2');
 
 /**
  * @constructor
+ * @private
  */
 Box2D.Collision.b2Simplex = function() {
     this.m_v1 = new Box2D.Collision.b2SimplexVertex();
     this.m_v2 = new Box2D.Collision.b2SimplexVertex();
     this.m_v3 = new Box2D.Collision.b2SimplexVertex();
     this.m_vertices = [this.m_v1, this.m_v2, this.m_v3];
+};
+
+/**
+ * @private
+ * @type {Array.<!Box2D.Collision.b2Simplex>}
+ */
+Box2D.Collision.b2Simplex._freeCache = [];
+
+/**
+ * @return {!Box2D.Collision.b2Simplex}
+ */
+Box2D.Collision.b2Simplex.Get = function() {
+    if (Box2D.Collision.b2Simplex._freeCache.length > 0) {
+        var simplex = Box2D.Collision.b2Simplex._freeCache.pop();
+        for (var i = 0; i < simplex.m_vertices.length; i++) {
+            var v = simplex.m_vertices[i];
+            if(v.wA != null) {
+                v.wA.Set(0,0);
+            }
+            if(v.wB != null) {
+                v.wB.Set(0,0);
+            }
+            if(v.w != null) {
+                v.w.Set(0,0);
+            }
+            v.indexA = 0;
+            v.indexB = 0;
+            v.a = 0;
+        }
+        return simplex;
+    }
+    return new Box2D.Collision.b2Simplex();
+};
+
+/**
+ * @param {!Box2D.Collision.b2Simplex} simplex
+ */
+Box2D.Collision.b2Simplex.Free = function(simplex) {
+    if (simplex != null) {
+        Box2D.Collision.b2Simplex._freeCache.push(simplex);
+    }
 };
 
 Box2D.Collision.b2Simplex.prototype.ReadCache = function(cache, proxyA, transformA, proxyB, transformB) {
@@ -59,6 +101,9 @@ Box2D.Collision.b2Simplex.prototype.ReadCache = function(cache, proxyA, transfor
         v.indexB = cache.indexB[i];
         wALocal = proxyA.GetVertex(v.indexA);
         wBLocal = proxyB.GetVertex(v.indexB);
+        Box2D.Common.Math.b2Vec2.Free(v.wA);
+        Box2D.Common.Math.b2Vec2.Free(v.wB);
+        Box2D.Common.Math.b2Vec2.Free(v.w);
         v.wA = Box2D.Common.Math.b2Math.MulX(transformA, wALocal);
         v.wB = Box2D.Common.Math.b2Math.MulX(transformB, wBLocal);
         v.w = Box2D.Common.Math.b2Math.SubtractVV(v.wB, v.wA);
@@ -77,6 +122,9 @@ Box2D.Collision.b2Simplex.prototype.ReadCache = function(cache, proxyA, transfor
         v.indexB = 0;
         wALocal = proxyA.GetVertex(0);
         wBLocal = proxyB.GetVertex(0);
+        Box2D.Common.Math.b2Vec2.Free(v.wA);
+        Box2D.Common.Math.b2Vec2.Free(v.wB);
+        Box2D.Common.Math.b2Vec2.Free(v.w);
         v.wA = Box2D.Common.Math.b2Math.MulX(transformA, wALocal);
         v.wB = Box2D.Common.Math.b2Math.MulX(transformB, wBLocal);
         v.w = Box2D.Common.Math.b2Math.SubtractVV(v.wB, v.wA);
@@ -148,9 +196,17 @@ Box2D.Collision.b2Simplex.prototype.GetMetric = function() {
     if (this.m_count == 1) {
         return 0.0;
     } else if (this.m_count == 2) {
-        return Box2D.Common.Math.b2Math.SubtractVV(this.m_v1.w, this.m_v2.w).Length();
+        var v = Box2D.Common.Math.b2Math.SubtractVV(this.m_v1.w, this.m_v2.w);
+        var metric = v.Length();
+        Box2D.Common.Math.b2Vec2.Free(v);
+        return metric;
     } else if (this.m_count == 3) {
-        return Box2D.Common.Math.b2Math.CrossVV(Box2D.Common.Math.b2Math.SubtractVV(this.m_v2.w, this.m_v1.w), Box2D.Common.Math.b2Math.SubtractVV(this.m_v3.w, this.m_v1.w));
+        var vA = Box2D.Common.Math.b2Math.SubtractVV(this.m_v2.w, this.m_v1.w);
+        var vB = Box2D.Common.Math.b2Math.SubtractVV(this.m_v3.w, this.m_v1.w);
+        var metric = Box2D.Common.Math.b2Math.CrossVV(vA, vB);
+        Box2D.Common.Math.b2Vec2.Free(vA);
+        Box2D.Common.Math.b2Vec2.Free(vB);
+        return metric;
     } else {
         Box2D.Common.b2Settings.b2Assert(false);
         return 0.0;
@@ -186,24 +242,30 @@ Box2D.Collision.b2Simplex.prototype.Solve3 = function() {
     var w1 = this.m_v1.w;
     var w2 = this.m_v2.w;
     var w3 = this.m_v3.w;
+    
     var e12 = Box2D.Common.Math.b2Math.SubtractVV(w2, w1);
     var w1e12 = Box2D.Common.Math.b2Math.Dot(w1, e12);
     var w2e12 = Box2D.Common.Math.b2Math.Dot(w2, e12);
     var d12_1 = w2e12;
     var d12_2 = (-w1e12);
+    
     var e13 = Box2D.Common.Math.b2Math.SubtractVV(w3, w1);
     var w1e13 = Box2D.Common.Math.b2Math.Dot(w1, e13);
     var w3e13 = Box2D.Common.Math.b2Math.Dot(w3, e13);
-    var d13_1 = w3e13;
-    var d13_2 = (-w1e13);
-    var e23 = Box2D.Common.Math.b2Math.SubtractVV(w3, w2);
-    var w2e23 = Box2D.Common.Math.b2Math.Dot(w2, e23);
-    var w3e23 = Box2D.Common.Math.b2Math.Dot(w3, e23);
-    var d23_1 = w3e23;
-    var d23_2 = (-w2e23);
+    
     var n123 = Box2D.Common.Math.b2Math.CrossVV(e12, e13);
     Box2D.Common.Math.b2Vec2.Free(e12);
     Box2D.Common.Math.b2Vec2.Free(e13);
+
+    var d13_1 = w3e13;
+    var d13_2 = (-w1e13);
+    
+    var e23 = Box2D.Common.Math.b2Math.SubtractVV(w3, w2);
+    var w2e23 = Box2D.Common.Math.b2Math.Dot(w2, e23);
+    var w3e23 = Box2D.Common.Math.b2Math.Dot(w3, e23);
+    Box2D.Common.Math.b2Vec2.Free(e23);
+    var d23_1 = w3e23;
+    var d23_2 = (-w2e23);
     var d123_1 = n123 * Box2D.Common.Math.b2Math.CrossVV(w2, w3);
     var d123_2 = n123 * Box2D.Common.Math.b2Math.CrossVV(w3, w1);
     var d123_3 = n123 * Box2D.Common.Math.b2Math.CrossVV(w1, w2);

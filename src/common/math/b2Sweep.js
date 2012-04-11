@@ -33,11 +33,15 @@
 goog.provide('Box2D.Common.Math.b2Sweep');
 
 goog.require('Box2D.Common.Math.b2Vec2');
+goog.require('UsageTracker');
+
+sweepTrack = new UsageTracker('b2Sweep', false);
 
 /**
  * @constructor
  */
 Box2D.Common.Math.b2Sweep = function() {
+    sweepTrack.trackCreate();
     this.localCenter = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.c0 = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.c = Box2D.Common.Math.b2Vec2.Get(0, 0);

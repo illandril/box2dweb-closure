@@ -123,6 +123,8 @@ Box2D.Collision.Shapes.b2Shape.TestOverlap = function(shape1, transform1, shape2
     simplexCache.count = 0;
     var output = new Box2D.Collision.b2DistanceOutput();
     Box2D.Collision.b2Distance.Distance(output, simplexCache, input);
+    Box2D.Common.Math.b2Vec2.Free(output.pointA);
+    Box2D.Common.Math.b2Vec2.Free(output.pointB);
     return output.distance < 10.0 * Number.MIN_VALUE;
 };
 

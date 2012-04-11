@@ -32,6 +32,10 @@
  
 goog.provide('Box2D.Common.Math.b2Vec3');
 
+goog.require('UsageTracker');
+
+v3Track = new UsageTracker('b2Vec3', false);
+
 /**
  * @param {number} x
  * @param {number} y
@@ -39,6 +43,7 @@ goog.provide('Box2D.Common.Math.b2Vec3');
  * @constructor
  */
 Box2D.Common.Math.b2Vec3 = function(x, y, z) {
+    v3Track.trackCreate();
     this.x = x;
     this.y = y;
     this.z = z;

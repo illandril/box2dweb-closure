@@ -162,6 +162,7 @@ Box2D.Collision.b2DynamicTree.prototype.RayCast = function(callback, input) {
     var r = Box2D.Common.Math.b2Math.SubtractVV(input.p1, input.p2);
     r.Normalize();
     var v = Box2D.Common.Math.b2Math.CrossFV(1.0, r);
+    Box2D.Common.Math.b2Vec2.Free(r);
     var abs_v = Box2D.Common.Math.b2Math.AbsV(v);
     var maxFraction = input.maxFraction;
     var tX = input.p1.x + maxFraction * (input.p2.x - input.p1.x);
@@ -183,6 +184,8 @@ Box2D.Collision.b2DynamicTree.prototype.RayCast = function(callback, input) {
         var c = node.aabb.GetCenter();
         var h = node.aabb.GetExtents();
         var separation = Math.abs(v.x * (input.p1.x - c.x) + v.y * (input.p1.y - c.y)) - abs_v.x * h.x - abs_v.y * h.y;
+        Box2D.Common.Math.b2Vec2.Free(c);
+        Box2D.Common.Math.b2Vec2.Free(h);
         if (separation > 0.0) {
             continue;
         }
@@ -205,6 +208,8 @@ Box2D.Collision.b2DynamicTree.prototype.RayCast = function(callback, input) {
             stack.push(node.child2);
         }
     }
+    Box2D.Common.Math.b2Vec2.Free(v);
+    Box2D.Common.Math.b2Vec2.Free(abs_v);
     Box2D.Collision.b2AABB.Free(segmentAABB);
 };
 

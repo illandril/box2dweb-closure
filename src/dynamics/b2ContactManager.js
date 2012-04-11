@@ -128,8 +128,8 @@ Box2D.Dynamics.b2ContactManager.prototype.Destroy = function (c) {
         this.m_contactListener.EndContact(c);
     }
     if (c.m_manifold.m_pointCount > 0) {
-        c.m_fixtureA.GetBody().SetAwake(true);
-        c.m_fixtureB.GetBody().SetAwake(true);
+        bodyA.SetAwake(true);
+        bodyB.SetAwake(true);
     }
     c.RemoveFromLists();
     this.m_contactFactory.Destroy(c);

@@ -447,10 +447,23 @@ Box2D.Dynamics.b2Body.prototype.Split = function(callback) {
     body2.ResetMassData();
     var center1 = body1.GetWorldCenter();
     var center2 = body2.GetWorldCenter();
-    var velocity1 = Box2D.Common.Math.b2Math.AddVV(linearVelocity, Box2D.Common.Math.b2Math.CrossFV(angularVelocity, Box2D.Common.Math.b2Math.SubtractVV(center1, center)));
-    var velocity2 = Box2D.Common.Math.b2Math.AddVV(linearVelocity, Box2D.Common.Math.b2Math.CrossFV(angularVelocity, Box2D.Common.Math.b2Math.SubtractVV(center2, center)));
+    var center1Diff = Box2D.Common.Math.b2Math.SubtractVV(center1, center);
+    var center1Cross = Box2D.Common.Math.b2Math.CrossFV(angularVelocity, center1Diff);
+    Box2D.Common.Math.b2Vec2.Free(center1Diff);
+    var velocity1 = Box2D.Common.Math.b2Math.AddVV(linearVelocity, center1Cross);
+    Box2D.Common.Math.b2Vec2.Free(center1Cross);
     body1.SetLinearVelocity(velocity1);
+    Box2D.Common.Math.b2Vec2.Free(velocity1);
+    
+    var center2Diff = Box2D.Common.Math.b2Math.SubtractVV(center2, center);
+    var center2Cross = Box2D.Common.Math.b2Math.CrossFV(angularVelocity, center2Diff);
+    Box2D.Common.Math.b2Vec2.Free(center2Diff);
+    var velocity2 = Box2D.Common.Math.b2Math.AddVV(linearVelocity, center2Cross);
+    Box2D.Common.Math.b2Vec2.Free(center2Cross);
     body2.SetLinearVelocity(velocity2);
+    Box2D.Common.Math.b2Vec2.Free(velocity2);
+    Box2D.Common.Math.b2Vec2.Free(linearVelocity);
+    
     body1.SetAngularVelocity(angularVelocity);
     body2.SetAngularVelocity(angularVelocity);
     body1.SynchronizeFixtures();

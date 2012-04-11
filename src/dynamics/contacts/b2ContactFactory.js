@@ -82,6 +82,7 @@ Box2D.Dynamics.Contacts.b2ContactFactory.prototype.AddType = function(ctor, type
 };
 
 Box2D.Dynamics.Contacts.b2ContactFactory.prototype.Create = function(fixtureA, fixtureB) {
+    contactTrack.trackGet();
     var type1 = fixtureA.GetShape().GetTypeName();
     var type2 = fixtureB.GetShape().GetTypeName();
     
@@ -109,6 +110,7 @@ Box2D.Dynamics.Contacts.b2ContactFactory.prototype.Create = function(fixtureA, f
 };
 
 Box2D.Dynamics.Contacts.b2ContactFactory.prototype.Destroy = function(contact) {
+    contactTrack.trackFree();
     var type1 = contact.GetFixtureA().GetShape().GetTypeName();
     var type2 = contact.GetFixtureB().GetShape().GetTypeName();
     this.m_freeContacts[type1][type2].push(contact);

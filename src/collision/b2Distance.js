@@ -45,7 +45,7 @@ Box2D.Collision.b2Distance = {};
  * @param {!Box2D.Collision.b2DistanceInput} input
  */
 Box2D.Collision.b2Distance.Distance = function(output, cache, input) {
-    var s_simplex = new Box2D.Collision.b2Simplex();
+    var s_simplex = Box2D.Collision.b2Simplex.Get();
     s_simplex.ReadCache(cache, input.proxyA, input.transformA, input.proxyB, input.transformB);
     if (s_simplex.m_count < 1 || s_simplex.m_count > 3) {
         Box2D.Common.b2Settings.b2Assert(false);
@@ -102,8 +102,11 @@ Box2D.Collision.b2Distance.Distance = function(output, cache, input) {
         s_simplex.m_count++;
     }
     s_simplex.GetWitnessPoints(output.pointA, output.pointB);
-    output.distance = Box2D.Common.Math.b2Math.SubtractVV(output.pointA, output.pointB).Length();
+    var distanceV = Box2D.Common.Math.b2Math.SubtractVV(output.pointA, output.pointB);
+    output.distance = distanceV.Length();
+    Box2D.Common.Math.b2Vec2.Free(distanceV);
     s_simplex.WriteCache(cache);
+    Box2D.Collision.b2Simplex.Free(s_simplex);
     if (input.useRadii) {
         var rA = input.proxyA.m_radius;
         var rB = input.proxyB.m_radius;

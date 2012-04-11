@@ -124,7 +124,10 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.SetAsVector = function(vertices)
         var i2 = i + 1 < this.m_vertexCount ? i + 1 : 0;
         var edge = Box2D.Common.Math.b2Math.SubtractVV(this.m_vertices[i2], this.m_vertices[i1]);
         Box2D.Common.b2Settings.b2Assert(edge.LengthSquared() > Number.MIN_VALUE);
-        this.m_normals[i].SetV(Box2D.Common.Math.b2Math.CrossVF(edge, 1.0));
+        var edgeCross = Box2D.Common.Math.b2Math.CrossVF(edge, 1.0);
+        Box2D.Common.Math.b2Vec2.Free(edge);
+        this.m_normals[i].SetV(edgeCross);
+        Box2D.Common.Math.b2Vec2.Free(edgeCross);
         this.m_normals[i].Normalize();
     }
     this.m_centroid = Box2D.Collision.Shapes.b2PolygonShape.ComputeCentroid(this.m_vertices, this.m_vertexCount);
@@ -220,7 +223,11 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.SetAsEdge = function(v1, v2) {
     this.m_vertices[1].SetV(v2);
     this.m_centroid.x = 0.5 * (v1.x + v2.x);
     this.m_centroid.y = 0.5 * (v1.y + v2.y);
-    this.m_normals[0] = Box2D.Common.Math.b2Math.CrossVF(Box2D.Common.Math.b2Math.SubtractVV(v2, v1), 1.0);
+    var d = Box2D.Common.Math.b2Math.SubtractVV(v2, v1);
+    var crossD = Box2D.Common.Math.b2Math.CrossVF(d, 1.0)
+    Box2D.Common.Math.b2Vec2.Free(d);
+    this.m_normals[0] = crossD;
+    Box2D.Common.Math.b2Vec2.Free(crossD);
     this.m_normals[0].Normalize();
     this.m_normals[1].x = (-this.m_normals[0].x);
     this.m_normals[1].y = (-this.m_normals[0].y);
@@ -543,9 +550,13 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.GetSupportVertex = function(d) {
  * @param {number} count
  */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.Reserve = function(count) {
+    for (var i = 0; i < this.m_vertices.length; i++) {
+        Box2D.Common.Math.b2Vec2.Free(this.m_vertices[i])
+        Box2D.Common.Math.b2Vec2.Free(this.m_normals[i])
+    }
     this.m_vertices = [];
     this.m_normals = [];
-    for (var i = this.m_vertices.length; i < count; i++) {
+    for (var i = 0; i < count; i++) {
         this.m_vertices[i] = Box2D.Common.Math.b2Vec2.Get(0, 0);
         this.m_normals[i] = Box2D.Common.Math.b2Vec2.Get(0, 0);
     }

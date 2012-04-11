@@ -30,20 +30,29 @@
  * https://github.com/illandril/box2dweb-closure
  */
  
- document.write('<div id="fps">?? FPS</div>');
+ document.write('<pre id="fps">?? FPS</pre>');
 var lastTick = new Date();
 var rollingFPS = 60;
 var totalFrames = 0;
 var lastMarkFrames = 0;
 var lastMarkTick = lastTick;
+var minFPS = 999;
+var maxFPS = 0;
 updateCalls.push(function() {
     var thisTick = new Date();
     var newFPS = 1 / (thisTick.getTime() - lastTick.getTime()) * 1000;
     lastTick = thisTick;
     totalFrames++;
     rollingFPS = rollingFPS * 0.9 + newFPS * 0.1;
-    document.getElementById('fps').innerHTML = Math.round(rollingFPS) + " FPS";
+    minFPS = Math.min(minFPS, rollingFPS);
+    maxFPS = Math.max(maxFPS, rollingFPS);
+    document.getElementById('fps').innerHTML = Math.round(rollingFPS) + " FPS\nMin: " + minFPS + "\nMax: " + maxFPS;
 });
+
+var resetMinMaxFPS = function() {
+    minFPS = 999;
+    maxFPS = 0;
+};
 
 var markFPS = function() {
     var newMarkTick = lastTick;

@@ -38,6 +38,9 @@ goog.require('Box2D.Collision.b2TimeOfImpact');
 goog.require('Box2D.Dynamics.b2BodyDef');
 goog.require('Box2D.Collision.Shapes.b2Shape');
 goog.require('Box2D.Common.b2Settings');
+goog.require('UsageTracker');
+
+contactTrack = new UsageTracker('b2Contact', false);
 
 /**
  * @param {!Box2D.Dynamics.b2Fixture} fixtureA
@@ -45,6 +48,7 @@ goog.require('Box2D.Common.b2Settings');
  * @constructor
  */
 Box2D.Dynamics.Contacts.b2Contact = function(fixtureA, fixtureB) {
+    contactTrack.trackCreate();
     
     /**
      * @const

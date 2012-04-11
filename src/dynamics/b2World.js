@@ -468,7 +468,7 @@ Box2D.Dynamics.b2World.prototype.Step = function(dt, velocityIterations, positio
         this.m_newFixture = false;
     }
     this.m_isLocked = true;
-    var step = new Box2D.Dynamics.b2TimeStep(dt, this.m_inv_dt0 * dt /* dtRatio */, velocityIterations, positionIterations, this.m_warmStarting);
+    var step = Box2D.Dynamics.b2TimeStep.Get(dt, this.m_inv_dt0 * dt /* dtRatio */, velocityIterations, positionIterations, this.m_warmStarting);
     this.m_contactManager.Collide();
     if (step.dt > 0.0) {
         this.Solve(step);
@@ -477,6 +477,7 @@ Box2D.Dynamics.b2World.prototype.Step = function(dt, velocityIterations, positio
         }
         this.m_inv_dt0 = step.inv_dt;
     }
+    Box2D.Dynamics.b2TimeStep.Free(step);
     this.m_isLocked = false;
 };
 
@@ -868,7 +869,9 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
                 jEdge.other.m_islandFlag = true;
             }
         }
-        m_island.SolveTOI(new Box2D.Dynamics.b2TimeStep((1.0 - minTOI) * step.dt /* dt */, 0 /* dtRatio */, step.velocityIterations, step.positionIterations, false /* warmStarting */));
+        var step = Box2D.Dynamics.b2TimeStep.Get((1.0 - minTOI) * step.dt /* dt */, 0 /* dtRatio */, step.velocityIterations, step.positionIterations, false /* warmStarting */);
+        m_island.SolveTOI(step);
+        Box2D.Dynamics.b2TimeStep.Free(step);
 
         for (var i = 0; i < m_island.m_bodies.length; i++) {
             m_island.m_bodies[i].m_islandFlag = false;

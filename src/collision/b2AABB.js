@@ -34,11 +34,14 @@ goog.provide('Box2D.Collision.b2AABB');
 
 goog.require('Box2D.Common.Math.b2Vec2');
 
+aabbTrack = new UsageTracker('b2AABB', false);
+
 /**
  * @private
  * @constructor
  */
 Box2D.Collision.b2AABB = function() {
+    aabbTrack.trackCreate();
     this.lowerBound = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.upperBound = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };
@@ -53,6 +56,7 @@ Box2D.Collision.b2AABB._freeCache = [];
  * @return {!Box2D.Collision.b2AABB}
  */
 Box2D.Collision.b2AABB.Get = function() {
+    aabbTrack.trackGet();
     if (Box2D.Collision.b2AABB._freeCache.length > 0) {
         var aabb = Box2D.Collision.b2AABB._freeCache.pop();
         aabb.SetZero();
@@ -65,7 +69,10 @@ Box2D.Collision.b2AABB.Get = function() {
  * @param {!Box2D.Collision.b2AABB} aabb
  */
 Box2D.Collision.b2AABB.Free = function(aabb) {
-    Box2D.Collision.b2AABB._freeCache.push(aabb);
+    if (aabb != null) {
+        aabbTrack.trackFree();
+        Box2D.Collision.b2AABB._freeCache.push(aabb);
+    }
 };
 
 Box2D.Collision.b2AABB.prototype.SetZero = function() {
