@@ -70,7 +70,7 @@ Box2D.Dynamics.Joints.b2FrictionJoint.prototype.GetAnchorB = function() {
 
 Box2D.Dynamics.Joints.b2FrictionJoint.prototype.GetReactionForce = function(inv_dt) {
     if (inv_dt === undefined) inv_dt = 0;
-    return new b2Vec2(inv_dt * this.m_linearImpulse.x, inv_dt * this.m_linearImpulse.y);
+    return new Box2D.Common.Math.b2Vec2.Get(inv_dt * this.m_linearImpulse.x, inv_dt * this.m_linearImpulse.y);
 };
 
 Box2D.Dynamics.Joints.b2FrictionJoint.prototype.GetReactionTorque = function(inv_dt) {

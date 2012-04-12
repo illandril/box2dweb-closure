@@ -5,8 +5,12 @@ Only use this for debugging to try and track down excessive object creation!
  */
 goog.provide('UsageTracker');
 
-UsageTracker = function(id, doTrack) {
-    this.doTrack = doTrack;
+/**
+ * @private
+ * @constructor
+ */
+UsageTracker = function(id) {
+    this.doTrack = false;
     this.id = id;
     this.createCount = 0;
     this.getCount = 0;
@@ -16,9 +20,39 @@ UsageTracker = function(id, doTrack) {
     this.frees = {};
     this.callers = [];
     UsageTracker.trackers.push(this);
+    UsageTracker.trackersByID[id] = this;
 };
 
+/**
+ * @const
+ * @private
+ */
+UsageTracker.ENABLED = true;
+
+if ( !UsageTracker.ENABLED ) {
+    UsageTracker.dummyTracker = new UsageTracker("NotTracking");
+}
+
+/**
+ * @private
+ */
 UsageTracker.trackers = [];
+
+/**
+ * @private
+ */
+UsageTracker.trackersByID = {};
+
+UsageTracker.get = function(id) {
+    if ( !UsageTracker.ENABLED ) {
+        return UsageTracker.dummyTracker;
+    }
+    var tracker = UsageTracker.trackersByID[id];
+    if ( tracker == null ) {
+        tracker = new UsageTracker(id);
+    }
+    return tracker;
+};
 
 UsageTracker.logStatsToConsole = function() {
     for( var i = 0; i < UsageTracker.trackers.length; i++ ) {
@@ -29,23 +63,29 @@ UsageTracker.logStatsToConsole = function() {
 };
 
 UsageTracker.prototype.trackCreate = function() {
-    this.createCount++;
-    if ( this.doTrack ) {
-        this.increment(this.creates, this.getCallers());
+    if ( UsageTracker.ENABLED ) {
+        this.createCount++;
+        if ( this.doTrack ) {
+            this.increment(this.creates, this.getCallers());
+        }
     }
 };
 
 UsageTracker.prototype.trackGet = function() {
-    this.getCount++;
-    if ( this.doTrack ) {
-        this.increment(this.gets, this.getCallers());
+    if ( UsageTracker.ENABLED ) {
+        this.getCount++;
+        if ( this.doTrack ) {
+            this.increment(this.gets, this.getCallers());
+        }
     }
 };
 
 UsageTracker.prototype.trackFree = function() {
-    this.freeCount++;
-    if ( this.doTrack ) {
-        this.increment(this.frees, this.getCallers());
+    if ( UsageTracker.ENABLED ) {
+        this.freeCount++;
+        if ( this.doTrack ) {
+            this.increment(this.frees, this.getCallers());
+        }
     }
 };
 
@@ -60,6 +100,9 @@ UsageTracker.prototype.getOffenders = function() {
     return offenders;
 };
 
+/**
+ * @private
+ */
 UsageTracker.prototype.increment = function(object, indices) {
     for ( var i = 0; i < indices.length; i++ ) {
         var index = indices[i];
@@ -73,6 +116,9 @@ UsageTracker.prototype.increment = function(object, indices) {
     }
 };
 
+/**
+ * @private
+ */
 UsageTracker.prototype.getCallers = function() {
     var callers = ['unknown'];
     try {

@@ -36,12 +36,14 @@ goog.require('Box2D.Collision.b2SimplexVertex');
 goog.require('Box2D.Common.b2Settings');
 goog.require('Box2D.Common.Math.b2Math');
 goog.require('Box2D.Common.Math.b2Vec2');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  * @private
  */
 Box2D.Collision.b2Simplex = function() {
+    UsageTracker.get('Box2D.Collision.b2Simplex').trackCreate();
     this.m_v1 = new Box2D.Collision.b2SimplexVertex();
     this.m_v2 = new Box2D.Collision.b2SimplexVertex();
     this.m_v3 = new Box2D.Collision.b2SimplexVertex();

@@ -32,15 +32,52 @@
  
 goog.provide('Box2D.Collision.b2DynamicTreePair');
 
+goog.require('UsageTracker');
+
 /**
  * @param {!Box2D.Dynamics.b2Fixture} fixtureA
  * @param {!Box2D.Dynamics.b2Fixture} fixtureB
  * @constructor
  */
 Box2D.Collision.b2DynamicTreePair = function(fixtureA, fixtureB) {
+    UsageTracker.get('Box2D.Collision.b2DynamicTreePair').trackCreate();
+    
     /** @type {!Box2D.Dynamics.b2Fixture} */
     this.fixtureA = fixtureA;
     
     /** @type {!Box2D.Dynamics.b2Fixture} */
     this.fixtureB = fixtureB;
 };
+
+/**
+ * @private
+ * @type {Array.<!Box2D.Collision.b2DynamicTreePair>}
+ */
+Box2D.Collision.b2DynamicTreePair._freeCache = [];
+
+/**
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureA
+ * @param {!Box2D.Dynamics.b2Fixture} fixtureB
+ * @return {!Box2D.Collision.b2DynamicTreePair}
+ */
+Box2D.Collision.b2DynamicTreePair.Get = function(fixtureA, fixtureB) {
+    UsageTracker.get('Box2D.Collision.b2DynamicTreePair').trackGet();
+    if (Box2D.Collision.b2DynamicTreePair._freeCache.length > 0) {
+        var pair = Box2D.Collision.b2DynamicTreePair._freeCache.pop();
+        pair.fixtureA = fixtureA;
+        pair.fixtureB = fixtureB;
+        return pair;
+    }
+    return new Box2D.Collision.b2DynamicTreePair(fixtureA, fixtureB);
+};
+
+/**
+ * @param {!Box2D.Collision.b2DynamicTreePair} pair
+ */
+Box2D.Collision.b2DynamicTreePair.Free = function(pair) {
+    if (pair != null) {
+        UsageTracker.get('Box2D.Collision.b2DynamicTreePair').trackFree();
+        Box2D.Collision.b2DynamicTreePair._freeCache.push(pair);
+    }
+};
+

@@ -50,7 +50,9 @@ Box2D.Dynamics.Controllers.b2ConstantAccelController.prototype.Step = function(s
     for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.awakeBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
         var body = bodyNode.body;
         var oldVelocity = body.GetLinearVelocity();
-        body.SetLinearVelocity(Box2D.Common.Math.b2Vec2.Get(oldVelocity.x + smallA.x, oldVelocity.y + smallA.y));
+        var newVelocity = Box2D.Common.Math.b2Vec2.Get(oldVelocity.x + smallA.x, oldVelocity.y + smallA.y);
+        body.SetLinearVelocity(newVelocity);
+        Box2D.Common.Math.b2Vec2.Free(newVelocity);
     }
     Box2D.Common.Math.b2Vec2.Free(smallA);
 };

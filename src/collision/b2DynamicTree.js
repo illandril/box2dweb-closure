@@ -37,11 +37,14 @@ goog.require('Box2D.Collision.b2AABB');
 goog.require('Box2D.Collision.b2DynamicTreeNode');
 goog.require('Box2D.Common.b2Settings');
 goog.require('Box2D.Common.Math.b2Math');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Collision.b2DynamicTree = function() {
+    UsageTracker.get('Box2D.Collision.b2DynamicTree').trackCreate();
+    
     /** @type {Box2D.Collision.b2DynamicTreeNode} */
     this.m_root = null;
     

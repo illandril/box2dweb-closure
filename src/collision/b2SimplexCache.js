@@ -32,10 +32,13 @@
  
 goog.provide('Box2D.Collision.b2SimplexCache');
 
+goog.require('UsageTracker');
+
 /**
  * @constructor
  */
 Box2D.Collision.b2SimplexCache = function() {
+    UsageTracker.get('Box2D.Collision.b2SimplexCache').trackCreate();
     this.indexA = [0, 0, 0];
     this.indexB = [0, 0, 0];
 };

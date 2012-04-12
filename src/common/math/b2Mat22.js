@@ -33,14 +33,47 @@
 goog.provide('Box2D.Common.Math.b2Mat22');
 
 goog.require('Box2D.Common.Math.b2Vec2');
+goog.require('UsageTracker');
 
 /**
  * @constructor
+ * @private
  */
 Box2D.Common.Math.b2Mat22 = function() {
+    UsageTracker.get('Box2D.Common.Math.b2Mat22').trackCreate();
+    
     this.col1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.col2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.SetIdentity();
+};
+
+/**
+ * @private
+ * @type {Array.<!Box2D.Common.Math.b2Mat22>}
+ */
+Box2D.Common.Math.b2Mat22._freeCache = [];
+
+/**
+ * @return {!Box2D.Common.Math.b2Mat22}
+ */
+Box2D.Common.Math.b2Mat22.Get = function() {
+    UsageTracker.get('Box2D.Common.Math.b2Mat22').trackGet();
+    if (Box2D.Common.Math.b2Mat22._freeCache.length > 0) {
+        var mat = Box2D.Common.Math.b2Mat22._freeCache.pop();
+        mat.SetZero();
+        return mat;
+    }
+    return new Box2D.Common.Math.b2Mat22();
+};
+
+/**
+ * @param {!Box2D.Common.Math.b2Mat22} mat
+ */
+Box2D.Common.Math.b2Mat22.Free = function(mat) {
+    if (mat != null) {
+        UsageTracker.get('Box2D.Common.Math.b2Mat22').trackFree();
+        Box2D.Common.Math.b2Mat22._freeCache.push(mat);
+    }
 };
 
 /**
@@ -48,7 +81,7 @@ Box2D.Common.Math.b2Mat22 = function() {
  * @return {!Box2D.Common.Math.b2Mat22}
  */
 Box2D.Common.Math.b2Mat22.FromAngle = function(angle) {
-    var mat = new Box2D.Common.Math.b2Mat22();
+    var mat = Box2D.Common.Math.b2Mat22.Get();
     mat.Set(angle);
     return mat;
 };
@@ -59,7 +92,7 @@ Box2D.Common.Math.b2Mat22.FromAngle = function(angle) {
  * @return {!Box2D.Common.Math.b2Mat22}
  */
 Box2D.Common.Math.b2Mat22.FromVV = function(c1, c2) {
-    var mat = new Box2D.Common.Math.b2Mat22();
+    var mat = Box2D.Common.Math.b2Mat22.Get();
     mat.SetVV(c1, c2);
     return mat;
 };
@@ -87,7 +120,7 @@ Box2D.Common.Math.b2Mat22.prototype.SetVV = function(c1, c2) {
  * @return {!Box2D.Common.Math.b2Mat22}
  */
 Box2D.Common.Math.b2Mat22.prototype.Copy = function() {
-    var mat = new Box2D.Common.Math.b2Mat22();
+    var mat = Box2D.Common.Math.b2Mat22.Get();
     mat.SetM(this);
     return mat;
 };

@@ -33,6 +33,7 @@
 goog.provide('Box2D.Common.Math.b2Mat33');
 
 goog.require('Box2D.Common.Math.b2Vec3');
+goog.require('UsageTracker');
 
 /**
  * @param {!Box2D.Common.Math.b2Vec3=} c1
@@ -41,6 +42,8 @@ goog.require('Box2D.Common.Math.b2Vec3');
  * @constructor
  */
 Box2D.Common.Math.b2Mat33 = function(c1, c2, c3) {
+    UsageTracker.get('Box2D.Common.Math.b2Mat33').trackCreate();
+    
     this.col1 = new Box2D.Common.Math.b2Vec3(0, 0, 0);
     this.col2 = new Box2D.Common.Math.b2Vec3(0, 0, 0);
     this.col3 = new Box2D.Common.Math.b2Vec3(0, 0, 0);

@@ -58,14 +58,17 @@ Box2D.Dynamics.Controllers.b2BuoyancyController.prototype.Step = function(step) 
     if (this.useWorldGravity) {
         this.gravity = this.m_world.GetGravity();
     }
+    var areac = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    var massc = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    var sc = Box2D.Common.Math.b2Vec2.Get(0, 0);
     for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.awakeBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
+        massc.Set(0, 0);
+        areac.Set(0, 0);
         var body = bodyNode.body;
-        var areac = Box2D.Common.Math.b2Vec2.Get(0, 0);
-        var massc = Box2D.Common.Math.b2Vec2.Get(0, 0);
         var area = 0.0;
         var mass = 0.0;
         for (var fixtureNode = body.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
-            var sc = Box2D.Common.Math.b2Vec2.Get(0, 0);
+            sc.Set(0,0);
             var sarea = fixtureNode.fixture.GetShape().ComputeSubmergedArea(this.normal, this.offset, body.GetTransform(), sc);
             area += sarea;
             areac.x += sarea * sc.x;
@@ -90,21 +93,30 @@ Box2D.Dynamics.Controllers.b2BuoyancyController.prototype.Step = function(step) 
         var buoyancyForce = this.gravity.GetNegative();
         buoyancyForce.Multiply(this.density * area);
         body.ApplyForce(buoyancyForce, massc);
-        Box2D.Common.Math.b2Vec2.Free(massc);
+        Box2D.Common.Math.b2Vec2.Free(buoyancyForce);
         var dragForce = body.GetLinearVelocityFromWorldPoint(areac);
         dragForce.Subtract(this.velocity);
         dragForce.Multiply((-this.linearDrag * area));
         body.ApplyForce(dragForce, areac);
         Box2D.Common.Math.b2Vec2.Free(dragForce);
-        Box2D.Common.Math.b2Vec2.Free(areac);
         body.ApplyTorque((-body.GetInertia() / body.GetMass() * area * body.GetAngularVelocity() * this.angularDrag));
     }
+    Box2D.Common.Math.b2Vec2.Free(sc)
+    Box2D.Common.Math.b2Vec2.Free(massc);
+    Box2D.Common.Math.b2Vec2.Free(areac);
 };
 
 Box2D.Dynamics.Controllers.b2BuoyancyController.prototype.Draw = function(debugDraw) {
     var r = 1000;
     var p1 = Box2D.Common.Math.b2Vec2.Get(this.normal.x * this.offset + this.normal.y * r, this.normal.y * this.offset - this.normal.x * r);
     var p2 = Box2D.Common.Math.b2Vec2.Get(this.normal.x * this.offset - this.normal.y * r, this.normal.y * this.offset + this.normal.x * r);
-    var color = new Box2D.Common.b2Color(0, 0, 1);
-    debugDraw.DrawSegment(p1, p2, color);
+    debugDraw.DrawSegment(p1, p2, Box2D.Dynamics.Controllers.b2BuoyancyController.color);
+    Box2D.Common.Math.b2Vec2.Free(p1);
+    Box2D.Common.Math.b2Vec2.Free(p2);
 };
+
+/**
+ * @type {!Box2D.Common.b2Color}
+ * @const
+ */
+Box2D.Dynamics.Controllers.b2BuoyancyController.color = new Box2D.Common.b2Color(0, 0, 1);

@@ -33,6 +33,7 @@
 goog.provide('Box2D.Common.b2Color');
 
 goog.require('Box2D.Common.Math.b2Math');
+goog.require('UsageTracker');
 
 /**
  * @param {number} rr
@@ -41,6 +42,8 @@ goog.require('Box2D.Common.Math.b2Math');
  * @constructor
  */
 Box2D.Common.b2Color = function(rr, gg, bb) {
+    UsageTracker.get('Box2D.Common.b2Color').trackCreate();
+    
     /**
      * @type {number}
      * @private

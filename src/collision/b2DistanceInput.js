@@ -32,7 +32,11 @@
  
 goog.provide('Box2D.Collision.b2DistanceInput');
 
+goog.require('UsageTracker');
+
 /**
  * @constructor
  */
-Box2D.Collision.b2DistanceInput = function () {};
+Box2D.Collision.b2DistanceInput = function () {
+    UsageTracker.get('Box2D.Collision.b2DistanceInput').trackCreate();
+};

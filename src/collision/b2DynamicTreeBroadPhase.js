@@ -35,6 +35,7 @@ goog.provide('Box2D.Collision.b2DynamicTreeBroadPhase');
 goog.require('Box2D.Collision.b2DynamicTree');
 goog.require('Box2D.Collision.b2DynamicTreePair');
 goog.require('Box2D.Collision.IBroadPhase');
+goog.require('UsageTracker');
 
 goog.require('goog.array');
 
@@ -42,7 +43,7 @@ goog.require('goog.array');
  * @constructor
  */
 Box2D.Collision.b2DynamicTreeBroadPhase = function() {
-    
+    UsageTracker.get('Box2D.Collision.b2DynamicTreeBroadPhase').trackCreate();
     /**
      * @private
      * @type {!Box2D.Collision.b2DynamicTree}
@@ -124,7 +125,7 @@ Box2D.Collision.b2DynamicTreeBroadPhase.prototype.UpdatePairs = function(callbac
         
         var QueryCallback = function(fixture) {
             if (fixture != queryProxy.fixture) {
-                pairs.push(new Box2D.Collision.b2DynamicTreePair(queryProxy.fixture, fixture));
+                pairs.push(Box2D.Collision.b2DynamicTreePair.Get(queryProxy.fixture, fixture));
             }
             return true;
         };
@@ -133,15 +134,17 @@ Box2D.Collision.b2DynamicTreeBroadPhase.prototype.UpdatePairs = function(callbac
     }
     var i = 0;
     while(i < pairs.length) {
-        var primaryPair = pairs[i];
-        callback(primaryPair.fixtureA, primaryPair.fixtureB);
+        var fixtureA = pairs[i].fixtureA;
+        var fixtureB = pairs[i].fixtureB;
+        callback(fixtureA, fixtureB);
+        Box2D.Collision.b2DynamicTreePair.Free(pairs[i]);
         i++;
         while(i < pairs.length) {
-            var pair = pairs[i];
-            if (!(pair.fixtureA == primaryPair.fixtureA && pair.fixtureB == primaryPair.fixtureB)
-                && !(pair.fixtureA == primaryPair.fixtureB && pair.fixtureB == primaryPair.fixtureA)) {
+            if (!(pairs[i].fixtureA == fixtureA && pairs[i].fixtureB == fixtureB)
+                && !(pairs[i].fixtureA == fixtureB && pairs[i].fixtureB == fixtureA)) {
                 break;
             }
+            Box2D.Collision.b2DynamicTreePair.Free(pairs[i]);
             i++;
         }
     }

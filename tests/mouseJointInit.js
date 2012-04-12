@@ -30,7 +30,8 @@
  * https://github.com/illandril/box2dweb-closure
  */
  
- var mouseX, mouseY, isMouseDown, selectedBody, mouseJoint;
+var mouseX, mouseY, isMouseDown, selectedBody, mouseJoint;
+var md = new Box2D.Dynamics.Joints.b2MouseJointDef();
 var mousePVec = Box2D.Common.Math.b2Vec2.Get(0,0);
 
 var getElementPosition = function(element) {
@@ -100,7 +101,6 @@ updateCalls.push(function() {
     if (isMouseDown && (!mouseJoint)) {
         var body = getBodyAtMouse();
         if (body) {
-            var md = new Box2D.Dynamics.Joints.b2MouseJointDef();
             md.bodyA = world.GetGroundBody();
             md.bodyB = body;
             md.target.Set(mouseX, mouseY);
@@ -112,7 +112,8 @@ updateCalls.push(function() {
     }
     if (mouseJoint) {
         if (isMouseDown) {
-            mouseJoint.SetTarget(new Box2D.Common.Math.b2Vec2(mouseX, mouseY));
+            mousePVec.Set(mouseX, mouseY);
+            mouseJoint.SetTarget(mousePVec);
         } else {
             world.DestroyJoint(mouseJoint);
             mouseJoint = null;

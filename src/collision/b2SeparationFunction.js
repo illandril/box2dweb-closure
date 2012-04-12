@@ -35,11 +35,13 @@ goog.provide('Box2D.Collision.b2SeparationFunction');
 goog.require('Box2D.Common.b2Settings');
 goog.require('Box2D.Common.Math.b2Vec2');
 goog.require('Box2D.Common.Math.b2Math');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Collision.b2SeparationFunction = function() {
+    UsageTracker.get('Box2D.Collision.b2SeparationFunction').trackCreate();
     this.m_localPoint = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_axis = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };

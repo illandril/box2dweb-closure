@@ -33,11 +33,14 @@
 goog.provide('Box2D.Collision.b2DistanceOutput');
 
 goog.require('Box2D.Common.Math.b2Vec2');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Collision.b2DistanceOutput = function () {
+    UsageTracker.get('Box2D.Collision.b2DistanceOutput').trackCreate();
+    
     /** @type {!Box2D.Common.Math.b2Vec2} */
     this.pointA = Box2D.Common.Math.b2Vec2.Get(0, 0);
     

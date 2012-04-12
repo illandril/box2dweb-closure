@@ -31,15 +31,14 @@
  */
  
 goog.provide('Box2D.Collision.b2ContactID');
-goog.require('UsageTracker');
 
-contactIDTrack = new UsageTracker('b2ContactID', false);
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Collision.b2ContactID = function() {
-    contactIDTrack.trackCreate();
+    UsageTracker.get('Box2D.Collision.b2ContactID').trackCreate();
     
     /** @type {number} */
     this._key = 0;

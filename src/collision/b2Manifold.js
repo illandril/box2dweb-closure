@@ -35,11 +35,14 @@ goog.provide('Box2D.Collision.b2Manifold');
 goog.require('Box2D.Common.b2Settings');
 goog.require('Box2D.Common.Math.b2Vec2');
 goog.require('Box2D.Collision.b2ManifoldPoint');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Collision.b2Manifold = function() {
+    UsageTracker.get('Box2D.Collision.b2Manifold').trackCreate();
+    
     this.m_pointCount = 0;
     this.m_type = 0;
     this.m_points = [];

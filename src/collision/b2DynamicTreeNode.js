@@ -33,6 +33,7 @@
 goog.provide('Box2D.Collision.b2DynamicTreeNode');
 
 goog.require('Box2D.Collision.b2AABB');
+goog.require('UsageTracker');
 
 /**
  * @private
@@ -40,6 +41,8 @@ goog.require('Box2D.Collision.b2AABB');
  * @constructor
  */
 Box2D.Collision.b2DynamicTreeNode = function(fixture) {
+    UsageTracker.get('Box2D.Collision.b2DynamicTreeNode').trackCreate();
+    
     /** @type {!Box2D.Collision.b2AABB} */
     this.aabb = Box2D.Collision.b2AABB.Get();
     

@@ -35,11 +35,14 @@ goog.provide('Box2D.Collision.b2WorldManifold');
 goog.require('Box2D.Collision.b2Manifold');
 goog.require('Box2D.Common.b2Settings');
 goog.require('Box2D.Common.Math.b2Vec2');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Collision.b2WorldManifold = function() {
+    UsageTracker.get('Box2D.Collision.b2WorldManifold').trackCreate();
+    
     /** @type  {!Box2D.Common.Math.b2Vec2} */
     this.m_normal = Box2D.Common.Math.b2Vec2.Get(0, 0);
     

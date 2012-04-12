@@ -34,11 +34,14 @@ goog.provide('Box2D.Collision.ClipVertex');
 
 goog.require('Box2D.Common.Math.b2Vec2');
 goog.require('Box2D.Collision.b2ContactID');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Collision.ClipVertex = function() {
+    UsageTracker.get('Box2D.Collision.ClipVertex').trackCreate();
+    
     this.v = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.id = new Box2D.Collision.b2ContactID();
 };

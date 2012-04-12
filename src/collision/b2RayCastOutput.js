@@ -33,10 +33,12 @@
 goog.provide('Box2D.Collision.b2RayCastOutput');
 
 goog.require('Box2D.Common.Math.b2Vec2');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Collision.b2RayCastOutput = function() {
+    UsageTracker.get('Box2D.Collision.b2RayCastOutput').trackCreate();
     this.normal = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };

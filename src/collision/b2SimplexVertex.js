@@ -32,10 +32,14 @@
  
 goog.provide('Box2D.Collision.b2SimplexVertex');
 
+goog.require('UsageTracker');
+
 /**
  * @constructor
  */
-Box2D.Collision.b2SimplexVertex = function() {};
+Box2D.Collision.b2SimplexVertex = function() {
+    UsageTracker.get('Box2D.Collision.b2SimplexVertex').trackCreate();
+};
 
 Box2D.Collision.b2SimplexVertex.prototype.Set = function(other) {
     this.wA.SetV(other.wA);

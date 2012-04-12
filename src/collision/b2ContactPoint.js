@@ -36,13 +36,11 @@ goog.require('Box2D.Common.Math.b2Vec2');
 goog.require('Box2D.Collision.b2ContactID');
 goog.require('UsageTracker');
 
-contactPointTrack = new UsageTracker('b2ContactPoint', false);
-
 /**
  * @constructor
  */
 Box2D.Collision.b2ContactPoint = function() {
-    contactPointTrack.trackCreate();
+    UsageTracker.get('Box2D.Collision.b2ContactPoint').trackCreate();
     
     this.position = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.velocity = Box2D.Common.Math.b2Vec2.Get(0, 0);

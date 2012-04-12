@@ -33,11 +33,14 @@
 goog.provide('Box2D.Collision.b2DistanceProxy');
 
 goog.require('Box2D.Common.b2Settings');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
-Box2D.Collision.b2DistanceProxy = function() {};
+Box2D.Collision.b2DistanceProxy = function() {
+    UsageTracker.get('Box2D.Collision.b2DistanceProxy').trackCreate();
+};
 
 Box2D.Collision.b2DistanceProxy.prototype.Set = function (shape) {
     shape.SetDistanceProxy(this);

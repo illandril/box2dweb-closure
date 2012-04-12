@@ -36,15 +36,13 @@ goog.require('Box2D.Common.Math.b2Mat22');
 goog.require('Box2D.Common.Math.b2Vec2');
 goog.require('UsageTracker');
 
-transformTrack = new UsageTracker('b2Transform', false);
-
 /**
  * @param {!Box2D.Common.Math.b2Vec2=} pos
  * @param {!Box2D.Common.Math.b2Mat22=} r
  * @constructor
  */
 Box2D.Common.Math.b2Transform = function(pos, r) {
-    transformTrack.trackCreate();
+    UsageTracker.get('Box2D.Common.Math.b2Transform').trackCreate();
     this.position = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.R = new Box2D.Common.Math.b2Mat22();
     if (pos) {

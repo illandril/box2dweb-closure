@@ -86,7 +86,6 @@ Box2D.Collision.Shapes.b2CircleShape.prototype.Set = function(other) {
  * @return {boolean}
  */
 Box2D.Collision.Shapes.b2CircleShape.prototype.TestPoint = function(transform, p) {
-    var tMat = transform.R;
     var dX = p.x - (transform.position.x + (transform.R.col1.x * this.m_p.x + transform.R.col2.x * this.m_p.y));
     var dY = p.y - (transform.position.y + (transform.R.col1.y * this.m_p.x + transform.R.col2.y * this.m_p.y));
     return (dX * dX + dY * dY) <= this.m_radiusSquared;
@@ -169,6 +168,7 @@ Box2D.Collision.Shapes.b2CircleShape.prototype.ComputeSubmergedArea = function(n
     var com = (-2 / 3 * Math.pow(this.m_radiusSquared - l2, 1.5) / area);
     c.x = p.x + normal.x * com;
     c.y = p.y + normal.y * com;
+    Box2D.Common.Math.b2Vec2.Free(p);
     return area;
 };
 

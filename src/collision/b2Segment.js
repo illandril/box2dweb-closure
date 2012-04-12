@@ -33,11 +33,13 @@
 goog.provide('Box2D.Collision.b2Segment');
 
 goog.require('Box2D.Common.Math.b2Vec2');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Collision.b2Segment = function() {
+    UsageTracker.get('Box2D.Collision.b2Segment').trackCreate();
     this.p1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.p2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };

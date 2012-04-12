@@ -68,7 +68,7 @@ Box2D.Dynamics.Joints.b2MouseJoint = function(def) {
 goog.inherits(Box2D.Dynamics.Joints.b2MouseJoint, Box2D.Dynamics.Joints.b2Joint);
 
 Box2D.Dynamics.Joints.b2MouseJoint.prototype.GetAnchorA = function() {
-    return this.m_target;
+    return Box2D.Common.Math.b2Vec2.Get(this.m_target.x, this.m_target.y);
 };
 
 Box2D.Dynamics.Joints.b2MouseJoint.prototype.GetAnchorB = function() {

@@ -167,6 +167,20 @@ Box2D.Dynamics.b2World = function(gravity, doSleep) {
      * @type {!Box2D.Dynamics.b2Body}
      */
     this.m_groundBody = this.CreateBody(new Box2D.Dynamics.b2BodyDef());
+    
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2TimeStep}
+     * @const
+     */
+    this.mainTimeStep = new Box2D.Dynamics.b2TimeStep(0, 0, 0, 0, this.m_warmStarting);
+     
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2TimeStep}
+     * @const
+     */
+    this.islandTimeStep = new Box2D.Dynamics.b2TimeStep(0, 0, 0, 0, this.m_warmStarting);
 };
 
 /**
@@ -468,16 +482,15 @@ Box2D.Dynamics.b2World.prototype.Step = function(dt, velocityIterations, positio
         this.m_newFixture = false;
     }
     this.m_isLocked = true;
-    var step = Box2D.Dynamics.b2TimeStep.Get(dt, this.m_inv_dt0 * dt /* dtRatio */, velocityIterations, positionIterations, this.m_warmStarting);
+    this.mainTimeStep.Reset(dt, this.m_inv_dt0 * dt /* dtRatio */, velocityIterations, positionIterations, this.m_warmStarting);
     this.m_contactManager.Collide();
-    if (step.dt > 0.0) {
-        this.Solve(step);
+    if (this.mainTimeStep.dt > 0.0) {
+        this.Solve(this.mainTimeStep);
         if (this.m_continuousPhysics) {
-            this.SolveTOI(step);
+            this.SolveTOI(this.mainTimeStep);
         }
-        this.m_inv_dt0 = step.inv_dt;
+        this.m_inv_dt0 = this.mainTimeStep.inv_dt;
     }
-    Box2D.Dynamics.b2TimeStep.Free(step);
     this.m_isLocked = false;
 };
 
@@ -495,14 +508,13 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
     this.m_debugDraw.m_sprite.graphics.clear();
     var flags = this.m_debugDraw.GetFlags();
     if (flags & Box2D.Dynamics.b2DebugDraw.e_shapeBit) {
-        var color_inactive = new Box2D.Common.b2Color(0.5, 0.5, 0.3);
-        var color_static = new Box2D.Common.b2Color(0.5, 0.9, 0.5);
-        var color_kinematic = new Box2D.Common.b2Color(0.5, 0.5, 0.9);
-        var color_dynamic_sleeping = new Box2D.Common.b2Color(0.6, 0.6, 0.6);
-        var color_dynamic_awake = new Box2D.Common.b2Color(0.9, 0.7, 0.7);
+        var color_inactive = Box2D.Dynamics.b2World.s_color_inactive;
+        var color_static = Box2D.Dynamics.b2World.s_color_static;
+        var color_kinematic = Box2D.Dynamics.b2World.s_color_kinematic;
+        var color_dynamic_sleeping = Box2D.Dynamics.b2World.s_color_dynamic_sleeping;
+        var color_dynamic_awake = Box2D.Dynamics.b2World.s_color_dynamic_awake;
         for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
             var b = bodyNode.body;
-            var xf = b.m_xf;
             for (var fixtureNode = b.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
                 var f = fixtureNode.fixture;
                 var s = f.GetShape();
@@ -531,23 +543,28 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
         }
     }
     if (flags & Box2D.Dynamics.b2DebugDraw.e_pairBit) {
-        var pairColor = new Box2D.Common.b2Color(0.3, 0.9, 0.9);
+        var pairColor = Box2D.Dynamics.b2World.s_pairColor;
         for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
             var fixtureA = contactNode.contact.GetFixtureA();
             var fixtureB = contactNode.contact.GetFixtureB();
             var cA = fixtureA.GetAABB().GetCenter();
             var cB = fixtureB.GetAABB().GetCenter();
             this.m_debugDraw.DrawSegment(cA, cB, pairColor);
+            Box2D.Common.Math.b2Vec2.Free(cA);
+            Box2D.Common.Math.b2Vec2.Free(cB);
         }
     }
     if (flags & Box2D.Dynamics.b2DebugDraw.e_aabbBit) {
-        var aabbColor = new Box2D.Common.b2Color(0.0, 0.0, 0.8);
+        var aabbColor = Box2D.Dynamics.b2World.s_aabbColor;
         for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.activeBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
             var b = bodyNode.body;
             for (var fixtureNode = b.GetFixtureList().GetFirstNode(); fixtureNode; fixtureNode = fixtureNode.GetNextNode()) {
                 var f = fixtureNode.fixture;
                 var aabb = this.m_contactManager.m_broadPhase.GetFatAABB(f.m_proxy);
-                var vs = [Box2D.Common.Math.b2Vec2.Get(aabb.lowerBound.x, aabb.lowerBound.y), Box2D.Common.Math.b2Vec2.Get(aabb.upperBound.x, aabb.lowerBound.y), Box2D.Common.Math.b2Vec2.Get(aabb.upperBound.x, aabb.upperBound.y), Box2D.Common.Math.b2Vec2.Get(aabb.lowerBound.x, aabb.upperBound.y)];
+                var vs = [Box2D.Common.Math.b2Vec2.Get(aabb.lowerBound.x, aabb.lowerBound.y),
+                          Box2D.Common.Math.b2Vec2.Get(aabb.upperBound.x, aabb.lowerBound.y),
+                          Box2D.Common.Math.b2Vec2.Get(aabb.upperBound.x, aabb.upperBound.y),
+                          Box2D.Common.Math.b2Vec2.Get(aabb.lowerBound.x, aabb.upperBound.y)];
                 this.m_debugDraw.DrawPolygon(vs, 4, aabbColor);
                 Box2D.Common.Math.b2Vec2.Free(vs[0]);
                 Box2D.Common.Math.b2Vec2.Free(vs[1]);
@@ -869,9 +886,8 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
                 jEdge.other.m_islandFlag = true;
             }
         }
-        var step = Box2D.Dynamics.b2TimeStep.Get((1.0 - minTOI) * step.dt /* dt */, 0 /* dtRatio */, step.velocityIterations, step.positionIterations, false /* warmStarting */);
-        m_island.SolveTOI(step);
-        Box2D.Dynamics.b2TimeStep.Free(step);
+        this.islandTimeStep.Reset((1.0 - minTOI) * step.dt /* dt */, 0 /* dtRatio */, step.velocityIterations, step.positionIterations, false /* warmStarting */);
+        m_island.SolveTOI(this.islandTimeStep);
 
         for (var i = 0; i < m_island.m_bodies.length; i++) {
             m_island.m_bodies[i].m_islandFlag = false;
@@ -961,19 +977,35 @@ Box2D.Dynamics.b2World.prototype._SolveTOI2SkipContact = function(step, c) {
  */
 Box2D.Dynamics.b2World.prototype.DrawJoint = function(joint) {
     if (joint instanceof Box2D.Dynamics.Joints.b2DistanceJoint || joint instanceof Box2D.Dynamics.Joints.b2MouseJoint) {
-        this.m_debugDraw.DrawSegment(joint.GetAnchorA(), joint.GetAnchorB(), Box2D.Dynamics.b2World.s_jointColor);
+        var anchorA = joint.GetAnchorA();
+        var anchorB = joint.GetAnchorB();
+        this.m_debugDraw.DrawSegment(anchorA, anchorB, Box2D.Dynamics.b2World.s_jointColor);
+        Box2D.Common.Math.b2Vec2.Free(anchorA);
+        Box2D.Common.Math.b2Vec2.Free(anchorB);
     } else if (joint instanceof Box2D.Dynamics.Joints.b2PulleyJoint) {
-        this.m_debugDraw.DrawSegment(joint.GetGroundAnchorA(), joint.GetAnchorA(), Box2D.Dynamics.b2World.s_jointColor);
-        this.m_debugDraw.DrawSegment(joint.GetGroundAnchorB(), joint.GetAnchorB(), Box2D.Dynamics.b2World.s_jointColor);
-        this.m_debugDraw.DrawSegment(joint.GetGroundAnchorA(), joint.GetGroundAnchorB(), Box2D.Dynamics.b2World.s_jointColor);
+        var anchorA = joint.getAnchorA();
+        var anchorB = joint.getAnchorB();
+        var groundA = joint.GetGroundAnchorA();
+        var groundB = joint.GetGroundAnchorB();
+        this.m_debugDraw.DrawSegment(groundA, anchorA, Box2D.Dynamics.b2World.s_jointColor);
+        this.m_debugDraw.DrawSegment(groundB, anchorB, Box2D.Dynamics.b2World.s_jointColor);
+        this.m_debugDraw.DrawSegment(groundA, groundB, Box2D.Dynamics.b2World.s_jointColor);
+        Box2D.Common.Math.b2Vec2.Free(anchorA);
+        Box2D.Common.Math.b2Vec2.Free(anchorB);
+        Box2D.Common.Math.b2Vec2.Free(groundA);
+        Box2D.Common.Math.b2Vec2.Free(groundB);
     } else {
+        var anchorA = joint.GetAnchorA();
+        var anchorB = joint.GetAnchorB();
         if (joint.GetBodyA() != this.m_groundBody) {
-            this.m_debugDraw.DrawSegment(joint.GetBodyA().m_xf.position, joint.GetAnchorA(), Box2D.Dynamics.b2World.s_jointColor);
+            this.m_debugDraw.DrawSegment(joint.GetBodyA().m_xf.position, anchorA, Box2D.Dynamics.b2World.s_jointColor);
         }
-        this.m_debugDraw.DrawSegment(joint.GetAnchorA(), joint.GetAnchorB(), Box2D.Dynamics.b2World.s_jointColor);
+        this.m_debugDraw.DrawSegment(anchorA, anchorB, Box2D.Dynamics.b2World.s_jointColor);
         if (joint.GetBodyB() != this.m_groundBody) {
-            this.m_debugDraw.DrawSegment(joint.GetBodyB().m_xf.position, joint.GetAnchorB(), Box2D.Dynamics.b2World.s_jointColor);
+            this.m_debugDraw.DrawSegment(joint.GetBodyB().m_xf.position, anchorB, Box2D.Dynamics.b2World.s_jointColor);
         }
+        Box2D.Common.Math.b2Vec2.Free(anchorA);
+        Box2D.Common.Math.b2Vec2.Free(anchorB);
     }
 };
 
@@ -989,6 +1021,7 @@ Box2D.Dynamics.b2World.prototype.DrawShape = function(shape, xf, color) {
         var radius = circle.m_radius;
         var axis = xf.R.col1;
         this.m_debugDraw.DrawSolidCircle(center, radius, axis, color);
+        Box2D.Common.Math.b2Vec2.Free(center);
     } else if (shape instanceof Box2D.Collision.Shapes.b2PolygonShape) {
         var i = 0;
         var poly = shape;
@@ -999,9 +1032,16 @@ Box2D.Dynamics.b2World.prototype.DrawShape = function(shape, xf, color) {
             vertices[i] = Box2D.Common.Math.b2Math.MulX(xf, localVertices[i]);
         }
         this.m_debugDraw.DrawSolidPolygon(vertices, vertexCount, color);
+        for (i = 0; i < vertexCount; i++) {
+            Box2D.Common.Math.b2Vec2.Free(vertices[i]);
+        }
     } else if (shape instanceof Box2D.Collision.Shapes.b2EdgeShape) {
         var edge = shape;
-        this.m_debugDraw.DrawSegment(Box2D.Common.Math.b2Math.MulX(xf, edge.GetVertex1()), Box2D.Common.Math.b2Math.MulX(xf, edge.GetVertex2()), color);
+        var v1 = Box2D.Common.Math.b2Math.MulX(xf, edge.GetVertex1());
+        var v2 = Box2D.Common.Math.b2Math.MulX(xf, edge.GetVertex2())
+        this.m_debugDraw.DrawSegment(v1, v2, color);
+        Box2D.Common.Math.b2Vec2.Free(v1);
+        Box2D.Common.Math.b2Vec2.Free(v2);
     }
 };
 
@@ -1014,5 +1054,50 @@ Box2D.Dynamics.b2World.s_backupA = new Box2D.Common.Math.b2Sweep();
 /** @type {!Box2D.Common.Math.b2Sweep} */
 Box2D.Dynamics.b2World.s_backupB = new Box2D.Common.Math.b2Sweep();
 
-/** @type {!Box2D.Common.b2Color} */
+/**
+ * @type {!Box2D.Common.b2Color}
+ * @const
+ */
 Box2D.Dynamics.b2World.s_jointColor = new Box2D.Common.b2Color(0.5, 0.8, 0.8);
+
+/**
+ * @type {!Box2D.Common.b2Color}
+ * @const
+ */
+Box2D.Dynamics.b2World.s_color_inactive = new Box2D.Common.b2Color(0.5, 0.5, 0.3);
+
+/**
+ * @type {!Box2D.Common.b2Color}
+ * @const
+ */
+Box2D.Dynamics.b2World.s_color_static = new Box2D.Common.b2Color(0.5, 0.9, 0.5);
+
+/**
+ * @type {!Box2D.Common.b2Color}
+ * @const
+ */
+Box2D.Dynamics.b2World.s_color_kinematic = new Box2D.Common.b2Color(0.5, 0.5, 0.9);
+
+/**
+ * @type {!Box2D.Common.b2Color}
+ * @const
+ */
+Box2D.Dynamics.b2World.s_color_dynamic_sleeping = new Box2D.Common.b2Color(0.6, 0.6, 0.6);
+
+/**
+ * @type {!Box2D.Common.b2Color}
+ * @const
+ */
+Box2D.Dynamics.b2World.s_color_dynamic_awake = new Box2D.Common.b2Color(0.9, 0.7, 0.7);
+
+/**
+ * @type {!Box2D.Common.b2Color}
+ * @const
+ */
+Box2D.Dynamics.b2World.s_pairColor = new Box2D.Common.b2Color(0.3, 0.9, 0.9);
+
+/**
+ * @type {!Box2D.Common.b2Color}
+ * @const
+ */
+Box2D.Dynamics.b2World.s_aabbColor = new Box2D.Common.b2Color(0.0, 0.0, 0.8);

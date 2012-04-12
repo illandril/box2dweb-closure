@@ -437,12 +437,16 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeSubmergedArea = function(
         }
         lastSubmerged = isSubmerged;
     }
+    Box2D.Common.Math.b2Vec2.Free(normalL);
     switch (diveCount) {
     case 0:
         if (lastSubmerged) {
             var md = new Box2D.Collision.Shapes.b2MassData();
             this.ComputeMass(md, 1);
-            c.SetV(Box2D.Common.Math.b2Math.MulX(xf, md.center));
+            var newV = Box2D.Common.Math.b2Math.MulX(xf, md.center);
+            Box2D.Common.Math.b2Vec2.Free(md.center);
+            c.SetV(newV);
+            Box2D.Common.Math.b2Vec2.Free(newV);
             return md.mass;
         } else {
             return 0;
@@ -460,8 +464,10 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeSubmergedArea = function(
     var outoIndex2 = ((outoIndex + 1) % this.m_vertexCount);
     var intoLamdda = (0 - depths[intoIndex]) / (depths[intoIndex2] - depths[intoIndex]);
     var outoLamdda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
-    var intoVec = Box2D.Common.Math.b2Vec2.Get(this.m_vertices[intoIndex].x * (1 - intoLamdda) + this.m_vertices[intoIndex2].x * intoLamdda, this.m_vertices[intoIndex].y * (1 - intoLamdda) + this.m_vertices[intoIndex2].y * intoLamdda);
-    var outoVec = Box2D.Common.Math.b2Vec2.Get(this.m_vertices[outoIndex].x * (1 - outoLamdda) + this.m_vertices[outoIndex2].x * outoLamdda, this.m_vertices[outoIndex].y * (1 - outoLamdda) + this.m_vertices[outoIndex2].y * outoLamdda);
+    var intoVec = Box2D.Common.Math.b2Vec2.Get(this.m_vertices[intoIndex].x * (1 - intoLamdda) + this.m_vertices[intoIndex2].x * intoLamdda,
+                                               this.m_vertices[intoIndex].y * (1 - intoLamdda) + this.m_vertices[intoIndex2].y * intoLamdda);
+    var outoVec = Box2D.Common.Math.b2Vec2.Get(this.m_vertices[outoIndex].x * (1 - outoLamdda) + this.m_vertices[outoIndex2].x * outoLamdda,
+                                               this.m_vertices[outoIndex].y * (1 - outoLamdda) + this.m_vertices[outoIndex2].y * outoLamdda);
     var area = 0;
     var center = Box2D.Common.Math.b2Vec2.Get(0, 0);
     var p2 = this.m_vertices[intoIndex2];
@@ -477,8 +483,13 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeSubmergedArea = function(
         center.y += triangleArea * (intoVec.y + p2.y + p3.y) / 3;
         p2 = p3;
     }
+    Box2D.Common.Math.b2Vec2.Free(intoVec);
+    Box2D.Common.Math.b2Vec2.Free(outoVec);
     center.Multiply(1 / area);
-    c.SetV(Box2D.Common.Math.b2Math.MulX(xf, center));
+    var newV = Box2D.Common.Math.b2Math.MulX(xf, center);
+    Box2D.Common.Math.b2Vec2.Free(center);
+    c.SetV(newV);
+    Box2D.Common.Math.b2Vec2.Free(newV);
     return area;
 };
 

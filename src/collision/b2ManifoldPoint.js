@@ -34,11 +34,14 @@ goog.provide('Box2D.Collision.b2ManifoldPoint');
 
 goog.require('Box2D.Common.Math.b2Vec2');
 goog.require('Box2D.Collision.b2ContactID');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Collision.b2ManifoldPoint = function() {
+    UsageTracker.get('Box2D.Collision.b2ManifoldPoint').trackCreate();
+    
     this.m_localPoint = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_id = new Box2D.Collision.b2ContactID();
     this.Reset();
