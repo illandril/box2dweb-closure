@@ -35,6 +35,7 @@ goog.provide('Box2D.Collision.Shapes.b2CircleShape');
 goog.require('Box2D.Collision.Shapes.b2Shape');
 goog.require('Box2D.Common.Math.b2Vec2');
 goog.require('Box2D.Common.Math.b2Math');
+goog.require('UsageTracker');
 
 /**
  * @param {number} radius
@@ -42,6 +43,8 @@ goog.require('Box2D.Common.Math.b2Math');
  * @extends {Box2D.Collision.Shapes.b2Shape}
  */
 Box2D.Collision.Shapes.b2CircleShape = function(radius) {
+    UsageTracker.get('Box2D.Collision.Shapes.b2CircleShape').trackCreate();
+    
     Box2D.Collision.Shapes.b2Shape.call(this);
     /** @type {number} */
     this.m_radius = radius;
@@ -157,9 +160,11 @@ Box2D.Collision.Shapes.b2CircleShape.prototype.ComputeSubmergedArea = function(n
     var p = Box2D.Common.Math.b2Math.MulX(xf, this.m_p);
     var l = (-(Box2D.Common.Math.b2Math.Dot(normal, p) - offset));
     if (l < (-this.m_radius) + Number.MIN_VALUE) {
+        Box2D.Common.Math.b2Vec2.Free(p);
         return 0;
     }
     if (l > this.m_radius) {
+        Box2D.Common.Math.b2Vec2.Free(p);
         c.SetV(p);
         return Math.PI * this.m_radiusSquared;
     }

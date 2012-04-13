@@ -44,6 +44,7 @@ goog.require('goog.array');
  */
 Box2D.Collision.b2DynamicTreeBroadPhase = function() {
     UsageTracker.get('Box2D.Collision.b2DynamicTreeBroadPhase').trackCreate();
+    
     /**
      * @private
      * @type {!Box2D.Collision.b2DynamicTree}
@@ -55,6 +56,31 @@ Box2D.Collision.b2DynamicTreeBroadPhase = function() {
      * @type {Array.<!Box2D.Collision.b2DynamicTreeNode>}
      */
     this.m_moveBuffer = [];
+    
+    /**
+     * @private
+     * @type {Box2D.Dynamics.b2Fixture}
+     */
+    this.lastQueryFixtureA = null;
+    
+    /**
+     * @private
+     * @type {Box2D.Dynamics.b2Fixture}
+     */
+    this.lastQueryFixtureB = null;
+
+    /**
+     * @private
+     * @type {function(!Box2D.Dynamics.b2Fixture): boolean}
+     */
+    this.queryCallback = null;
+    
+    /**
+     * @private
+     * @type {Box2D.Collision.b2DynamicTreeNode}
+     */
+    this.queryProxy = null;
+
 };
 
 /**
@@ -118,36 +144,34 @@ Box2D.Collision.b2DynamicTreeBroadPhase.prototype.GetProxyCount = function() {
  * @param {function(!Box2D.Dynamics.b2Fixture, !Box2D.Dynamics.b2Fixture)} callback
  */
 Box2D.Collision.b2DynamicTreeBroadPhase.prototype.UpdatePairs = function(callback) {
-    var __this = this;
-    var pairs = [];
+    this.lastQueryFixtureA = null;
+    this.lastQueryFixtureB = null;
+    this.queryCallback = callback;
     while (this.m_moveBuffer.length > 0) {
-        var queryProxy = this.m_moveBuffer.pop();
-        
-        var QueryCallback = function(fixture) {
-            if (fixture != queryProxy.fixture) {
-                pairs.push(Box2D.Collision.b2DynamicTreePair.Get(queryProxy.fixture, fixture));
-            }
-            return true;
-        };
-        var fatAABB = this.m_tree.GetFatAABB(queryProxy);
-        this.m_tree.Query(QueryCallback, fatAABB);
+        this.queryProxy = this.m_moveBuffer.pop();
+        this.m_tree.Query(this.QueryCallback, this.m_tree.GetFatAABB(this.queryProxy), this);
     }
-    var i = 0;
-    while(i < pairs.length) {
-        var fixtureA = pairs[i].fixtureA;
-        var fixtureB = pairs[i].fixtureB;
-        callback(fixtureA, fixtureB);
-        Box2D.Collision.b2DynamicTreePair.Free(pairs[i]);
-        i++;
-        while(i < pairs.length) {
-            if (!(pairs[i].fixtureA == fixtureA && pairs[i].fixtureB == fixtureB)
-                && !(pairs[i].fixtureA == fixtureB && pairs[i].fixtureB == fixtureA)) {
-                break;
-            }
-            Box2D.Collision.b2DynamicTreePair.Free(pairs[i]);
-            i++;
+    this.lastQueryFixtureA = null;
+    this.lastQueryFixtureB = null;
+    this.queryCallback = null;
+    this.queryProxy = null;
+};
+
+/**
+ * @param {!Box2D.Dynamics.b2Fixture} fixture
+ * @return {boolean}
+ * @private
+ */
+Box2D.Collision.b2DynamicTreeBroadPhase.prototype.QueryCallback = function(fixture) {
+    if (fixture != this.queryProxy.fixture) {
+        if ( !(this.queryProxy.fixture == this.lastQueryFixtureA && fixture == this.lastQueryFixtureB)
+             && !(this.queryProxy.fixture == this.lastQueryFixtureB && fixture == this.lastQueryFixtureA) ) {
+            this.queryCallback(this.queryProxy.fixture, fixture);
+            this.lastQueryFixtureA = this.queryProxy.fixture;
+            this.lastQueryFixtureB = fixture;
         }
     }
+    return true;
 };
 
 /**

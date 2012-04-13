@@ -132,8 +132,9 @@ Box2D.Collision.b2DynamicTree.prototype.GetFatAABB = function(proxy) {
 /**
  * @param {function(!Box2D.Dynamics.b2Fixture): boolean} callback
  * @param {!Box2D.Collision.b2AABB} aabb
+ * @param {!Object=} callbackObject
  */
-Box2D.Collision.b2DynamicTree.prototype.Query = function(callback, aabb) {
+Box2D.Collision.b2DynamicTree.prototype.Query = function(callback, aabb, callbackObject) {
     if (this.m_root !== null) {
         var stack = [];
         stack.push(this.m_root);
@@ -141,7 +142,7 @@ Box2D.Collision.b2DynamicTree.prototype.Query = function(callback, aabb) {
             var node = stack.pop();
             if (node.aabb.TestOverlap(aabb)) {
                 if (node.IsLeaf()) {
-                    if (!callback(node.fixture)) {
+                    if (!callback.call(callbackObject, node.fixture)) {
                         return;
                     }
                 } else {

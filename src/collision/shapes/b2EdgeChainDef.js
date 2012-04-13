@@ -32,10 +32,14 @@
  
 goog.provide('Box2D.Collision.Shapes.b2EdgeChainDef');
 
+goog.require('UsageTracker');
+
 /**
  * @constructor
  */
 Box2D.Collision.Shapes.b2EdgeChainDef = function() {
+    UsageTracker.get('Box2D.Collision.Shapes.b2EdgeChainDef').trackCreate();
+    
     /** @type {number} */
     this.vertexCount = 0;
     

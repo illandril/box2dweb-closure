@@ -39,6 +39,7 @@ goog.require('UsageTracker');
  * @param {number} y
  * @param {number} z
  * @constructor
+ * @private
  */
 Box2D.Common.Math.b2Vec3 = function(x, y, z) {
     UsageTracker.get('Box2D.Common.Math.b2Vec3').trackCreate();
@@ -46,6 +47,38 @@ Box2D.Common.Math.b2Vec3 = function(x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
+};
+
+/**
+ * @private
+ * @type {Array.<!Box2D.Common.Math.b2Vec3>}
+ */
+Box2D.Common.Math.b2Vec3._freeCache = [];
+
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {number} z
+ * @return {!Box2D.Common.Math.b2Vec3}
+ */
+Box2D.Common.Math.b2Vec3.Get = function(x, y, z) {
+    UsageTracker.get('Box2D.Common.Math.b2Vec3').trackGet();
+    if (Box2D.Common.Math.b2Vec3._freeCache.length > 0) {
+        var vec = Box2D.Common.Math.b2Vec3._freeCache.pop();
+        vec.Set(x, y, z);
+        return vec;
+    }
+    return new Box2D.Common.Math.b2Vec3(x, y, z);
+};
+
+/**
+ * @param {!Box2D.Common.Math.b2Vec3} vec
+ */
+Box2D.Common.Math.b2Vec3.Free = function(vec) {
+    if (vec != null) {
+        UsageTracker.get('Box2D.Common.Math.b2Vec3').trackFree();
+        Box2D.Common.Math.b2Vec3._freeCache.push(vec);
+    }
 };
 
 Box2D.Common.Math.b2Vec3.prototype.SetZero = function() {
@@ -78,7 +111,7 @@ Box2D.Common.Math.b2Vec3.prototype.SetV = function(v) {
  * @return {!Box2D.Common.Math.b2Vec3}
  */
 Box2D.Common.Math.b2Vec3.prototype.GetNegative = function() {
-    return new Box2D.Common.Math.b2Vec3((-this.x), (-this.y), (-this.z));
+    return Box2D.Common.Math.b2Vec3.Get((-this.x), (-this.y), (-this.z));
 };
 
 Box2D.Common.Math.b2Vec3.prototype.NegativeSelf = function() {
@@ -91,7 +124,7 @@ Box2D.Common.Math.b2Vec3.prototype.NegativeSelf = function() {
  * @return {!Box2D.Common.Math.b2Vec3}
  */
 Box2D.Common.Math.b2Vec3.prototype.Copy = function() {
-    return new Box2D.Common.Math.b2Vec3(this.x, this.y, this.z);
+    return Box2D.Common.Math.b2Vec3.Get(this.x, this.y, this.z);
 };
 
 /**

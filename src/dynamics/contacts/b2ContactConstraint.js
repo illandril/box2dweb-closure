@@ -35,11 +35,14 @@ goog.provide('Box2D.Dynamics.Contacts.b2ContactConstraint');
 goog.require('Box2D.Common.Math.b2Vec2');
 goog.require('Box2D.Common.Math.b2Mat22');
 goog.require('Box2D.Dynamics.Contacts.b2ContactConstraintPoint');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Dynamics.Contacts.b2ContactConstraint = function() {
+    UsageTracker.get('Box2D.Dynamics.Contacts.b2ContactConstraint').trackCreate();
+    
     this.localPlaneNormal = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.localPoint = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.normal = Box2D.Common.Math.b2Vec2.Get(0, 0);

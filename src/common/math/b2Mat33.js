@@ -44,9 +44,9 @@ goog.require('UsageTracker');
 Box2D.Common.Math.b2Mat33 = function(c1, c2, c3) {
     UsageTracker.get('Box2D.Common.Math.b2Mat33').trackCreate();
     
-    this.col1 = new Box2D.Common.Math.b2Vec3(0, 0, 0);
-    this.col2 = new Box2D.Common.Math.b2Vec3(0, 0, 0);
-    this.col3 = new Box2D.Common.Math.b2Vec3(0, 0, 0);
+    this.col1 = Box2D.Common.Math.b2Vec3.Get(0, 0, 0);
+    this.col2 = Box2D.Common.Math.b2Vec3.Get(0, 0, 0);
+    this.col3 = Box2D.Common.Math.b2Vec3.Get(0, 0, 0);
     if (c1) {
         this.col1.SetV(c1);
     }

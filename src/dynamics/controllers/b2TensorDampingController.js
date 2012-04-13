@@ -73,7 +73,7 @@ Box2D.Dynamics.Controllers.b2TensorDampingController.prototype.Step = function(s
         var lV = body.GetLocalVector(body.GetLinearVelocity());
         var tV = Box2D.Common.Math.b2Math.MulMV(this.T, lV);
         Box2D.Common.Math.b2Vec2.Free(lV);
-        var damping = body.GetWorldVector(tv);
+        var damping = body.GetWorldVector(tV);
         Box2D.Common.Math.b2Vec2.Free(tV);
         var newV = Box2D.Common.Math.b2Vec2.Get(body.GetLinearVelocity().x + damping.x * timestep, body.GetLinearVelocity().y + damping.y * timestep);
         Box2D.Common.Math.b2Vec2.Free(damping);

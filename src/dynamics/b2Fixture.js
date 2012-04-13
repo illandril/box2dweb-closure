@@ -193,7 +193,7 @@ Box2D.Dynamics.b2Fixture.prototype.RayCast = function(output, input) {
  */
 Box2D.Dynamics.b2Fixture.prototype.GetMassData = function(massData) {
     if (!massData) {
-        massData = new Box2D.Collision.Shapes.b2MassData();
+        massData = Box2D.Collision.Shapes.b2MassData.Get();
     }
     this.m_shape.ComputeMass(massData, this.m_density);
     return massData;

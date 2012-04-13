@@ -39,12 +39,15 @@ goog.require('Box2D.Common.Math.b2Mat22');
 goog.require('Box2D.Common.Math.b2Math');
 goog.require('Box2D.Common.Math.b2Transform');
 goog.require('Box2D.Common.Math.b2Vec2');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  * @extends {Box2D.Collision.Shapes.b2Shape}
  */
 Box2D.Collision.Shapes.b2PolygonShape = function() {
+    UsageTracker.get('Box2D.Collision.Shapes.b2PolygonShape').trackCreate();
+    
     Box2D.Collision.Shapes.b2Shape.call(this);
     
     /** @type {!Box2D.Common.Math.b2Vec2} */
@@ -441,13 +444,14 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeSubmergedArea = function(
     switch (diveCount) {
     case 0:
         if (lastSubmerged) {
-            var md = new Box2D.Collision.Shapes.b2MassData();
+            var md = Box2D.Collision.Shapes.b2MassData.Get();
             this.ComputeMass(md, 1);
             var newV = Box2D.Common.Math.b2Math.MulX(xf, md.center);
-            Box2D.Common.Math.b2Vec2.Free(md.center);
             c.SetV(newV);
             Box2D.Common.Math.b2Vec2.Free(newV);
-            return md.mass;
+            var mass = md.mass;
+            Box2D.Collision.Shapes.b2MassData.Free(md);
+            return mass;
         } else {
             return 0;
         }

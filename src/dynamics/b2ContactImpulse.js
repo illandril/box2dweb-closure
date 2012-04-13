@@ -32,10 +32,19 @@
  
 goog.provide('Box2D.Dynamics.b2ContactImpulse');
 
+goog.require('UsageTracker');
+
 /**
  * @constructor
  */
 Box2D.Dynamics.b2ContactImpulse = function () {
+    UsageTracker.get('Box2D.Dynamics.b2ContactImpulse').trackCreate();
+    
+    this.normalImpulses = [];
+    this.tangentImpulses = [];
+};
+
+Box2D.Dynamics.b2ContactImpulse.prototype.Reset = function() {
     this.normalImpulses = [];
     this.tangentImpulses = [];
 };

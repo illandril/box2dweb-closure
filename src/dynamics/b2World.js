@@ -181,6 +181,13 @@ Box2D.Dynamics.b2World = function(gravity, doSleep) {
      * @const
      */
     this.islandTimeStep = new Box2D.Dynamics.b2TimeStep(0, 0, 0, 0, this.m_warmStarting);
+    
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2Island}
+     * @const
+     */
+     this.island = new Box2D.Dynamics.b2Island(this.m_contactManager.m_contactListener, this.m_contactSolver);
 };
 
 /**
@@ -720,7 +727,9 @@ Box2D.Dynamics.b2World.prototype.Solve = function(step) {
     for (var controllerNode = this.controllerList.GetFirstNode(); controllerNode; controllerNode = controllerNode.GetNextNode()) {
         controllerNode.controller.Step(step);
     }
-    var m_island = new Box2D.Dynamics.b2Island(this.m_contactManager.m_contactListener, this.m_contactSolver);
+    
+    var m_island = this.island;
+    m_island.Reset(this.m_contactManager.m_contactListener, this.m_contactSolver);
     
     for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
         bodyNode.body.m_islandFlag = false;
@@ -789,7 +798,9 @@ Box2D.Dynamics.b2World.prototype.Solve = function(step) {
  * @param {!Box2D.Dynamics.b2TimeStep} step
  */
 Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
-    var m_island = new Box2D.Dynamics.b2Island(this.m_contactManager.m_contactListener, this.m_contactSolver);
+    var m_island = this.island;
+    m_island.Reset(this.m_contactManager.m_contactListener, this.m_contactSolver);
+    
     for (var bodyNode = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); bodyNode; bodyNode = bodyNode.GetNextNode()) {
         var b = bodyNode.body;
         b.m_islandFlag = false;

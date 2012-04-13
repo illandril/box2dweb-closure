@@ -58,7 +58,7 @@ UsageTracker.logStatsToConsole = function() {
     for( var i = 0; i < UsageTracker.trackers.length; i++ ) {
         var t = UsageTracker.trackers[i];
         var gNotFree = (t.getCount - t.freeCount);
-        console.log(t.id + ": " + t.createCount + "; " + t.getCount + " - " + t.freeCount + " = " + gNotFree + (gNotFree > 0 ? " (" + Math.round((gNotFree/t.getCount) * 10000)/100 + "%)" : ""));
+        window['console']['log'](t.id + ": " + t.createCount + "; " + t.getCount + " - " + t.freeCount + " = " + gNotFree + (gNotFree > 0 ? " (" + Math.round((gNotFree/t.getCount) * 10000)/100 + "%)" : ""));
     }
 };
 

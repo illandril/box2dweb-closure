@@ -36,6 +36,7 @@ goog.require('Box2D.Collision.Shapes.b2Shape');
 goog.require('Box2D.Common.b2Settings');
 goog.require('Box2D.Common.Math.b2Math');
 goog.require('Box2D.Common.Math.b2Vec2');
+goog.require('UsageTracker');
 
 /**
  * @param {!Box2D.Common.Math.b2Vec2} v1
@@ -44,6 +45,8 @@ goog.require('Box2D.Common.Math.b2Vec2');
  * @extends {Box2D.Collision.Shapes.b2Shape}
  */
 Box2D.Collision.Shapes.b2EdgeShape = function(v1, v2) {
+    UsageTracker.get('Box2D.Collision.Shapes.b2EdgeShape').trackCreate();
+    
     Box2D.Collision.Shapes.b2Shape.call(this);
     
     /** @type {Box2D.Collision.Shapes.b2EdgeShape} */

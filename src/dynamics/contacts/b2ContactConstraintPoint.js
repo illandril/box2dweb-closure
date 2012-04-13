@@ -33,11 +33,14 @@
 goog.provide('Box2D.Dynamics.Contacts.b2ContactConstraintPoint');
 
 goog.require('Box2D.Common.Math.b2Vec2');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Dynamics.Contacts.b2ContactConstraintPoint = function() {
+    UsageTracker.get('Box2D.Dynamics.Contacts.b2ContactConstraintPoint').trackCreate();
+    
       this.localPoint = Box2D.Common.Math.b2Vec2.Get(0, 0);
       this.rA = Box2D.Common.Math.b2Vec2.Get(0, 0);
       this.rB = Box2D.Common.Math.b2Vec2.Get(0, 0);

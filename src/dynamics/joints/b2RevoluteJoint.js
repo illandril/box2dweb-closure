@@ -51,12 +51,12 @@ Box2D.Dynamics.Joints.b2RevoluteJoint = function(def) {
     this.K1 = new Box2D.Common.Math.b2Mat22();
     this.K2 = new Box2D.Common.Math.b2Mat22();
     this.K3 = new Box2D.Common.Math.b2Mat22();
-    this.impulse3 = new Box2D.Common.Math.b2Vec3(0, 0, 0);
+    this.impulse3 = Box2D.Common.Math.b2Vec3.Get(0, 0, 0);
     this.impulse2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.reduced = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_localAnchor1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_localAnchor2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
-    this.m_impulse = new Box2D.Common.Math.b2Vec3(0, 0, 0);
+    this.m_impulse = Box2D.Common.Math.b2Vec3.Get(0, 0, 0);
     this.m_mass = new Box2D.Common.Math.b2Mat33();
     this.m_localAnchor1.SetV(def.localAnchorA);
     this.m_localAnchor2.SetV(def.localAnchorB);

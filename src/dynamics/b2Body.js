@@ -495,7 +495,7 @@ Box2D.Dynamics.b2Body.prototype.GetInertia = function() {
  */
 Box2D.Dynamics.b2Body.prototype.GetMassData = function(massData) {
     if (!massData) {
-        massData = new Box2D.Collision.Shapes.b2MassData();
+        massData = Box2D.Collision.Shapes.b2MassData.Get();
     }
     massData.mass = this.m_mass;
     massData.I = this.m_I;

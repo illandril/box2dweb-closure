@@ -37,11 +37,13 @@ goog.require('Box2D.Collision.b2DistanceInput');
 goog.require('Box2D.Collision.b2DistanceOutput');
 goog.require('Box2D.Collision.b2DistanceProxy');
 goog.require('Box2D.Collision.b2SimplexCache');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Collision.Shapes.b2Shape = function() {
+    UsageTracker.get('Box2D.Collision.Shapes.b2Shape').trackCreate();
     this.m_radius = Box2D.Common.b2Settings.b2_linearSlop;
 };
 

@@ -33,11 +33,14 @@
 goog.provide('Box2D.Collision.Shapes.b2MassData');
 
 goog.require('Box2D.Common.Math.b2Vec2');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Collision.Shapes.b2MassData = function() {
+    UsageTracker.get('Box2D.Collision.Shapes.b2MassData').trackCreate();
+    
     /** @type {number} */
     this.mass = 0;
     
@@ -46,4 +49,36 @@ Box2D.Collision.Shapes.b2MassData = function() {
     
     /** @type {number} */
     this.I = 0;
+};
+
+
+/**
+ * @private
+ * @type {Array.<!Box2D.Collision.Shapes.b2MassData>}
+ */
+Box2D.Collision.Shapes.b2MassData._freeCache = [];
+
+/**
+ * @return {!Box2D.Collision.Shapes.b2MassData}
+ */
+Box2D.Collision.Shapes.b2MassData.Get = function() {
+    UsageTracker.get('Box2D.Collision.Shapes.b2MassData').trackGet();
+    if (Box2D.Collision.Shapes.b2MassData._freeCache.length > 0) {
+        var md = Box2D.Collision.Shapes.b2MassData._freeCache.pop();
+        md.mass = 0;
+        md.center.SetZero();
+        md.I = 0;
+        return md;
+    }
+    return new Box2D.Collision.Shapes.b2MassData();
+};
+
+/**
+ * @param {!Box2D.Collision.Shapes.b2MassData} md
+ */
+Box2D.Collision.Shapes.b2MassData.Free = function(md) {
+    if (md != null) {
+        UsageTracker.get('Box2D.Collision.Shapes.b2MassData').trackFree();
+        Box2D.Collision.Shapes.b2MassData._freeCache.push(md);
+    }
 };

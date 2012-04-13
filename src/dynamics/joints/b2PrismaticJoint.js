@@ -54,7 +54,7 @@ Box2D.Dynamics.Joints.b2PrismaticJoint = function(def) {
     this.m_axis = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_perp = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_K = new Box2D.Common.Math.b2Mat33();
-    this.m_impulse = new Box2D.Common.Math.b2Vec3(0, 0, 0);
+    this.m_impulse = Box2D.Common.Math.b2Vec3.Get(0, 0, 0);
     this.m_localAnchor1.SetV(def.localAnchorA);
     this.m_localAnchor2.SetV(def.localAnchorB);
     this.m_localXAxis1.SetV(def.localAxisA);
@@ -334,7 +334,7 @@ Box2D.Dynamics.Joints.b2PrismaticJoint.prototype.SolveVelocityConstraints = func
     if (this.m_enableLimit && this.m_limitState != Box2D.Dynamics.Joints.b2Joint.e_inactiveLimit) {
         var Cdot2 = this.m_axis.x * (v2.x - v1.x) + this.m_axis.y * (v2.y - v1.y) + this.m_a2 * w2 - this.m_a1 * w1;
         var f1 = this.m_impulse.Copy();
-        var df = new Box2D.Common.Math.b2Vec3(0, 0, 0);
+        var df = Box2D.Common.Math.b2Vec3.Get(0, 0, 0);
         this.m_K.Solve33(df, (-Cdot1X), (-Cdot1Y), (-Cdot2));
         this.m_impulse.Add(df);
         if (this.m_limitState == Box2D.Dynamics.Joints.b2Joint.e_atLowerLimit) {
@@ -360,6 +360,8 @@ Box2D.Dynamics.Joints.b2PrismaticJoint.prototype.SolveVelocityConstraints = func
         PY = df.x * this.m_perp.y + df.z * this.m_axis.y;
         L1 = df.x * this.m_s1 + df.y + df.z * this.m_a1;
         L2 = df.x * this.m_s2 + df.y + df.z * this.m_a2;
+        Box2D.Common.Math.b2Vec3.Free(df);
+        
         v1.x -= this.m_invMassA * PX;
         v1.y -= this.m_invMassA * PY;
         w1 -= this.m_invIA * L1;
@@ -449,7 +451,7 @@ Box2D.Dynamics.Joints.b2PrismaticJoint.prototype.SolvePositionConstraints = func
     this.m_perp = Box2D.Common.Math.b2Math.MulMV(R1, this.m_localYAxis1);
     this.m_s1 = (dX + r1X) * this.m_perp.y - (dY + r1Y) * this.m_perp.x;
     this.m_s2 = r2X * this.m_perp.y - r2Y * this.m_perp.x;
-    var impulse = new Box2D.Common.Math.b2Vec3(0, 0, 0);
+    var impulse = Box2D.Common.Math.b2Vec3.Get(0, 0, 0);
     var C1X = this.m_perp.x * dX + this.m_perp.y * dY;
     var C1Y = a2 - a1 - this.m_refAngle;
     linearError = Math.max(linearError, Math.abs(C1X));
@@ -490,6 +492,7 @@ Box2D.Dynamics.Joints.b2PrismaticJoint.prototype.SolvePositionConstraints = func
     var PY = impulse.x * this.m_perp.y + impulse.z * this.m_axis.y;
     var L1 = impulse.x * this.m_s1 + impulse.y + impulse.z * this.m_a1;
     var L2 = impulse.x * this.m_s2 + impulse.y + impulse.z * this.m_a2;
+    Box2D.Common.Math.b2Vec3.Free(impulse);
     c1.x -= this.m_invMassA * PX;
     c1.y -= this.m_invMassA * PY;
     a1 -= this.m_invIA * L1;

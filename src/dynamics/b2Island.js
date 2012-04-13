@@ -36,6 +36,7 @@ goog.require('Box2D.Dynamics.b2ContactImpulse');
 goog.require('Box2D.Dynamics.b2BodyDef');
 goog.require('Box2D.Common.Math.b2Math');
 goog.require('Box2D.Common.b2Settings');
+goog.require('UsageTracker');
 
 /**
  * @param {!Box2D.Dynamics.b2ContactListener} listener
@@ -43,6 +44,7 @@ goog.require('Box2D.Common.b2Settings');
  * @constructor
  */
 Box2D.Dynamics.b2Island = function(listener, contactSolver) {
+    UsageTracker.get('Box2D.Dynamics.b2Island').trackCreate();
     
     /**
      * @private
@@ -85,6 +87,22 @@ Box2D.Dynamics.b2Island = function(listener, contactSolver) {
      * @type {Array.<!Box2D.Dynamics.Joints.b2Joint>}
      */
     this.m_joints = [];
+    
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2ContactImpulse}
+     * @const
+     */
+    this.impulse = new Box2D.Dynamics.b2ContactImpulse();
+};
+
+/**
+ * @param {!Box2D.Dynamics.b2ContactListener} listener
+ * @param {!Box2D.Dynamics.Contacts.b2ContactSolver} contactSolver
+ */
+Box2D.Dynamics.b2Island.prototype.Reset = function(listener, contactSolver) {
+    this.m_listener = listener;
+    this.m_contactSolver = contactSolver;
 };
 
 Box2D.Dynamics.b2Island.prototype.Clear = function() {
@@ -287,12 +305,12 @@ Box2D.Dynamics.b2Island.prototype.Report = function(constraints) {
     for (var i = 0; i < this.m_contacts.length; ++i) {
         var c = this.m_contacts[i];
         var cc = constraints[i];
-        var impulse = new Box2D.Dynamics.b2ContactImpulse();
+        this.impulse.Reset();
         for (var j = 0; j < cc.pointCount; ++j) {
-            impulse.normalImpulses[j] = cc.points[j].normalImpulse;
-            impulse.tangentImpulses[j] = cc.points[j].tangentImpulse;
+            this.impulse.normalImpulses[j] = cc.points[j].normalImpulse;
+            this.impulse.tangentImpulses[j] = cc.points[j].tangentImpulse;
         }
-        this.m_listener.PostSolve(c, impulse);
+        this.m_listener.PostSolve(c, this.impulse);
     }
 };
 
