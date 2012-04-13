@@ -24,6 +24,19 @@ UsageTracker = function(id) {
 };
 
 /**
+ * @type {Array.<!UsageTracker>}
+ * @private
+ */
+UsageTracker.trackers = [];
+
+/**
+ * @type {Object.<!UsageTracker>}
+ * @private
+ */
+UsageTracker.trackersByID = {};
+
+/**
+ * @type {boolean}
  * @const
  * @private
  */
@@ -32,16 +45,6 @@ UsageTracker.ENABLED = true;
 if ( !UsageTracker.ENABLED ) {
     UsageTracker.dummyTracker = new UsageTracker("NotTracking");
 }
-
-/**
- * @private
- */
-UsageTracker.trackers = [];
-
-/**
- * @private
- */
-UsageTracker.trackersByID = {};
 
 UsageTracker.get = function(id) {
     if ( !UsageTracker.ENABLED ) {
