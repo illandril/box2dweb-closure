@@ -164,7 +164,7 @@ Box2D.Dynamics.b2Fixture.prototype.GetFilterData = function() {
 };
 
 /**
- * @return {Box2D.Dynamics.b2Body}
+ * @return {!Box2D.Dynamics.b2Body}
  */
 Box2D.Dynamics.b2Fixture.prototype.GetBody = function() {
     return this.m_body;

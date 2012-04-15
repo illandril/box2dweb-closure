@@ -77,7 +77,7 @@ Box2D.Collision.b2Collision.ClipSegmentToLine = function(vOut, vIn, normal, offs
  * @param {!Box2D.Common.Math.b2Transform} xf1
  * @param {number} edge1
  * @param {!Box2D.Collision.Shapes.b2PolygonShape} poly2
- * @param {!Box2D.Common.Math.b2Transform} xf1
+ * @param {!Box2D.Common.Math.b2Transform} xf2
  * @return {number}
  */
 Box2D.Collision.b2Collision.EdgeSeparation = function(poly1, xf1, edge1, poly2, xf2) {
@@ -106,7 +106,7 @@ Box2D.Collision.b2Collision.EdgeSeparation = function(poly1, xf1, edge1, poly2, 
  * @param {!Box2D.Collision.Shapes.b2PolygonShape} poly1
  * @param {!Box2D.Common.Math.b2Transform} xf1
  * @param {!Box2D.Collision.Shapes.b2PolygonShape} poly2
- * @param {!Box2D.Common.Math.b2Transform} xf1
+ * @param {!Box2D.Common.Math.b2Transform} xf2
  * @return {{bestEdge: number, separation: number}}
  */
 Box2D.Collision.b2Collision.FindMaxSeparation = function(poly1, xf1, poly2, xf2) {

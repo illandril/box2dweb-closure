@@ -174,7 +174,7 @@ Box2D.Collision.b2SeparationFunction.prototype.Initialize = function(cache, prox
         localPointB.y = localPointB1.y + s * (localPointB2.y - localPointB1.y);
         if (s == 0.0 || s == 1.0) {
             this.m_type = Box2D.Collision.b2SeparationFunction.e_faceB;
-            var tempVec = Box2D.Common.Math.b2Math.SubtractVV(localPointB2, localPointB1);
+            tempVec = Box2D.Common.Math.b2Math.SubtractVV(localPointB2, localPointB1);
             Box2D.Common.Math.b2Vec2.Free(this.m_axis);
             this.m_axis = Box2D.Common.Math.b2Math.CrossVF(tempVec, 1.0);
             Box2D.Common.Math.b2Vec2.Free(tempVec);
@@ -198,7 +198,7 @@ Box2D.Collision.b2SeparationFunction.prototype.Initialize = function(cache, prox
             }
         } else {
             this.m_type = Box2D.Collision.b2SeparationFunction.e_faceA;
-            var tempVec = Box2D.Common.Math.b2Math.SubtractVV(localPointA2, localPointA1);
+            tempVec = Box2D.Common.Math.b2Math.SubtractVV(localPointA2, localPointA1);
             Box2D.Common.Math.b2Vec2.Free(this.m_axis);
             this.m_axis = Box2D.Common.Math.b2Math.CrossVF(tempVec, 1.0);
             Box2D.Common.Math.b2Vec2.Free(tempVec);

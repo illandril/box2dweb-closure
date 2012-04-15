@@ -71,9 +71,9 @@ Box2D.Collision.b2DynamicTreeBroadPhase = function() {
 
     /**
      * @private
-     * @type {function(!Box2D.Dynamics.b2Fixture): boolean}
+     * @type {?function(!Box2D.Dynamics.b2Fixture, !Box2D.Dynamics.b2Fixture): boolean}
      */
-    this.queryCallback = null;
+    this.updatePairsCallback = null;
     
     /**
      * @private
@@ -146,14 +146,14 @@ Box2D.Collision.b2DynamicTreeBroadPhase.prototype.GetProxyCount = function() {
 Box2D.Collision.b2DynamicTreeBroadPhase.prototype.UpdatePairs = function(callback) {
     this.lastQueryFixtureA = null;
     this.lastQueryFixtureB = null;
-    this.queryCallback = callback;
+    this.updatePairsCallback = callback;
     while (this.m_moveBuffer.length > 0) {
         this.queryProxy = this.m_moveBuffer.pop();
         this.m_tree.Query(this.QueryCallback, this.m_tree.GetFatAABB(this.queryProxy), this);
     }
     this.lastQueryFixtureA = null;
     this.lastQueryFixtureB = null;
-    this.queryCallback = null;
+    this.updatePairsCallback = null;
     this.queryProxy = null;
 };
 
@@ -166,7 +166,7 @@ Box2D.Collision.b2DynamicTreeBroadPhase.prototype.QueryCallback = function(fixtu
     if (fixture != this.queryProxy.fixture) {
         if ( !(this.queryProxy.fixture == this.lastQueryFixtureA && fixture == this.lastQueryFixtureB)
              && !(this.queryProxy.fixture == this.lastQueryFixtureB && fixture == this.lastQueryFixtureA) ) {
-            this.queryCallback(this.queryProxy.fixture, fixture);
+            this.updatePairsCallback(this.queryProxy.fixture, fixture);
             this.lastQueryFixtureA = this.queryProxy.fixture;
             this.lastQueryFixtureB = fixture;
         }

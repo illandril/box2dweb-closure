@@ -59,7 +59,7 @@ Box2D.Dynamics.Contacts.b2ContactListNode = function(contact) {
 
 /**
  * @private
- * @type {Array.<!Box2D.Dynamics.Contacts.b2ContactListNode>
+ * @type {Array.<!Box2D.Dynamics.Contacts.b2ContactListNode>}
  */
 Box2D.Dynamics.Contacts.b2ContactListNode.freeNodes = [];
 

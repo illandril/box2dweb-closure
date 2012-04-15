@@ -55,7 +55,7 @@ Box2D.Dynamics.Contacts.b2ContactFactory = function() {
     
     /**
      * @private
-     * @type {Object.<Object.<Array.<!Box2D.Dynamics.b2Contact>>>}
+     * @type {Object.<Object.<Array.<!Box2D.Dynamics.Contacts.b2Contact>>>}
      */
     this.m_freeContacts = {};
     

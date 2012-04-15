@@ -707,7 +707,7 @@ Box2D.Dynamics.b2World.prototype.GetJointList = function() {
 };
 
 /**
- * @return {Box2D.Dynamics.Contacts.b2Contact}
+ * @return {!Box2D.Dynamics.Contacts.b2ContactList}
  */
 Box2D.Dynamics.b2World.prototype.GetContactList = function() {
     return this.contactList;
@@ -847,7 +847,8 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
         queue.enqueue(seed);
         seed.m_islandFlag = true;
         while (queue.size > 0) {
-            var b = queue.dequeue();
+            
+            var b = /** @type {!Box2D.Dynamics.b2Body} */queue.dequeue();
             m_island.AddBody(b);
             if (!b.IsAwake()) {
                 b.SetAwake(true);
@@ -994,8 +995,8 @@ Box2D.Dynamics.b2World.prototype.DrawJoint = function(joint) {
         Box2D.Common.Math.b2Vec2.Free(anchorA);
         Box2D.Common.Math.b2Vec2.Free(anchorB);
     } else if (joint instanceof Box2D.Dynamics.Joints.b2PulleyJoint) {
-        var anchorA = joint.getAnchorA();
-        var anchorB = joint.getAnchorB();
+        var anchorA = joint.GetAnchorA();
+        var anchorB = joint.GetAnchorB();
         var groundA = joint.GetGroundAnchorA();
         var groundB = joint.GetGroundAnchorB();
         this.m_debugDraw.DrawSegment(groundA, anchorA, Box2D.Dynamics.b2World.s_jointColor);
