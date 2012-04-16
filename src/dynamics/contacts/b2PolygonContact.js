@@ -55,7 +55,7 @@ Box2D.Dynamics.Contacts.b2PolygonContact.prototype.Reset = function(fixtureA, fi
 };
 
 Box2D.Dynamics.Contacts.b2PolygonContact.prototype.Evaluate = function() {
-    var shapeA = /** @type {Box2D.Collision.Shapes.b2PolygonShape} */ this.m_fixtureA.GetShape();
-    var shapeB = /** @type {Box2D.Collision.Shapes.b2PolygonShape} */ this.m_fixtureB.GetShape();
+    var shapeA = /** @type {!Box2D.Collision.Shapes.b2PolygonShape} */ this.m_fixtureA.GetShape();
+    var shapeB = /** @type {!Box2D.Collision.Shapes.b2PolygonShape} */ this.m_fixtureB.GetShape();
     Box2D.Collision.b2Collision.CollidePolygons(this.m_manifold, shapeA, this.m_fixtureA.GetBody().m_xf, shapeB, this.m_fixtureB.GetBody().m_xf);
 };

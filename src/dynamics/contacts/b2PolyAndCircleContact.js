@@ -62,7 +62,7 @@ Box2D.Dynamics.Contacts.b2PolyAndCircleContact.prototype.Reset = function(fixtur
 };
 
 Box2D.Dynamics.Contacts.b2PolyAndCircleContact.prototype.Evaluate = function() {
-    var shapeA = /** @type {Box2D.Collision.Shapes.b2PolygonShape} */ this.m_fixtureA.GetShape();
-    var shapeB = /** @type {Box2D.Collision.Shapes.b2CircleShape} */ this.m_fixtureB.GetShape();
+    var shapeA = /** @type {!Box2D.Collision.Shapes.b2PolygonShape} */ this.m_fixtureA.GetShape();
+    var shapeB = /** @type {!Box2D.Collision.Shapes.b2CircleShape} */ this.m_fixtureB.GetShape();
     Box2D.Collision.b2Collision.CollidePolygonAndCircle(this.m_manifold, shapeA, this.m_fixtureA.GetBody().m_xf, shapeB, this.m_fixtureB.GetBody().m_xf);
 };
