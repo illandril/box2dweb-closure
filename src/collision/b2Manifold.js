@@ -89,7 +89,7 @@ Box2D.Collision.b2Manifold.prototype.Reset = function() {
 };
 
 /**
- * @param {!Box2D.Collision.b2Manifold}
+ * @param {!Box2D.Collision.b2Manifold} m
  */
 Box2D.Collision.b2Manifold.prototype.Set = function(m) {
     this.m_pointCount = m.m_pointCount;

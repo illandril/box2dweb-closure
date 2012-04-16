@@ -70,7 +70,7 @@ Box2D.Collision.Shapes.b2CircleShape = function(radius) {
      * Used to minimize the creation of arrays for SetDistanceProxy only
      * @private
      * @const
-     * @type {Array.<!Box2D.Common.Math.b2Vec2>}
+     * @type {!Array.<!Box2D.Common.Math.b2Vec2>}
      */
     this.m_vertices = [this.m_p];
 };
@@ -164,7 +164,7 @@ Box2D.Collision.Shapes.b2CircleShape.prototype.ComputeAABB = function(aabb, tran
  */
 Box2D.Collision.Shapes.b2CircleShape.prototype.ComputeMass = function(massData, density) {
     var mass = density * Math.PI * this.m_radiusSquared;
-    massData.SetValues(mass, this.m_p, mass * (0.5 * this.m_radiusSquared + (this.m_p.x * this.m_p.x + this.m_p.y * this.m_p.y)));
+    massData.SetV(mass, this.m_p, mass * (0.5 * this.m_radiusSquared + (this.m_p.x * this.m_p.x + this.m_p.y * this.m_p.y)));
 };
 
 /**

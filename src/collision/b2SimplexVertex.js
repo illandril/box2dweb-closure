@@ -56,19 +56,19 @@ Box2D.Collision.b2SimplexVertex = function() {
     this.w = Box2D.Common.Math.b2Vec2.Get(0, 0);
     
     /**
-     * @type {!number}
+     * @type {number}
      */
-    this.a = null;
+    this.a = 0;
     
     /**
-     * @type {!number}
+     * @type {number}
      */
-    this.indexA = null;
+    this.indexA = 0;
     
     /**
-     * @type {!number}
+     * @type {number}
      */
-    this.indexB = null;
+    this.indexB = 0;
 };
 
 Box2D.Collision.b2SimplexVertex.prototype.Set = function(other) {

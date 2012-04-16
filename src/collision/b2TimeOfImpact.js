@@ -43,7 +43,7 @@ goog.require('Box2D.Collision.b2Distance');
 Box2D.Collision.b2TimeOfImpact = {};
 
 /**
- * @param {!Box2D.Collision.b2TOIInput}
+ * @param {!Box2D.Collision.b2TOIInput} input
  * @return {number}
  */
 Box2D.Collision.b2TimeOfImpact.TimeOfImpact = function(input) {

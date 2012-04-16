@@ -40,8 +40,8 @@ goog.require('Box2D.Common.Math.b2Vec2');
 Box2D.Collision.b2Collision = {};
 
 /**
- * @param {!Box2D.Common.Math.b2Vec2} vOut
- * @param {!Box2D.Common.Math.b2Vec2} vIn
+ * @param {!Array.<!Box2D.Collision.ClipVertex>} vOut
+ * @param {!Array.<!Box2D.Collision.ClipVertex>} vIn
  * @param {!Box2D.Common.Math.b2Vec2} normal
  * @param {number} offset
  */
@@ -424,19 +424,19 @@ Box2D.Collision.b2Collision.CollidePolygonAndCircle = function(manifold, polygon
 
 /**
  * @private
- * @type {!Array.<!Box2D.Collision.ClipPoint>}
+ * @type {!Array.<!Box2D.Collision.ClipVertex>}
  */
 Box2D.Collision.b2Collision.s_incidentEdge = Box2D.Collision.b2Collision.MakeClipPointVector();
 
 /**
  * @private
- * @type {!Array.<!Box2D.Collision.ClipPoint>}
+ * @type {!Array.<!Box2D.Collision.ClipVertex>}
  */
 Box2D.Collision.b2Collision.s_clipPoints1 = Box2D.Collision.b2Collision.MakeClipPointVector();
 
 /**
  * @private
- * @type {!Array.<!Box2D.Collision.ClipPoint>}
+ * @type {!Array.<!Box2D.Collision.ClipVertex>}
  */
 Box2D.Collision.b2Collision.s_clipPoints2 = Box2D.Collision.b2Collision.MakeClipPointVector();
 
