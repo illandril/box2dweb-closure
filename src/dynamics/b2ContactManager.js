@@ -53,13 +53,13 @@ Box2D.Dynamics.b2ContactManager = function(world) {
     
     /**
      * @private
-     * @type {!Box2D.Dynamics.b2ContactFilter}
+     * @type {!Box2D.Dynamics.iContactFilter}
      */
     this.m_contactFilter = Box2D.Dynamics.b2ContactFilter.b2_defaultFilter;
     
     /**
      * @private
-     * @type {!Box2D.Dynamics.b2ContactListener}
+     * @type {!Box2D.Dynamics.iContactListener}
      */
     this.m_contactListener = Box2D.Dynamics.b2ContactListener.b2_defaultListener;
     

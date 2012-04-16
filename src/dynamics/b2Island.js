@@ -39,7 +39,7 @@ goog.require('Box2D.Common.b2Settings');
 goog.require('UsageTracker');
 
 /**
- * @param {!Box2D.Dynamics.b2ContactListener} listener
+ * @param {!Box2D.Dynamics.iContactListener} listener
  * @param {!Box2D.Dynamics.Contacts.b2ContactSolver} contactSolver
  * @constructor
  */
@@ -48,7 +48,7 @@ Box2D.Dynamics.b2Island = function(listener, contactSolver) {
     
     /**
      * @private
-     * @type {!Box2D.Dynamics.b2ContactListener}
+     * @type {!Box2D.Dynamics.iContactListener}
      */
     this.m_listener = listener;
     
@@ -97,7 +97,7 @@ Box2D.Dynamics.b2Island = function(listener, contactSolver) {
 };
 
 /**
- * @param {!Box2D.Dynamics.b2ContactListener} listener
+ * @param {!Box2D.Dynamics.iContactListener} listener
  * @param {!Box2D.Dynamics.Contacts.b2ContactSolver} contactSolver
  */
 Box2D.Dynamics.b2Island.prototype.Reset = function(listener, contactSolver) {

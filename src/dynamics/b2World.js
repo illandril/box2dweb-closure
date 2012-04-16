@@ -204,14 +204,14 @@ Box2D.Dynamics.b2World.prototype.SetDestructionListener = function(listener) {
 };
 
 /**
- * @param {!Box2D.Dynamics.b2ContactFilter} filter
+ * @param {!Box2D.Dynamics.iContactFilter} filter
  */
 Box2D.Dynamics.b2World.prototype.SetContactFilter = function(filter) {
     this.m_contactManager.m_contactFilter = filter;
 };
 
 /**
- * @param {!Box2D.Dynamics.b2ContactListener} listener
+ * @param {!Box2D.Dynamics.iContactListener} listener
  */
 Box2D.Dynamics.b2World.prototype.SetContactListener = function(listener) {
     this.m_contactManager.m_contactListener = listener;

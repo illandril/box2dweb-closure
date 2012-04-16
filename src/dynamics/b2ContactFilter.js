@@ -32,8 +32,11 @@
  
 goog.provide('Box2D.Dynamics.b2ContactFilter');
 
+goog.require('Box2D.Dynamics.iContactFilter');
+
 /**
  * @constructor
+ * @implements {Box2D.Dynamics.iContactFilter}
  */
 Box2D.Dynamics.b2ContactFilter = function() {};
 
