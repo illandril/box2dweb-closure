@@ -40,16 +40,28 @@ goog.require('UsageTracker');
 Box2D.Collision.b2ContactID = function() {
     UsageTracker.get('Box2D.Collision.b2ContactID').trackCreate();
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this._key = 0;
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this._referenceEdge = 0;
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this._incidentEdge = 0;
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this._incidentVertex = 0;
 };
 
@@ -111,6 +123,9 @@ Box2D.Collision.b2ContactID.prototype.SetFlip = function(flip) {
     this._key = (this._key & 0x00ffffff) | ((this._flip << 24) & 0xff000000);
 };
 
+/**
+ * @return {!Box2D.Collision.b2ContactID}
+ */
 Box2D.Collision.b2ContactID.prototype.Copy = function () {
   var id = new Box2D.Collision.b2ContactID();
   id.Set(this);

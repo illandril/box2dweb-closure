@@ -40,7 +40,17 @@ goog.require('Box2D.Common.Math.b2Vec2');
  */
 Box2D.Collision.b2AABB = function() {
     UsageTracker.get('Box2D.Collision.b2AABB').trackCreate();
+    
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.lowerBound = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.upperBound = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };
 

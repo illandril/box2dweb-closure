@@ -40,12 +40,21 @@ goog.require('UsageTracker');
 Box2D.Collision.Shapes.b2EdgeChainDef = function() {
     UsageTracker.get('Box2D.Collision.Shapes.b2EdgeChainDef').trackCreate();
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this.vertexCount = 0;
     
-    /** @type {boolean} */
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.isALoop = true;
     
-    /** @type {Array.<Box2D.Common.Math.b2Vec2} */
+    /**
+    * @private
+    * @type {Array.<!Box2D.Common.Math.b2Vec2}
+    */
     this.vertices = [];
 };

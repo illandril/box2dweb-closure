@@ -39,6 +39,14 @@ goog.require('UsageTracker');
  */
 Box2D.Collision.b2SimplexCache = function() {
     UsageTracker.get('Box2D.Collision.b2SimplexCache').trackCreate();
+    
+    /**
+     * @type {Array.<number>}
+     */
     this.indexA = [0, 0, 0];
+    
+    /**
+     * @type {Array.<number>}
+     */
     this.indexB = [0, 0, 0];
 };

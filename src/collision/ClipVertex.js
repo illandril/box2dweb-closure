@@ -42,10 +42,20 @@ goog.require('UsageTracker');
 Box2D.Collision.ClipVertex = function() {
     UsageTracker.get('Box2D.Collision.ClipVertex').trackCreate();
     
+    /**
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.v = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @type {!Box2D.Collision.b2ContactID}
+     */
     this.id = new Box2D.Collision.b2ContactID();
 };
 
+/**
+ * @param {!Box2D.Collision.ClipVertex} other
+ */
 Box2D.Collision.ClipVertex.prototype.Set = function(other) {
     this.v.SetV(other.v);
     this.id.Set(other.id);

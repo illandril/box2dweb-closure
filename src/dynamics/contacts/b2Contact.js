@@ -364,6 +364,11 @@ Box2D.Dynamics.Contacts.b2Contact.prototype.Update = function (listener) {
 
 Box2D.Dynamics.Contacts.b2Contact.prototype.Evaluate = function () {};
 
+/**
+ * @param {!Box2D.Common.Math.b2Sweep} sweepA
+ * @param {!Box2D.Common.Math.b2Sweep} sweepB
+ * @return {number}
+ */
 Box2D.Dynamics.Contacts.b2Contact.prototype.ComputeTOI = function (sweepA, sweepB) {
   Box2D.Dynamics.Contacts.b2Contact.s_input.proxyA.Set(this.m_fixtureA.GetShape());
   Box2D.Dynamics.Contacts.b2Contact.s_input.proxyB.Set(this.m_fixtureB.GetShape());
@@ -373,6 +378,11 @@ Box2D.Dynamics.Contacts.b2Contact.prototype.ComputeTOI = function (sweepA, sweep
   return Box2D.Collision.b2TimeOfImpact.TimeOfImpact(Box2D.Dynamics.Contacts.b2Contact.s_input);
 };
 
+/**
+ * @private
+ * @const
+ * @type {!Box2D.Collision.b2TOIInput}
+ */
 Box2D.Dynamics.Contacts.b2Contact.s_input = new Box2D.Collision.b2TOIInput();
 
 /**

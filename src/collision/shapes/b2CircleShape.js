@@ -46,14 +46,33 @@ Box2D.Collision.Shapes.b2CircleShape = function(radius) {
     UsageTracker.get('Box2D.Collision.Shapes.b2CircleShape').trackCreate();
     
     Box2D.Collision.Shapes.b2Shape.call(this);
-    /** @type {number} */
+    
+    /**
+     * @private
+     * @type {number}
+     */
     this.m_radius = radius;
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this.m_radiusSquared = radius * radius;
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @const
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_p = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * Used to minimize the creation of arrays for SetDistanceProxy only
+     * @private
+     * @const
+     * @type {Array.<!Box2D.Common.Math.b2Vec2>}
+     */
+    this.m_vertices = [this.m_p];
 };
 goog.inherits(Box2D.Collision.Shapes.b2CircleShape, Box2D.Collision.Shapes.b2Shape);
 
@@ -144,9 +163,8 @@ Box2D.Collision.Shapes.b2CircleShape.prototype.ComputeAABB = function(aabb, tran
  * @param {number} density
  */
 Box2D.Collision.Shapes.b2CircleShape.prototype.ComputeMass = function(massData, density) {
-    massData.mass = density * Math.PI * this.m_radiusSquared;
-    massData.center.SetV(this.m_p);
-    massData.I = massData.mass * (0.5 * this.m_radiusSquared + (this.m_p.x * this.m_p.x + this.m_p.y * this.m_p.y));
+    var mass = density * Math.PI * this.m_radiusSquared;
+    massData.SetValues(mass, this.m_p, mass * (0.5 * this.m_radiusSquared + (this.m_p.x * this.m_p.x + this.m_p.y * this.m_p.y)));
 };
 
 /**
@@ -181,9 +199,7 @@ Box2D.Collision.Shapes.b2CircleShape.prototype.ComputeSubmergedArea = function(n
  * @param {!Box2D.Collision.b2DistanceProxy} proxy
  */
 Box2D.Collision.Shapes.b2CircleShape.prototype.SetDistanceProxy = function(proxy) {
-    proxy.m_vertices = [this.m_p];
-    proxy.m_count = 1;
-    proxy.m_radius = this.m_radius;
+    proxy.SetValues(1, this.m_radius, this.m_vertices);
 };
 
 /**

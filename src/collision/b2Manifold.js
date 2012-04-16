@@ -43,13 +43,38 @@ goog.require('UsageTracker');
 Box2D.Collision.b2Manifold = function() {
     UsageTracker.get('Box2D.Collision.b2Manifold').trackCreate();
     
+    /**
+     * @private
+     * @type {number}
+     */
     this.m_pointCount = 0;
+    
+    /**
+     * @private
+     * @type {number}
+     */
     this.m_type = 0;
+    
+    /**
+     * @private
+     * @type {Array.<!Box2D.Collision.b2ManifoldPoint>}
+     */
     this.m_points = [];
+    
     for (var i = 0; i < Box2D.Common.b2Settings.b2_maxManifoldPoints; i++) {
         this.m_points[i] = new Box2D.Collision.b2ManifoldPoint();
     }
+    
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_localPlaneNormal = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_localPoint = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };
 
@@ -63,6 +88,9 @@ Box2D.Collision.b2Manifold.prototype.Reset = function() {
     this.m_pointCount = 0;
 };
 
+/**
+ * @param {!Box2D.Collision.b2Manifold}
+ */
 Box2D.Collision.b2Manifold.prototype.Set = function(m) {
     this.m_pointCount = m.m_pointCount;
     for (var i = 0; i < Box2D.Common.b2Settings.b2_maxManifoldPoints; i++) {
@@ -73,12 +101,29 @@ Box2D.Collision.b2Manifold.prototype.Set = function(m) {
     this.m_type = m.m_type;
 };
 
+/**
+ * @return {!Box2D.Collision.b2Manifold}
+ */
 Box2D.Collision.b2Manifold.prototype.Copy = function() {
     var copy = new Box2D.Collision.b2Manifold();
     copy.Set(this);
     return copy;
 };
 
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Collision.b2Manifold.e_circles = 0x0001;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Collision.b2Manifold.e_faceA = 0x0002;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Collision.b2Manifold.e_faceB = 0x0004;

@@ -42,10 +42,16 @@ goog.require('UsageTracker');
 Box2D.Collision.b2DynamicTreePair = function(fixtureA, fixtureB) {
     UsageTracker.get('Box2D.Collision.b2DynamicTreePair').trackCreate();
     
-    /** @type {!Box2D.Dynamics.b2Fixture} */
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2Fixture}
+     */
     this.fixtureA = fixtureA;
     
-    /** @type {!Box2D.Dynamics.b2Fixture} */
+    /**
+     * @private
+     * @type {!Box2D.Dynamics.b2Fixture}
+     */
     this.fixtureB = fixtureB;
 };
 

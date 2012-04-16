@@ -49,43 +49,82 @@ Box2D.Collision.Shapes.b2EdgeShape = function(v1, v2) {
     
     Box2D.Collision.Shapes.b2Shape.call(this);
     
-    /** @type {Box2D.Collision.Shapes.b2EdgeShape} */
+    /**
+     * @private
+     * @type {Box2D.Collision.Shapes.b2EdgeShape}
+     */
     this.m_prevEdge = null;
     
-    /** @type {Box2D.Collision.Shapes.b2EdgeShape} */
+    /**
+     * @private
+     * @type {Box2D.Collision.Shapes.b2EdgeShape}
+     */
     this.m_nextEdge = null;
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_v1 = v1;
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_v2 = v2;
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_direction = Box2D.Common.Math.b2Vec2.Get(this.m_v2.x - this.m_v1.x, this.m_v2.y - this.m_v1.y);
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this.m_length = this.m_direction.Normalize();
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_normal = Box2D.Common.Math.b2Vec2.Get(this.m_direction.y, -this.m_direction.x);
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_coreV1 = Box2D.Common.Math.b2Vec2.Get((-Box2D.Common.b2Settings.b2_toiSlop * (this.m_normal.x - this.m_direction.x)) + this.m_v1.x, (-Box2D.Common.b2Settings.b2_toiSlop * (this.m_normal.y - this.m_direction.y)) + this.m_v1.y);
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_coreV2 = Box2D.Common.Math.b2Vec2.Get((-Box2D.Common.b2Settings.b2_toiSlop * (this.m_normal.x + this.m_direction.x)) + this.m_v2.x, (-Box2D.Common.b2Settings.b2_toiSlop * (this.m_normal.y + this.m_direction.y)) + this.m_v2.y);
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_cornerDir1 = this.m_normal;
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_cornerDir2 = Box2D.Common.Math.b2Vec2.Get(-this.m_normal.x, -this.m_normal.y);
     
-    /** @type {boolean} */
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.m_cornerConvex1 = false;
     
-    /** @type {boolean} */
+    /**
+     * @private
+     * @type {boolean}
+     */
     this.m_cornerConvex2 = false;
 };
 goog.inherits(Box2D.Collision.Shapes.b2EdgeShape, Box2D.Collision.Shapes.b2Shape);

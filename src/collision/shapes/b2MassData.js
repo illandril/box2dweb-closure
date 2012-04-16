@@ -41,16 +41,24 @@ goog.require('UsageTracker');
 Box2D.Collision.Shapes.b2MassData = function() {
     UsageTracker.get('Box2D.Collision.Shapes.b2MassData').trackCreate();
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this.mass = 0;
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.center = Box2D.Common.Math.b2Vec2.Get(0, 0);
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this.I = 0;
 };
-
 
 /**
  * @private
@@ -81,4 +89,27 @@ Box2D.Collision.Shapes.b2MassData.Free = function(md) {
         UsageTracker.get('Box2D.Collision.Shapes.b2MassData').trackFree();
         Box2D.Collision.Shapes.b2MassData._freeCache.push(md);
     }
+};
+
+/**
+ * @param {number} mass
+ * @param {!Box2D.Common.Math.b2Vec2} center
+ * @param {number} I
+ */
+Box2D.Collision.Shapes.b2MassData.prototype.SetV = function(mass, center, I) {
+    this.mass = mass;
+    this.center.SetV(center);
+    this.I = I;
+};
+
+/**
+ * @param {number} mass
+ * @param {number} x
+ * @param {number} y
+ * @param {number} I
+ */
+Box2D.Collision.Shapes.b2MassData.prototype.Set = function(mass, x, y, I) {
+    this.mass = mass;
+    this.center.Set(x, y);
+    this.I = I;
 };

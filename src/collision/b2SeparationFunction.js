@@ -42,10 +42,39 @@ goog.require('UsageTracker');
  */
 Box2D.Collision.b2SeparationFunction = function() {
     UsageTracker.get('Box2D.Collision.b2SeparationFunction').trackCreate();
+    
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_localPoint = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_axis = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @private
+     * @type {Box2D.Collision.b2DistanceProxy}
+     */
+    this.m_proxyA = null;
+    
+    /**
+     * @private
+     * @type {Box2D.Collision.b2DistanceProxy}
+     */
+    this.m_proxyB = null;
 };
 
+/**
+ * @param {!Box2D.Collision.b2SimplexCache} cache
+ * @param {!Box2D.Collision.b2DistanceProxy} proxyA
+ * @param {!Box2D.Common.Math.b2Transform} transformA
+ * @param {!Box2D.Collision.b2DistanceProxy} proxyB
+ * @param {!Box2D.Common.Math.b2Transform} transformB
+ */
 Box2D.Collision.b2SeparationFunction.prototype.Initialize = function(cache, proxyA, transformA, proxyB, transformB) {
     this.m_proxyA = proxyA;
     this.m_proxyB = proxyB;
@@ -225,6 +254,11 @@ Box2D.Collision.b2SeparationFunction.prototype.Initialize = function(cache, prox
     }
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Transform} transformA
+ * @param {!Box2D.Common.Math.b2Transform} transformB
+ * @return {number}
+ */
 Box2D.Collision.b2SeparationFunction.prototype.Evaluate = function(transformA, transformB) {
     var seperation = 0;
     switch (this.m_type) {
@@ -278,6 +312,20 @@ Box2D.Collision.b2SeparationFunction.prototype.Evaluate = function(transformA, t
     return seperation;
 };
 
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Collision.b2SeparationFunction.e_points = 0x01;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Collision.b2SeparationFunction.e_faceA = 0x02;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Collision.b2SeparationFunction.e_faceB = 0x04;

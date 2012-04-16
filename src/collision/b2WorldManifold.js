@@ -43,13 +43,22 @@ goog.require('UsageTracker');
 Box2D.Collision.b2WorldManifold = function() {
     UsageTracker.get('Box2D.Collision.b2WorldManifold').trackCreate();
     
-    /** @type  {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @private
+     * @type  {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_normal = Box2D.Common.Math.b2Vec2.Get(0, 0);
     
-    /** @type {Array.<!Box2D.Common.Math.b2Vec2>} */
+    /**
+     * @private
+     * @type {Array.<!Box2D.Common.Math.b2Vec2>}
+     */
     this.m_points = [];
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this.m_pointCount = 0;
     
     for (var i = 0; i < Box2D.Common.b2Settings.b2_maxManifoldPoints; i++) {

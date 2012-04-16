@@ -40,12 +40,28 @@ goog.require('UsageTracker');
  */
 Box2D.Collision.b2Segment = function() {
     UsageTracker.get('Box2D.Collision.b2Segment').trackCreate();
+    
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.p1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.p2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
 };
 
+/**
+ * @param {Array.<number>} lambda
+ * @param {!Box2D.Common.Math.b2Vec2} normal
+ * @param {!Box2D.Collision.b2Segment} segment
+ * @param {number} maxLambda
+ * @return {boolean}
+ */
 Box2D.Collision.b2Segment.prototype.TestSegment = function(lambda, normal, segment, maxLambda) {
-    if (maxLambda === undefined) maxLambda = 0;
     var s = segment.p1;
     var rX = segment.p2.x - s.x;
     var rY = segment.p2.y - s.y;
@@ -75,11 +91,17 @@ Box2D.Collision.b2Segment.prototype.TestSegment = function(lambda, normal, segme
     return false;
 };
 
+/**
+ * @param {!Box2D.Collision.b2AABB} aabb
+ */
 Box2D.Collision.b2Segment.prototype.Extend = function(aabb) {
     this.ExtendForward(aabb);
     this.ExtendBackward(aabb);
 };
 
+/**
+ * @param {!Box2D.Collision.b2AABB} aabb
+ */
 Box2D.Collision.b2Segment.prototype.ExtendForward = function(aabb) {
     var dX = this.p2.x - this.p1.x;
     var dY = this.p2.y - this.p1.y;
@@ -88,6 +110,9 @@ Box2D.Collision.b2Segment.prototype.ExtendForward = function(aabb) {
     this.p2.y = this.p1.y + dY * lambda;
 };
 
+/**
+ * @param {!Box2D.Collision.b2AABB} aabb
+ */
 Box2D.Collision.b2Segment.prototype.ExtendBackward = function(aabb) {
     var dX = (-this.p2.x) + this.p1.x;
     var dY = (-this.p2.y) + this.p1.y;

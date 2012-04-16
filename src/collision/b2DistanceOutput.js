@@ -41,12 +41,18 @@ goog.require('UsageTracker');
 Box2D.Collision.b2DistanceOutput = function () {
     UsageTracker.get('Box2D.Collision.b2DistanceOutput').trackCreate();
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.pointA = Box2D.Common.Math.b2Vec2.Get(0, 0);
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.pointB = Box2D.Common.Math.b2Vec2.Get(0, 0);
     
-    /** @type {number} */
+    /**
+     * @type {number}
+     */
     this.distance = 0;
 };

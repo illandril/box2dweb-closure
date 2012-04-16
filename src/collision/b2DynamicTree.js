@@ -45,13 +45,22 @@ goog.require('UsageTracker');
 Box2D.Collision.b2DynamicTree = function() {
     UsageTracker.get('Box2D.Collision.b2DynamicTree').trackCreate();
     
-    /** @type {Box2D.Collision.b2DynamicTreeNode} */
+    /**
+     * @private
+     * @type {Box2D.Collision.b2DynamicTreeNode}
+     */
     this.m_root = null;
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this.m_path = 0;
     
-    /** @type {number} */
+    /**
+     * @private
+     * @type {number}
+     */
     this.m_insertionCount = 0;
 };
 

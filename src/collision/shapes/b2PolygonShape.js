@@ -50,13 +50,22 @@ Box2D.Collision.Shapes.b2PolygonShape = function() {
     
     Box2D.Collision.Shapes.b2Shape.call(this);
     
-    /** @type {!Box2D.Common.Math.b2Vec2} */
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_centroid = Box2D.Common.Math.b2Vec2.Get(0, 0);
     
-    /** @type {Array.<!Box2D.Common.Math.b2Vec2>} */
+    /**
+     * @private
+     * @type {Array.<!Box2D.Common.Math.b2Vec2>}
+     */
     this.m_vertices = [];
     
-    /** @type {Array.<!Box2D.Common.Math.b2Vec2>} */
+    /**
+     * @private
+     * @type {Array.<!Box2D.Common.Math.b2Vec2>}
+     */
     this.m_normals = [];
 };
 goog.inherits(Box2D.Collision.Shapes.b2PolygonShape, Box2D.Collision.Shapes.b2Shape);
@@ -399,11 +408,9 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeMass = function(massData,
         var inty2 = k_inv3 * (0.25 * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) + 0.5 * py * py;
         I += D * (intx2 + inty2);
     }
-    massData.mass = density * area;
     centerX *= 1.0 / area;
     centerY *= 1.0 / area;
-    massData.center.Set(centerX, centerY);
-    massData.I = density * I;
+    massData.Set(density * area, centerX, centerY, density * I);
 };
 
 /**
@@ -501,9 +508,7 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.ComputeSubmergedArea = function(
  * @param {!Box2D.Collision.b2DistanceProxy} proxy
  */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.SetDistanceProxy = function(proxy) {
-    proxy.m_vertices = this.m_vertices;
-    proxy.m_count = this.m_vertexCount;
-    proxy.m_radius = this.m_radius;
+    proxy.SetValues(this.m_vertexCount, this.m_radius, this.m_vertices);
 };
 
 /**

@@ -39,6 +39,36 @@ goog.require('UsageTracker');
  */
 Box2D.Collision.b2SimplexVertex = function() {
     UsageTracker.get('Box2D.Collision.b2SimplexVertex').trackCreate();
+    
+    /**
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
+    this.wA = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
+    this.wB = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
+    this.w = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @type {!number}
+     */
+    this.a = null;
+    
+    /**
+     * @type {!number}
+     */
+    this.indexA = null;
+    
+    /**
+     * @type {!number}
+     */
+    this.indexB = null;
 };
 
 Box2D.Collision.b2SimplexVertex.prototype.Set = function(other) {

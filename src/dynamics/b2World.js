@@ -929,7 +929,6 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
 Box2D.Dynamics.b2World.prototype._SolveTOI2 = function(step) {
     var minContact = null;
     var minTOI = 1.0;
-    var contacts = 0;
     for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.nonSensorEnabledContinuousContacts); contactNode; contactNode = contactNode.GetNextNode()) {
         var c = contactNode.contact;
         if (this._SolveTOI2SkipContact(step, c)) {

@@ -42,15 +42,35 @@ goog.require('UsageTracker');
 Box2D.Collision.b2ManifoldPoint = function() {
     UsageTracker.get('Box2D.Collision.b2ManifoldPoint').trackCreate();
     
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.m_localPoint = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @private
+     * @type {!Box2D.Collision.b2ContactID}
+     */
     this.m_id = new Box2D.Collision.b2ContactID();
-    this.Reset();
+    
+    /**
+     * @private
+     * @type {number}
+     */
+    this.m_normalImpulse = 0;
+    
+    /**
+     * @private
+     * @type {number}
+     */
+    this.m_tangentImpulse = 0;
 };
 
 Box2D.Collision.b2ManifoldPoint.prototype.Reset = function() {
     this.m_localPoint.SetZero();
-    this.m_normalImpulse = 0.0;
-    this.m_tangentImpulse = 0.0;
+    this.m_normalImpulse = 0;
+    this.m_tangentImpulse = 0;
     this.m_id.SetKey(0);
 };
 

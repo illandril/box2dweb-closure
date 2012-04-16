@@ -40,8 +40,40 @@ goog.require('UsageTracker');
  */
 Box2D.Collision.b2DistanceProxy = function() {
     UsageTracker.get('Box2D.Collision.b2DistanceProxy').trackCreate();
+    
+    /**
+     * @private
+     * @type {number}
+     */
+    this.m_count = 0;
+    
+    /**
+     * @private
+     * @type {number}
+     */
+    this.m_radius = 0;
+    
+    /**
+     * @private
+     * @type {Array.<!Box2D.Common.Math.b2Vec2>}
+     */
+    this.m_vertices = [];
 };
 
+/**
+ * @param {number} count
+ * @param {number} radius
+ * @param {!Array.<!Box2D.Common.Math.b2Vec2>} vertices
+ */
+Box2D.Collision.b2DistanceProxy.prototype.SetValues = function (count, radius, vertices) {
+    this.m_count = count;
+    this.m_radius = radius;
+    this.m_vertices = vertices;
+};
+
+/**
+ * @param {!Box2D.Collision.Shapes.b2Shape} shape
+ */
 Box2D.Collision.b2DistanceProxy.prototype.Set = function (shape) {
     shape.SetDistanceProxy(this);
 };

@@ -44,6 +44,11 @@ goog.require('UsageTracker');
  */
 Box2D.Collision.Shapes.b2Shape = function() {
     UsageTracker.get('Box2D.Collision.Shapes.b2Shape').trackCreate();
+    
+    /**
+     * @protected
+     * @type {number}
+     */
     this.m_radius = Box2D.Common.b2Settings.b2_linearSlop;
 };
 

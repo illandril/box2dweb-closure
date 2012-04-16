@@ -50,34 +50,161 @@ Box2D.Common.b2Settings.b2MixRestitution = function (restitution1, restitution2)
     return restitution1 > restitution2 ? restitution1 : restitution2;
 };
 
+/**
+ * @param {boolean} a
+ */
 Box2D.Common.b2Settings.b2Assert = function (a) {
     if (!a) {
         throw "Assertion Failed";
     }
 };
 
+/**
+ * @const
+ * @type {string}
+ */
 Box2D.Common.b2Settings.VERSION = "2.1alpha-illandril";
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.USHRT_MAX = 0x0000ffff;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_maxManifoldPoints = 2;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_aabbExtension = 0.1;
-Box2D.Common.b2Settings.b2_aabbMultiplier = 2.0;
-Box2D.Common.b2Settings.b2_polygonRadius = 2.0 * Box2D.Common.b2Settings.b2_linearSlop;
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Common.b2Settings.b2_aabbMultiplier = 2;
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Common.b2Settings.b2_polygonRadius = 2 * Box2D.Common.b2Settings.b2_linearSlop;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_linearSlop = 0.005;
-Box2D.Common.b2Settings.b2_angularSlop = 2.0 / 180.0 * Math.PI;
-Box2D.Common.b2Settings.b2_toiSlop = 8.0 * Box2D.Common.b2Settings.b2_linearSlop;
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Common.b2Settings.b2_angularSlop = 2 / 180 * Math.PI;
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Common.b2Settings.b2_toiSlop = 8 * Box2D.Common.b2Settings.b2_linearSlop;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_maxTOIContactsPerIsland = 32;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_maxTOIJointsPerIsland = 32;
-Box2D.Common.b2Settings.b2_velocityThreshold = 1.0;
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Common.b2Settings.b2_velocityThreshold = 1;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_maxLinearCorrection = 0.2;
-Box2D.Common.b2Settings.b2_maxAngularCorrection = 8.0 / 180.0 * Math.PI;
-Box2D.Common.b2Settings.b2_maxTranslation = 2.0;
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Common.b2Settings.b2_maxAngularCorrection = 8 / 180 * Math.PI;
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Common.b2Settings.b2_maxTranslation = 2;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_maxTranslationSquared = Box2D.Common.b2Settings.b2_maxTranslation * Box2D.Common.b2Settings.b2_maxTranslation;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_maxRotation = 0.5 * Math.PI;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_maxRotationSquared = Box2D.Common.b2Settings.b2_maxRotation * Box2D.Common.b2Settings.b2_maxRotation;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_contactBaumgarte = 0.2;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_timeToSleep = 0.5;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_linearSleepTolerance = 0.01;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_linearSleepToleranceSquared = Box2D.Common.b2Settings.b2_linearSleepTolerance * Box2D.Common.b2Settings.b2_linearSleepTolerance;
-Box2D.Common.b2Settings.b2_angularSleepTolerance = 2.0 / 180.0 * Math.PI;
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Common.b2Settings.b2_angularSleepTolerance = 2 / 180 * Math.PI;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.b2_angularSleepToleranceSquared = Box2D.Common.b2Settings.b2_angularSleepTolerance * Box2D.Common.b2Settings.b2_angularSleepTolerance;
+
+/**
+ * @const
+ * @type {number}
+ */
 Box2D.Common.b2Settings.MIN_VALUE_SQUARED = Number.MIN_VALUE * Number.MIN_VALUE;

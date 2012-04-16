@@ -43,11 +43,34 @@ goog.require('UsageTracker');
 Box2D.Dynamics.Contacts.b2ContactConstraint = function() {
     UsageTracker.get('Box2D.Dynamics.Contacts.b2ContactConstraint').trackCreate();
     
+    /**
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.localPlaneNormal = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.localPoint = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.normal = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @type {!Box2D.Common.Math.b2Mat22}
+     */
     this.normalMass = new Box2D.Common.Math.b2Mat22();
+    
+    /**
+     * @type {!Box2D.Common.Math.b2Mat22}
+     */
     this.K = new Box2D.Common.Math.b2Mat22();
+    
+    /**
+     * @type {!Array.<!Box2D.Dynamics.Contacts.b2ContactConstraintPoint>}
+     */
     this.points = [];
     for (var i = 0; i < Box2D.Common.b2Settings.b2_maxManifoldPoints; i++) {
         this.points[i] = new Box2D.Dynamics.Contacts.b2ContactConstraintPoint();

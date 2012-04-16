@@ -39,4 +39,29 @@ goog.require('UsageTracker');
  */
 Box2D.Collision.b2DistanceInput = function () {
     UsageTracker.get('Box2D.Collision.b2DistanceInput').trackCreate();
+    
+    /**
+     * @type {boolean}
+     */
+    this.useRadii = false;
+    
+    /**
+     * @type {Box2D.Collision.b2DistanceProxy}
+     */
+    this.proxyA = null;
+    
+    /**
+     * @type {Box2D.Collision.b2DistanceProxy}
+     */
+    this.proxyB = null;
+    
+    /**
+     * @type {Box2D.Common.Math.b2Transform}
+     */
+    this.transformA = null;
+    
+    /**
+     * @type {Box2D.Common.Math.b2Transform}
+     */
+    this.transformB = null;
 };

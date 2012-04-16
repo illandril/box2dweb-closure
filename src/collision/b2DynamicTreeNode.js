@@ -37,30 +37,41 @@ goog.require('UsageTracker');
 
 /**
  * @private
- * @param {Box2D.Dynamics.b2Fixture=} fixture
+ * @param {Box2D.Dynamics.b2Fixture} fixture
  * @constructor
  */
 Box2D.Collision.b2DynamicTreeNode = function(fixture) {
     UsageTracker.get('Box2D.Collision.b2DynamicTreeNode').trackCreate();
     
-    /** @type {!Box2D.Collision.b2AABB} */
+    /**
+     * @private
+     * @type {!Box2D.Collision.b2AABB}
+     */
     this.aabb = Box2D.Collision.b2AABB.Get();
     
-    /** @type {Box2D.Collision.b2DynamicTreeNode} */
+    /**
+     * @private
+     * @type {Box2D.Collision.b2DynamicTreeNode}
+     */
     this.child1 = null;
     
-    /** @type {Box2D.Collision.b2DynamicTreeNode} */
+    /**
+     * @private
+     * @type {Box2D.Collision.b2DynamicTreeNode}
+     */
     this.child2 = null;
     
-    /** @type {Box2D.Collision.b2DynamicTreeNode} */
+    /**
+     * @private
+     * @type {Box2D.Collision.b2DynamicTreeNode}
+     */
     this.parent = null;
     
-    /** @type {Box2D.Dynamics.b2Fixture} */
-    this.fixture = null;
-    
-    if (typeof(fixture) != "undefined") {
-        this.fixture = fixture;
-    }
+    /**
+     * @private
+     * @type {Box2D.Dynamics.b2Fixture}
+     */
+    this.fixture = fixture;
 };
 
 /**
@@ -74,11 +85,12 @@ Box2D.Collision.b2DynamicTreeNode._freeCache = [];
  * @return {!Box2D.Collision.b2DynamicTreeNode}
  */
 Box2D.Collision.b2DynamicTreeNode.Get = function(fixture) {
+    if (typeof(fixture) == "undefined") {
+        fixture = null;
+    }
     if (Box2D.Collision.b2DynamicTreeNode._freeCache.length > 0) {
         var node = Box2D.Collision.b2DynamicTreeNode._freeCache.pop();
-        if (typeof(fixture) != "undefined") {
-            node.fixture = fixture;
-        }
+        node.fixture = fixture;
         node.aabb.SetZero();
         return node;
     }

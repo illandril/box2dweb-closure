@@ -42,8 +42,27 @@ goog.require('UsageTracker');
 Box2D.Collision.b2ContactPoint = function() {
     UsageTracker.get('Box2D.Collision.b2ContactPoint').trackCreate();
     
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.position = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.velocity = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @private
+     * @type {!Box2D.Common.Math.b2Vec2}
+     */
     this.normal = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @private
+     * @type {!Box2D.Collision.b2ContactID}
+     */
     this.id = new Box2D.Collision.b2ContactID();
 };
