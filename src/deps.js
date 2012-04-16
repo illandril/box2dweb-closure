@@ -83,6 +83,8 @@ goog.addDependency('../../../src/dynamics/controllers/b2ControllerList.js', ['Bo
 goog.addDependency('../../../src/dynamics/controllers/b2ControllerListNode.js', ['Box2D.Dynamics.Controllers.b2ControllerListNode'], []);
 goog.addDependency('../../../src/dynamics/controllers/b2GravityController.js', ['Box2D.Dynamics.Controllers.b2GravityController'], ['Box2D.Common.Math.b2Vec2', 'Box2D.Dynamics.Controllers.b2Controller']);
 goog.addDependency('../../../src/dynamics/controllers/b2TensorDampingController.js', ['Box2D.Dynamics.Controllers.b2TensorDampingController'], ['Box2D.Common.Math.b2Mat22', 'Box2D.Common.Math.b2Math', 'Box2D.Common.Math.b2Vec2', 'Box2D.Dynamics.Controllers.b2Controller']);
+goog.addDependency('../../../src/dynamics/iContactFilter.js', ['Box2D.Dynamics.iContactFilter'], []);
+goog.addDependency('../../../src/dynamics/iContactListener.js', ['Box2D.Dynamics.iContactListener'], []);
 goog.addDependency('../../../src/dynamics/joints/b2DistanceJoint.js', ['Box2D.Dynamics.Joints.b2DistanceJoint'], ['Box2D.Common.Math.b2Math', 'Box2D.Common.Math.b2Vec2', 'Box2D.Common.b2Settings', 'Box2D.Dynamics.Joints.b2Joint']);
 goog.addDependency('../../../src/dynamics/joints/b2DistanceJointDef.js', ['Box2D.Dynamics.Joints.b2DistanceJointDef'], ['Box2D.Common.Math.b2Vec2', 'Box2D.Dynamics.Joints.b2DistanceJoint', 'Box2D.Dynamics.Joints.b2Joint', 'Box2D.Dynamics.Joints.b2JointDef']);
 goog.addDependency('../../../src/dynamics/joints/b2FrictionJoint.js', ['Box2D.Dynamics.Joints.b2FrictionJoint'], ['Box2D.Common.Math.b2Mat22', 'Box2D.Common.Math.b2Math', 'Box2D.Common.Math.b2Vec2', 'Box2D.Common.b2Settings', 'Box2D.Dynamics.Joints.b2Joint']);
@@ -105,6 +107,4 @@ goog.addDependency('../../../src/dynamics/joints/b2RevoluteJoint.js', ['Box2D.Dy
 goog.addDependency('../../../src/dynamics/joints/b2RevoluteJointDef.js', ['Box2D.Dynamics.Joints.b2RevoluteJointDef'], ['Box2D.Common.Math.b2Vec2', 'Box2D.Dynamics.Joints.b2Joint', 'Box2D.Dynamics.Joints.b2JointDef', 'Box2D.Dynamics.Joints.b2RevoluteJoint']);
 goog.addDependency('../../../src/dynamics/joints/b2WeldJoint.js', ['Box2D.Dynamics.Joints.b2WeldJoint'], ['Box2D.Common.Math.b2Mat33', 'Box2D.Common.Math.b2Vec2', 'Box2D.Common.Math.b2Vec3', 'Box2D.Common.b2Settings', 'Box2D.Dynamics.Joints.b2Joint']);
 goog.addDependency('../../../src/dynamics/joints/b2WeldJointDef.js', ['Box2D.Dynamics.Joints.b2WeldJointDef'], ['Box2D.Common.Math.b2Vec2', 'Box2D.Dynamics.Joints.b2Joint', 'Box2D.Dynamics.Joints.b2JointDef', 'Box2D.Dynamics.Joints.b2WeldJoint']);
-goog.addDependency('../../../src/dynamics/iContactFilter.js', ['Box2D.Dynamics.iContactFilter'], ['']);
-goog.addDependency('../../../src/dynamics/iContactListener.js', ['Box2D.Dynamics.iContactListener'], ['']);
 goog.addDependency('../../../src/usage_tracker.js', ['UsageTracker'], []);
