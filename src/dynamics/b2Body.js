@@ -43,6 +43,7 @@ goog.require('Box2D.Dynamics.b2Fixture');
 goog.require('Box2D.Dynamics.b2FixtureDef');
 goog.require('Box2D.Dynamics.b2FixtureList');
 goog.require('Box2D.Dynamics.Controllers.b2ControllerList');
+goog.require('UsageTracker');
 
 /**
  * @param {!Box2D.Dynamics.b2BodyDef} bd
@@ -50,6 +51,7 @@ goog.require('Box2D.Dynamics.Controllers.b2ControllerList');
  * @constructor
  */
 Box2D.Dynamics.b2Body = function(bd, world) {
+    UsageTracker.get('Box2D.Dynamics.b2Body').trackCreate();
     
     /**
      * @const
@@ -233,6 +235,7 @@ Box2D.Dynamics.b2Body = function(bd, world) {
 
 /**
  * @param {!Box2D.Dynamics.b2FixtureDef} def
+ * @return {!Box2D.Dynamics.b2Fixture}
  */
 Box2D.Dynamics.b2Body.prototype.CreateFixture = function(def) {
     Box2D.Common.b2Settings.b2Assert(!this.m_world.IsLocked());
@@ -250,8 +253,12 @@ Box2D.Dynamics.b2Body.prototype.CreateFixture = function(def) {
     return fixture;
 };
 
+/**
+ * @param {!Box2D.Collision.Shapes.b2Shape} shape
+ * @param {number} density
+ * @return {!Box2D.Dynamics.b2Fixture}
+ */
 Box2D.Dynamics.b2Body.prototype.CreateFixture2 = function(shape, density) {
-    if (density === undefined) density = 0.0;
     var def = new Box2D.Dynamics.b2FixtureDef();
     def.shape = shape;
     def.density = density;
@@ -266,6 +273,9 @@ Box2D.Dynamics.b2Body.prototype.Destroy = function() {
     Box2D.Common.Math.b2Vec2.Free(this.m_force);
 };
 
+/**
+ * @param {!Box2D.Dynamics.b2Fixture} fixture
+ */
 Box2D.Dynamics.b2Body.prototype.DestroyFixture = function(fixture) {
     Box2D.Common.b2Settings.b2Assert(!this.m_world.IsLocked());
     this.fixtureList.RemoveFixture(fixture);
@@ -349,14 +359,23 @@ Box2D.Dynamics.b2Body.prototype.SetAngle = function(angle) {
     this.SetPositionAndAngle(this.GetPosition(), angle);
 };
 
+/**
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
 Box2D.Dynamics.b2Body.prototype.GetWorldCenter = function() {
     return this.m_sweep.c;
 };
 
+/**
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
 Box2D.Dynamics.b2Body.prototype.GetLocalCenter = function() {
     return this.m_sweep.localCenter;
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} v
+ */
 Box2D.Dynamics.b2Body.prototype.SetLinearVelocity = function(v) {
     if (this.m_type == Box2D.Dynamics.b2BodyDef.b2_staticBody) {
         return;
@@ -364,22 +383,33 @@ Box2D.Dynamics.b2Body.prototype.SetLinearVelocity = function(v) {
     this.m_linearVelocity.SetV(v);
 };
 
+/**
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
 Box2D.Dynamics.b2Body.prototype.GetLinearVelocity = function() {
     return this.m_linearVelocity;
 };
 
+/**
+ * @param {number} omega
+ */
 Box2D.Dynamics.b2Body.prototype.SetAngularVelocity = function(omega) {
-    if (omega === undefined) omega = 0;
     if (this.m_type == Box2D.Dynamics.b2BodyDef.b2_staticBody) {
         return;
     }
     this.m_angularVelocity = omega;
 };
 
+/**
+ * @return {number}
+ */
 Box2D.Dynamics.b2Body.prototype.GetAngularVelocity = function() {
     return this.m_angularVelocity;
 };
 
+/**
+ * @return {!Box2D.Dynamics.b2BodyDef}
+ */
 Box2D.Dynamics.b2Body.prototype.GetDefinition = function() {
     var bd = new Box2D.Dynamics.b2BodyDef();
     bd.type = this.GetType();
@@ -393,10 +423,14 @@ Box2D.Dynamics.b2Body.prototype.GetDefinition = function() {
     bd.awake = this.m_awake;
     bd.linearDamping = this.m_linearDamping;
     bd.linearVelocity.SetV(this.GetLinearVelocity());
-    bd.position = this.GetPosition();
+    bd.position.SetV(this.GetPosition());
     return bd;
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} force
+ * @param {!Box2D.Common.Math.b2Vec2} point
+ */
 Box2D.Dynamics.b2Body.prototype.ApplyForce = function(force, point) {
     if (this.m_type != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
         return;
@@ -408,16 +442,21 @@ Box2D.Dynamics.b2Body.prototype.ApplyForce = function(force, point) {
     this.m_torque += ((point.x - this.m_sweep.c.x) * force.y - (point.y - this.m_sweep.c.y) * force.x);
 };
 
+/**
+ * @param {number} torque
+ */
 Box2D.Dynamics.b2Body.prototype.ApplyTorque = function(torque) {
-    if (torque === undefined) torque = 0;
     if (this.m_type != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
         return;
     }
     this.SetAwake(true);
-    
     this.m_torque += torque;
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} impulse
+ * @param {!Box2D.Common.Math.b2Vec2} point
+ */
 Box2D.Dynamics.b2Body.prototype.ApplyImpulse = function(impulse, point) {
     if (this.m_type != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
         return;
@@ -429,13 +468,16 @@ Box2D.Dynamics.b2Body.prototype.ApplyImpulse = function(impulse, point) {
     this.m_angularVelocity += this.m_invI * ((point.x - this.m_sweep.c.x) * impulse.y - (point.y - this.m_sweep.c.y) * impulse.x);
 };
 
+/**
+ * @param {function(!Box2D.Dynamics.b2Fixture,!Box2D.Dynamics.b2Fixture):boolean} callback
+ * @return {!Box2D.Dynamics.b2Body}
+ */
 Box2D.Dynamics.b2Body.prototype.Split = function(callback) {
     var linearVelocity = this.GetLinearVelocity().Copy();
     var angularVelocity = this.GetAngularVelocity();
     var center = this.GetWorldCenter();
     var body1 = this;
     var body2 = this.m_world.CreateBody(this.GetDefinition());
-    var prev;
     for (var node = body1.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
         var f = node.fixture;
         if (callback(f)) {
@@ -471,6 +513,9 @@ Box2D.Dynamics.b2Body.prototype.Split = function(callback) {
     return body2;
 };
 
+/**
+ * @param {!Box2D.Dynamics.b2Body} other
+ */
 Box2D.Dynamics.b2Body.prototype.Merge = function(other) {
     for (var node = other.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
         this.fixtureList.AddFixture(node.fixture);
@@ -481,10 +526,17 @@ Box2D.Dynamics.b2Body.prototype.Merge = function(other) {
     this.SynchronizeFixtures();
 };
 
+/**
+ * @return {number}
+ */
 Box2D.Dynamics.b2Body.prototype.GetMass = function() {
     return this.m_mass;
 };
 
+
+/**
+ * @return {number}
+ */
 Box2D.Dynamics.b2Body.prototype.GetInertia = function() {
     return this.m_I;
 };
@@ -580,6 +632,10 @@ Box2D.Dynamics.b2Body.prototype.ResetMassData = function() {
     Box2D.Common.Math.b2Vec2.Free(oldCenter);
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} localPoint
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
 Box2D.Dynamics.b2Body.prototype.GetWorldPoint = function(localPoint) {
     var A = this.m_xf.R;
     var u = Box2D.Common.Math.b2Vec2.Get(A.col1.x * localPoint.x + A.col2.x * localPoint.y, A.col1.y * localPoint.x + A.col2.y * localPoint.y);
@@ -588,22 +644,42 @@ Box2D.Dynamics.b2Body.prototype.GetWorldPoint = function(localPoint) {
     return u;
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} localVector
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
 Box2D.Dynamics.b2Body.prototype.GetWorldVector = function(localVector) {
     return Box2D.Common.Math.b2Math.MulMV(this.m_xf.R, localVector);
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} worldPoint
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
 Box2D.Dynamics.b2Body.prototype.GetLocalPoint = function(worldPoint) {
     return Box2D.Common.Math.b2Math.MulXT(this.m_xf, worldPoint);
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} worldVector
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
 Box2D.Dynamics.b2Body.prototype.GetLocalVector = function(worldVector) {
     return Box2D.Common.Math.b2Math.MulTMV(this.m_xf.R, worldVector);
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} worldPoint
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
 Box2D.Dynamics.b2Body.prototype.GetLinearVelocityFromWorldPoint = function(worldPoint) {
     return Box2D.Common.Math.b2Vec2.Get(this.m_linearVelocity.x - this.m_angularVelocity * (worldPoint.y - this.m_sweep.c.y), this.m_linearVelocity.y + this.m_angularVelocity * (worldPoint.x - this.m_sweep.c.x));
 };
 
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} localPoint
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
 Box2D.Dynamics.b2Body.prototype.GetLinearVelocityFromLocalPoint = function(localPoint) {
     var A = this.m_xf.R;
     var worldPoint = Box2D.Common.Math.b2Vec2.Get(A.col1.x * localPoint.x + A.col2.x * localPoint.y, A.col1.y * localPoint.x + A.col2.y * localPoint.y);
@@ -780,14 +856,23 @@ Box2D.Dynamics.b2Body.prototype.IsSleepingAllowed = function() {
     return this.m_allowSleep;
 };
 
+/**
+ * @return {!Box2D.Dynamics.b2FixtureList}
+ */
 Box2D.Dynamics.b2Body.prototype.GetFixtureList = function() {
     return this.fixtureList;
 };
 
+/**
+ * @return {Box2D.Dynamics.b2Joint}
+ */
 Box2D.Dynamics.b2Body.prototype.GetJointList = function() {
     return this.m_jointList;
 };
 
+/**
+ * @return {!Box2D.Dynamics.Controllers.b2ControllerList}
+ */
 Box2D.Dynamics.b2Body.prototype.GetControllerList = function() {
     return this.controllerList;
 };
@@ -806,10 +891,16 @@ Box2D.Dynamics.b2Body.prototype.RemoveController = function(controller) {
     this.controllerList.RemoveController(controller);
 };
 
+/**
+ * @return {!Box2D.Dynamics.Contacts.b2ContactList}
+ */
 Box2D.Dynamics.b2Body.prototype.GetContactList = function() {
     return this.contactList;
 };
 
+/**
+ * @return {!Box2D.Dynamics.b2World}
+ */
 Box2D.Dynamics.b2Body.prototype.GetWorld = function() {
     return this.m_world;
 };
@@ -821,7 +912,6 @@ Box2D.Dynamics.b2Body.prototype.SynchronizeFixtures = function() {
     var tVec = this.m_sweep.localCenter;
     xf1.position.x = this.m_sweep.c0.x - (tMat.col1.x * tVec.x + tMat.col2.x * tVec.y);
     xf1.position.y = this.m_sweep.c0.y - (tMat.col1.y * tVec.x + tMat.col2.y * tVec.y);
-    var f;
     var broadPhase = this.m_world.m_contactManager.m_broadPhase;
     for (var node = this.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
         node.fixture.Synchronize(broadPhase, xf1, this.m_xf);
@@ -836,6 +926,10 @@ Box2D.Dynamics.b2Body.prototype.SynchronizeTransform = function() {
     this.m_xf.position.y = this.m_sweep.c.y - (tMat.col1.y * tVec.x + tMat.col2.y * tVec.y);
 };
 
+/**
+ * @param {!Box2D.Dynamics.b2Body}
+ * @return {boolean}
+ */
 Box2D.Dynamics.b2Body.prototype.ShouldCollide = function(other) {
     if (this.m_type != Box2D.Dynamics.b2BodyDef.b2_dynamicBody && other.m_type != Box2D.Dynamics.b2BodyDef.b2_dynamicBody) {
         return false;
@@ -864,5 +958,7 @@ Box2D.Dynamics.b2Body.prototype.Advance = function(t) {
  */
 Box2D.Dynamics.b2Body.NEXT_ID = 0;
 
-/** @type {!Box2D.Common.Math.b2Transform} */
+/**
+ * @type {!Box2D.Common.Math.b2Transform}
+ */
 Box2D.Dynamics.b2Body.s_xf1 = new Box2D.Common.Math.b2Transform();

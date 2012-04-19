@@ -33,12 +33,13 @@
 goog.provide('Box2D.Dynamics.b2FixtureList');
 
 goog.require('Box2D.Dynamics.b2FixtureListNode');
-
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Dynamics.b2FixtureList = function() {
+    UsageTracker.get('Box2D.Dynamics.b2FixtureList').trackCreate();
     
     /**
      * @private

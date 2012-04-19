@@ -33,20 +33,41 @@
 goog.provide('Box2D.Dynamics.b2ContactListener');
 
 goog.require('Box2D.Dynamics.iContactListener');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  * @implements {Box2D.Dynamics.iContactListener}
  */
-Box2D.Dynamics.b2ContactListener = function () {};
+Box2D.Dynamics.b2ContactListener = function () {
+    UsageTracker.get('Box2D.Dynamics.b2DebugDraw').trackCreate();
+};
 
+/**
+ * @param {!Box2D.Dynamics.Contacts.b2Contact} contact
+ */
 Box2D.Dynamics.b2ContactListener.prototype.BeginContact = function (contact) {};
 
+/**
+ * @param {!Box2D.Dynamics.Contacts.b2Contact} contact
+ */
 Box2D.Dynamics.b2ContactListener.prototype.EndContact = function (contact) {};
 
+/**
+ * @param {!Box2D.Dynamics.Contacts.b2Contact} contact
+ * @param {!Box2D.Collision.b2Manifold} oldManifold
+ */
 Box2D.Dynamics.b2ContactListener.prototype.PreSolve = function (contact, oldManifold) {};
 
+/**
+ * @param {!Box2D.Dynamics.Contacts.b2Contact} contact
+ * @param {!Box2D.Dynamics.b2ContactImpulse} impulse
+ */
 Box2D.Dynamics.b2ContactListener.prototype.PostSolve = function (contact, impulse) {};
 
+/**
+ * @type {!Box2D.Dynamics.b2ContactListener}
+ * @const
+ */
 Box2D.Dynamics.b2ContactListener.b2_defaultListener = new Box2D.Dynamics.b2ContactListener();
   

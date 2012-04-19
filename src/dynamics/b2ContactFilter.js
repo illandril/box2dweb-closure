@@ -33,12 +33,15 @@
 goog.provide('Box2D.Dynamics.b2ContactFilter');
 
 goog.require('Box2D.Dynamics.iContactFilter');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  * @implements {Box2D.Dynamics.iContactFilter}
  */
-Box2D.Dynamics.b2ContactFilter = function() {};
+Box2D.Dynamics.b2ContactFilter = function() {
+    UsageTracker.get('Box2D.Dynamics.b2ContactFilter').trackCreate();
+};
 
 /**
  * @param {!Box2D.Dynamics.b2Fixture} fixtureA
@@ -54,5 +57,8 @@ Box2D.Dynamics.b2ContactFilter.prototype.ShouldCollide = function(fixtureA, fixt
     return (filter1.maskBits & filter2.categoryBits) != 0 && (filter1.categoryBits & filter2.maskBits) != 0;
 };
 
-/** @type {!Box2D.Dynamics.b2ContactFilter} */
+/**
+ * @const
+ * @type {!Box2D.Dynamics.b2ContactFilter}
+ */
 Box2D.Dynamics.b2ContactFilter.b2_defaultFilter = new Box2D.Dynamics.b2ContactFilter();

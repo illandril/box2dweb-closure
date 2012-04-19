@@ -33,6 +33,7 @@
 goog.provide('Box2D.Dynamics.b2BodyList');
 
 goog.require('Box2D.Dynamics.b2BodyListNode');
+goog.require('UsageTracker');
 
 goog.require('goog.array');
 
@@ -40,10 +41,11 @@ goog.require('goog.array');
  * @constructor
  */
 Box2D.Dynamics.b2BodyList = function() {
+    UsageTracker.get('Box2D.Dynamics.b2BodyList').trackCreate();
     
     /**
      * @private
-     * @type {Array.<Box2D.Dynamics.b2BodyListNode>}
+     * @type {!Array.<!Box2D.Dynamics.b2BodyListNode>}
      */
     this.bodyFirstNodes = [];
     for(var i = 0; i <= Box2D.Dynamics.b2BodyList.TYPES.allBodies; i++) {
@@ -52,7 +54,7 @@ Box2D.Dynamics.b2BodyList = function() {
     
     /**
      * @private
-     * @type {Array.<Box2D.Dynamics.b2BodyListNode>}
+     * @type {!Array.<!Box2D.Dynamics.b2BodyListNode>}
      */
     this.bodyLastNodes = [];
     for(var i = 0; i <= Box2D.Dynamics.b2BodyList.TYPES.allBodies; i++) {
@@ -61,7 +63,7 @@ Box2D.Dynamics.b2BodyList = function() {
     
     /**
      * @private
-     * @type {Object.<Array.<Box2D.Dynamics.b2BodyListNode>>}
+     * @type {Object.<!Array.<!Box2D.Dynamics.b2BodyListNode>>}
      */
     this.bodyNodeLookup = {};
     

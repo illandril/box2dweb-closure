@@ -32,11 +32,14 @@
  
 goog.provide('Box2D.Dynamics.b2BodyListNode');
 
+goog.require('UsageTracker');
+
 /**
  * @param {!Box2D.Dynamics.b2Body} body
  * @constructor
  */
 Box2D.Dynamics.b2BodyListNode = function(body) {
+    UsageTracker.get('Box2D.Dynamics.b2BodyListNode').trackCreate();
     
     /**
      * @const

@@ -40,7 +40,14 @@ goog.require('UsageTracker');
 Box2D.Dynamics.b2ContactImpulse = function () {
     UsageTracker.get('Box2D.Dynamics.b2ContactImpulse').trackCreate();
     
+    /**
+     * @type {!Array.<number>}
+     */
     this.normalImpulses = [];
+    
+    /**
+     * @type {!Array.<number>}
+     */
     this.tangentImpulses = [];
 };
 

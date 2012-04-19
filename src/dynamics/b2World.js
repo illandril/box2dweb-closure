@@ -512,7 +512,7 @@ Box2D.Dynamics.b2World.prototype.DrawDebugData = function() {
     if (this.m_debugDraw === null) {
         return;
     }
-    this.m_debugDraw.m_sprite.graphics.clear();
+    this.m_debugDraw.Clear();
     var flags = this.m_debugDraw.GetFlags();
     if (flags & Box2D.Dynamics.b2DebugDraw.e_shapeBit) {
         var color_inactive = Box2D.Dynamics.b2World.s_color_inactive;

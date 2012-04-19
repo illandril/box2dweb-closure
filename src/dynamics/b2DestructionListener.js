@@ -37,6 +37,12 @@ goog.provide('Box2D.Dynamics.b2DestructionListener');
  */
 Box2D.Dynamics.b2DestructionListener = function () {};
 
+/**
+ * @param {!Box2D.Dynamics.Joints.b2Joint} joint
+ */
 Box2D.Dynamics.b2DestructionListener.prototype.SayGoodbyeJoint = function (joint) {};
 
+/**
+ * @param {!Box2D.Dynamics.b2Fixture} fixture
+ */
 Box2D.Dynamics.b2DestructionListener.prototype.SayGoodbyeFixture = function (fixture) {};

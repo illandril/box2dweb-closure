@@ -55,11 +55,24 @@ Box2D.Dynamics.Contacts.b2ContactConstraintPoint = function() {
      * @type {!Box2D.Common.Math.b2Vec2}
      */
     this.rB = Box2D.Common.Math.b2Vec2.Get(0, 0);
+    
+    /**
+     * @type {number}
+     */
+    this.normalImpulse = 0;
+    
+    /**
+     * @type {number}
+     */
+    this.tangentImpulse = 0;
 };
 
 Box2D.Dynamics.Contacts.b2ContactConstraintPoint.prototype.Reset = function() {
     this.localPoint.Set(0, 0);
     this.rA.Set(0, 0);
     this.rB.Set(0, 0);
+    this.normalImpulse = 0;
+    this.tangentImpulse = 0;
+    
 }; 
 

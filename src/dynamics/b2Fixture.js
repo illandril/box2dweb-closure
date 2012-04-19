@@ -36,6 +36,7 @@ goog.require('Box2D.Common.Math.b2Math');
 goog.require('Box2D.Dynamics.b2FilterData');
 goog.require('Box2D.Collision.b2AABB');
 goog.require('Box2D.Collision.Shapes.b2MassData');
+goog.require('UsageTracker');
 
 /**
  * @param {!Box2D.Dynamics.b2Body} body
@@ -44,6 +45,7 @@ goog.require('Box2D.Collision.Shapes.b2MassData');
  * @constructor
  */
 Box2D.Dynamics.b2Fixture = function(body, xf, def) {
+    UsageTracker.get('Box2D.Dynamics.b2Fixture').trackCreate();
     
     /**
      * @const

@@ -32,87 +32,185 @@
  
 goog.provide('Box2D.Dynamics.b2DebugDraw');
 
+goog.require('UsageTracker');
+
 /**
  * @constructor
  */
 Box2D.Dynamics.b2DebugDraw = function() {
-      this.m_drawScale = 1.0;
-      this.m_lineThickness = 1.0;
-      this.m_alpha = 1.0;
-      this.m_fillAlpha = 1.0;
-      this.m_xformScale = 1.0;
-      var __this = this;
-      //#WORKAROUND
-      this.m_sprite = {
-         graphics: {
-            clear: function () {
-               __this.m_ctx.clearRect(0, 0, __this.m_ctx.canvas.width, __this.m_ctx.canvas.height)
-            }
-         }
-      };
-      this.m_drawFlags = 0;
+    UsageTracker.get('Box2D.Dynamics.b2DebugDraw').trackCreate();
+    
+    /**
+     * @private
+     * @type {number}
+     */
+    this.m_drawScale = 1;
+    
+    /**
+     * @private
+     * @type {number}
+     */
+    this.m_lineThickness = 1;
+    
+    /**
+     * @private
+     * @type {number}
+     */
+    this.m_alpha = 1;
+    
+    /**
+     * @private
+     * @type {number}
+     */
+    this.m_fillAlpha = 1;
+    
+    /**
+     * @private
+     * @type {number}
+     */
+    this.m_xformScale = 1;
+    
+    /**
+     * @private
+     * @type {number}
+     */
+    this.m_drawFlags = 0;
+    
+    /**
+     * @private
+     * @type {CanvasRenderingContext2D}
+     */
+    this.m_ctx = null;
 };
+
+Box2D.Dynamics.b2DebugDraw.prototype.Clear = function() {
+    this.m_ctx.clearRect(0, 0, this.m_ctx.canvas.width, this.m_ctx.canvas.height)
+};
+
+/**
+ * @private
+ * @param {number} color
+ * @param {number} alpha
+ * @return {string}
+ */
+Box2D.Dynamics.b2DebugDraw.prototype._color = function (color, alpha) {
+    return "rgba(" + ((color & 0xFF0000) >> 16) + "," + ((color & 0xFF00) >> 8) + "," + (color & 0xFF) + "," + alpha + ")";
+};
+
+/**
+ * @param {number} flags
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.SetFlags = function (flags) {
+    this.m_drawFlags = flags;
+};
+
+/**
+ * @return {number}
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.GetFlags = function () {
+    return this.m_drawFlags
+};
+
+/**
+ * @param {number} flags
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.AppendFlags = function (flags) {
+    this.m_drawFlags |= flags;
+};
+
+/**
+ * @param {number} flags
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.ClearFlags = function (flags) {
+    this.m_drawFlags &= ~flags;
+};
+
+/**
+ * @param {CanvasRenderingContext2D} sprite
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.SetSprite = function (sprite) {
+    this.m_ctx = sprite;
+};
+
+/**
+ * @return {CanvasRenderingContext2D}
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.GetSprite = function () {
+    return this.m_ctx;
+};
+
+/**
+ * @param {number} drawScale
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.SetDrawScale = function (drawScale) {
+    this.m_drawScale = drawScale;
+};
+
+/**
+ * @return {number}
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.GetDrawScale = function () {
+    return this.m_drawScale;
+};
+
+/**
+ * @param {number} lineThickness
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.SetLineThickness = function (lineThickness) {
+    this.m_lineThickness = lineThickness;
+    this.m_ctx.strokeWidth = lineThickness;
+};
+
+/**
+ * @return {number}
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.GetLineThickness = function () {
+    return this.m_lineThickness;
+};
+
+/**
+ * @param {number} alpha
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.SetAlpha = function (alpha) {
+    this.m_alpha = alpha;
+};
+
+/**
+ * @return {number}
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.GetAlpha = function () {
+    return this.m_alpha;
+};
+
+/**
+ * @param {number} alpha
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.SetFillAlpha = function (alpha) {
+    this.m_fillAlpha = alpha;
+};
+
+/**
+ * @return {number}
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.GetFillAlpha = function () {
+    return this.m_fillAlpha;
+};
+
+/**
+ * @param {number} scale
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.SetXFormScale = function (scale) {
+    this.m_xformScale = scale;
+};
+
+/**
+ * @return {number}
+ */
+Box2D.Dynamics.b2DebugDraw.prototype.GetXFormScale = function () {
+    return this.m_xformScale;
+};
+
 (function (b2DebugDraw) {
-   b2DebugDraw.prototype._color = function (color, alpha) {
-      return "rgba(" + ((color & 0xFF0000) >> 16) + "," + ((color & 0xFF00) >> 8) + "," + (color & 0xFF) + "," + alpha + ")";
-   };
-   b2DebugDraw.prototype.SetFlags = function (flags) {
-      if (flags === undefined) flags = 0;
-      this.m_drawFlags = flags;
-   };
-   b2DebugDraw.prototype.GetFlags = function () {
-      return this.m_drawFlags;
-   };
-   b2DebugDraw.prototype.AppendFlags = function (flags) {
-      if (flags === undefined) flags = 0;
-      this.m_drawFlags |= flags;
-   };
-   b2DebugDraw.prototype.ClearFlags = function (flags) {
-      if (flags === undefined) flags = 0;
-      this.m_drawFlags &= ~flags;
-   };
-   b2DebugDraw.prototype.SetSprite = function (sprite) {
-      this.m_ctx = sprite;
-   };
-   b2DebugDraw.prototype.GetSprite = function () {
-      return this.m_ctx;
-   };
-   b2DebugDraw.prototype.SetDrawScale = function (drawScale) {
-      if (drawScale === undefined) drawScale = 0;
-      this.m_drawScale = drawScale;
-   };
-   b2DebugDraw.prototype.GetDrawScale = function () {
-      return this.m_drawScale;
-   };
-   b2DebugDraw.prototype.SetLineThickness = function (lineThickness) {
-      if (lineThickness === undefined) lineThickness = 0;
-      this.m_lineThickness = lineThickness;
-      this.m_ctx.strokeWidth = lineThickness;
-   };
-   b2DebugDraw.prototype.GetLineThickness = function () {
-      return this.m_lineThickness;
-   };
-   b2DebugDraw.prototype.SetAlpha = function (alpha) {
-      if (alpha === undefined) alpha = 0;
-      this.m_alpha = alpha;
-   };
-   b2DebugDraw.prototype.GetAlpha = function () {
-      return this.m_alpha;
-   };
-   b2DebugDraw.prototype.SetFillAlpha = function (alpha) {
-      if (alpha === undefined) alpha = 0;
-      this.m_fillAlpha = alpha;
-   };
-   b2DebugDraw.prototype.GetFillAlpha = function () {
-      return this.m_fillAlpha;
-   };
-   b2DebugDraw.prototype.SetXFormScale = function (xformScale) {
-      if (xformScale === undefined) xformScale = 0;
-      this.m_xformScale = xformScale;
-   };
-   b2DebugDraw.prototype.GetXFormScale = function () {
-      return this.m_xformScale;
-   };
    b2DebugDraw.prototype.DrawPolygon = function (vertices, vertexCount, color) {
       if (!vertexCount) return;
       var s = this.m_ctx;
@@ -194,10 +292,41 @@ Box2D.Dynamics.b2DebugDraw = function() {
       s.closePath();
       s.stroke();
    };
-  Box2D.Dynamics.b2DebugDraw.e_shapeBit = 0x0001;
-  Box2D.Dynamics.b2DebugDraw.e_jointBit = 0x0002;
-  Box2D.Dynamics.b2DebugDraw.e_aabbBit = 0x0004;
-  Box2D.Dynamics.b2DebugDraw.e_pairBit = 0x0008;
-  Box2D.Dynamics.b2DebugDraw.e_centerOfMassBit = 0x0010;
-  Box2D.Dynamics.b2DebugDraw.e_controllerBit = 0x0020;
+
 })(Box2D.Dynamics.b2DebugDraw);
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Dynamics.b2DebugDraw.e_shapeBit = 0x0001;
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Dynamics.b2DebugDraw.e_jointBit = 0x0002;
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Dynamics.b2DebugDraw.e_aabbBit = 0x0004;
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Dynamics.b2DebugDraw.e_pairBit = 0x0008;
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Dynamics.b2DebugDraw.e_centerOfMassBit = 0x0010;
+
+/**
+ * @const
+ * @type {number}
+ */
+Box2D.Dynamics.b2DebugDraw.e_controllerBit = 0x0020;

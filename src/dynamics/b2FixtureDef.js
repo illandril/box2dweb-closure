@@ -33,18 +33,32 @@
 goog.provide('Box2D.Dynamics.b2FixtureDef');
 
 goog.require('Box2D.Dynamics.b2FilterData');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
-Box2D.Dynamics.b2FixtureDef = function () {
+Box2D.Dynamics.b2FixtureDef = function() {
+    UsageTracker.get('Box2D.Dynamics.b2FixtureDef').trackCreate();
     
     /**
      * @type {!Box2D.Dynamics.b2FilterData}
      */
     this.filter = new Box2D.Dynamics.b2FilterData();
+    
+    /**
+     * @type {number}
+     */
     this.filter.categoryBits = 0x0001;
+    
+    /**
+     * @type {number}
+     */
     this.filter.maskBits = 0xFFFF;
+    
+    /**
+     * @type {number}
+     */
     this.filter.groupIndex = 0;
     
     /**

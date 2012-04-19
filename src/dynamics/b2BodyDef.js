@@ -33,11 +33,13 @@
 goog.provide('Box2D.Dynamics.b2BodyDef');
 
 goog.require('Box2D.Common.Math.b2Vec2');
+goog.require('UsageTracker');
 
 /**
  * @constructor
  */
 Box2D.Dynamics.b2BodyDef = function() {
+    UsageTracker.get('Box2D.Dynamics.b2BodyDef').trackCreate();
     
     /** @type {!Box2D.Common.Math.b2Vec2} */
     this.position = Box2D.Common.Math.b2Vec2.Get(0, 0);
@@ -46,16 +48,16 @@ Box2D.Dynamics.b2BodyDef = function() {
     this.linearVelocity = Box2D.Common.Math.b2Vec2.Get(0, 0);
     
     /** @type {number} */
-    this.angle = 0.0;
+    this.angle = 0;
     
     /** @type {number} */
-    this.angularVelocity = 0.0;
+    this.angularVelocity = 0;
     
     /** @type {number} */
-    this.linearDamping = 0.0;
+    this.linearDamping = 0;
     
     /** @type {number} */
-    this.angularDamping = 0.0;
+    this.angularDamping = 0;
     
     /** @type {boolean} */
     this.allowSleep = true;
@@ -76,7 +78,7 @@ Box2D.Dynamics.b2BodyDef = function() {
     this.active = true;
     
     /** @type {number} */
-    this.inertiaScale = 1.0;
+    this.inertiaScale = 1;
 };
 
 /**

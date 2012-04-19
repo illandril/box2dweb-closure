@@ -37,12 +37,14 @@ goog.require('Box2D.Collision.b2DynamicTreeBroadPhase');
 goog.require('Box2D.Dynamics.b2ContactFilter');
 goog.require('Box2D.Dynamics.b2ContactListener');
 goog.require('Box2D.Dynamics.Contacts.b2ContactFactory');
+goog.require('UsageTracker');
 
 /**
  * @param {!Box2D.Dynamics.b2World} world
  * @constructor
  */
 Box2D.Dynamics.b2ContactManager = function(world) {
+    UsageTracker.get('Box2D.Dynamics.b2ContactManager').trackCreate();
     
     /**
      * @private
@@ -119,6 +121,9 @@ Box2D.Dynamics.b2ContactManager.prototype.FindNewContacts = function () {
     this.m_broadPhase.UpdatePairs(addPairCallback);
 };
 
+/**
+ * @param {!Box2D.Dynamics.Contacts.b2Contact} c
+ */
 Box2D.Dynamics.b2ContactManager.prototype.Destroy = function (c) {
     var fixtureA = c.GetFixtureA();
     var fixtureB = c.GetFixtureB();
@@ -142,15 +147,15 @@ Box2D.Dynamics.b2ContactManager.prototype.Collide = function() {
         var fixtureB = c.GetFixtureB();
         var bodyA = fixtureA.GetBody();
         var bodyB = fixtureB.GetBody();
-        if (bodyA.IsAwake() == false && bodyB.IsAwake() == false) {
+        if (!bodyA.IsAwake() && !bodyB.IsAwake()) {
             continue;
         }
         if (c.IsFiltering()) {
-            if (bodyB.ShouldCollide(bodyA) == false) {
+            if (!bodyB.ShouldCollide(bodyA)) {
                 this.Destroy(c);
                 continue;
             }
-            if (this.m_contactFilter.ShouldCollide(fixtureA, fixtureB) == false) {
+            if (!this.m_contactFilter.ShouldCollide(fixtureA, fixtureB)) {
                 this.Destroy(c);
                 continue;
             }
@@ -159,7 +164,7 @@ Box2D.Dynamics.b2ContactManager.prototype.Collide = function() {
         var proxyA = fixtureA.m_proxy;
         var proxyB = fixtureB.m_proxy;
         var overlap = this.m_broadPhase.TestOverlap(proxyA, proxyB);
-        if (overlap == false) {
+        if (!overlap) {
             this.Destroy(c);
             continue;
         }
@@ -167,4 +172,9 @@ Box2D.Dynamics.b2ContactManager.prototype.Collide = function() {
     }
 };
 
+/**
+ * @private
+ * @const
+ * @type {!Box2D.Collision.b2ContactPoint}
+ */
 Box2D.Dynamics.b2ContactManager.s_evalCP = new Box2D.Collision.b2ContactPoint();

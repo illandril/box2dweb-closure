@@ -32,10 +32,13 @@
  
 goog.provide('Box2D.Dynamics.b2FilterData');
 
+goog.require('UsageTracker');
+
 /**
  * @constructor
  */
 Box2D.Dynamics.b2FilterData = function () {
+    UsageTracker.get('Box2D.Dynamics.b2FilterData').trackCreate();
   
     /**
      * @type {number}
