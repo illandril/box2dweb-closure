@@ -162,7 +162,7 @@ Box2D.Dynamics.b2Fixture.prototype.SetFilterData = function(filter) {
  * @return {!Box2D.Dynamics.b2FilterData}
  */
 Box2D.Dynamics.b2Fixture.prototype.GetFilterData = function() {
-    return this.m_filter.Copy();
+    return this.m_filter;
 };
 
 /**
