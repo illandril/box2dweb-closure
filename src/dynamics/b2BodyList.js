@@ -63,7 +63,7 @@ Box2D.Dynamics.b2BodyList = function() {
     
     /**
      * @private
-     * @type {Object.<!Array.<!Box2D.Dynamics.b2BodyListNode>>}
+     * @type {Object.<!Array.<Box2D.Dynamics.b2BodyListNode>>}
      */
     this.bodyNodeLookup = {};
     
