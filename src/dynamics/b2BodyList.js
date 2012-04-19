@@ -45,7 +45,7 @@ Box2D.Dynamics.b2BodyList = function() {
     
     /**
      * @private
-     * @type {!Array.<!Box2D.Dynamics.b2BodyListNode>}
+     * @type {!Array.<Box2D.Dynamics.b2BodyListNode>}
      */
     this.bodyFirstNodes = [];
     for(var i = 0; i <= Box2D.Dynamics.b2BodyList.TYPES.allBodies; i++) {
@@ -54,7 +54,7 @@ Box2D.Dynamics.b2BodyList = function() {
     
     /**
      * @private
-     * @type {!Array.<!Box2D.Dynamics.b2BodyListNode>}
+     * @type {!Array.<Box2D.Dynamics.b2BodyListNode>}
      */
     this.bodyLastNodes = [];
     for(var i = 0; i <= Box2D.Dynamics.b2BodyList.TYPES.allBodies; i++) {

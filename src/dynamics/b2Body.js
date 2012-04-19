@@ -289,7 +289,6 @@ Box2D.Dynamics.b2Body.prototype.DestroyFixture = function(fixture) {
         fixture.DestroyProxy(broadPhase);
     }
     fixture.Destroy();
-    fixture.m_body = null;
     this.ResetMassData();
 };
 
@@ -469,7 +468,7 @@ Box2D.Dynamics.b2Body.prototype.ApplyImpulse = function(impulse, point) {
 };
 
 /**
- * @param {function(!Box2D.Dynamics.b2Fixture,!Box2D.Dynamics.b2Fixture):boolean} callback
+ * @param {function(!Box2D.Dynamics.b2Fixture):boolean} callback
  * @return {!Box2D.Dynamics.b2Body}
  */
 Box2D.Dynamics.b2Body.prototype.Split = function(callback) {
@@ -864,7 +863,7 @@ Box2D.Dynamics.b2Body.prototype.GetFixtureList = function() {
 };
 
 /**
- * @return {Box2D.Dynamics.b2Joint}
+ * @return {Box2D.Dynamics.Joints.b2Joint}
  */
 Box2D.Dynamics.b2Body.prototype.GetJointList = function() {
     return this.m_jointList;
@@ -927,7 +926,7 @@ Box2D.Dynamics.b2Body.prototype.SynchronizeTransform = function() {
 };
 
 /**
- * @param {!Box2D.Dynamics.b2Body}
+ * @param {!Box2D.Dynamics.b2Body} other
  * @return {boolean}
  */
 Box2D.Dynamics.b2Body.prototype.ShouldCollide = function(other) {
