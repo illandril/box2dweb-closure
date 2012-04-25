@@ -70,6 +70,7 @@ Box2D.Dynamics.Joints.b2RevoluteJoint = function(def) {
     this.m_enableLimit = def.enableLimit;
     this.m_enableMotor = def.enableMotor;
     this.m_limitState = Box2D.Dynamics.Joints.b2Joint.e_inactiveLimit;
+    this.m_motorMass = 0;
 };
 goog.inherits(Box2D.Dynamics.Joints.b2RevoluteJoint, Box2D.Dynamics.Joints.b2Joint);
 
@@ -183,7 +184,11 @@ Box2D.Dynamics.Joints.b2RevoluteJoint.prototype.InitVelocityConstraints = functi
     this.m_mass.col1.z = this.m_mass.col3.x;
     this.m_mass.col2.z = this.m_mass.col3.y;
     this.m_mass.col3.z = i1 + i2;
-    this.m_motorMass = 1.0 / (i1 + i2);
+    if (i1 + i2 == 0) {
+        this.m_motorMass = 0;
+    } else {
+        this.m_motorMass = 1.0 / (i1 + i2);
+    }
     if (!this.m_enableMotor) {
         this.m_motorImpulse = 0.0;
     }
