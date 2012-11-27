@@ -239,7 +239,6 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.SetAsEdge = function(v1, v2) {
     var crossD = Box2D.Common.Math.b2Math.CrossVF(d, 1.0)
     Box2D.Common.Math.b2Vec2.Free(d);
     this.m_normals[0] = crossD;
-    Box2D.Common.Math.b2Vec2.Free(crossD);
     this.m_normals[0].Normalize();
     this.m_normals[1].x = (-this.m_normals[0].x);
     this.m_normals[1].y = (-this.m_normals[0].y);
