@@ -342,6 +342,10 @@ Box2D.Dynamics.b2World.prototype.DestroyJoint = function(j) {
     if (j == this.m_jointList) {
         this.m_jointList = j.m_next;
     }
+    
+    j.m_next = null;
+    j.m_prev = null;
+    
     var bodyA = j.m_bodyA;
     var bodyB = j.m_bodyB;
     bodyA.SetAwake(true);
