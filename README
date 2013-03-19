@@ -30,5 +30,7 @@ Anticipated future changes:
  * fixing visibility of most variables (by annotation and convention only - not by anything that would actually make them private as far as javascript is concerned)
  * moving constant values from b2Settings (and maybe other areas) to Box2D.Consts
 
+If you are interested in a version that is Gjslint compliant, and with all warnings fixed (sometimes by making things public that are supposed to be private or protected), firecow has made a fork: https://github.com/firecow/box2dweb-closure
+
 Notice anything else that doesn't work (especially if it did work using box2dweb)?
 E-mail box2dweb@illandril.net

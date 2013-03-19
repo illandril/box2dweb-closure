@@ -83,6 +83,26 @@ Box2D.Collision.b2AABB.Free = function(aabb) {
     }
 };
 
+/**
+ * @param {number} lowerX
+ * @param {number} lowerY
+ * @param {number} upperX
+ * @param {number} upperY
+ */
+Box2D.Collision.b2AABB.prototype.Set = function(lowerX, lowerY, upperX, upperY) {
+    this.lowerBound.Set(lowerX, lowerY);
+    this.upperBound.Set(upperX, upperY);
+};
+
+/**
+ * @param {!Box2D.Common.Math.b2Vec2} lowerBound
+ * @param {!Box2D.Common.Math.b2Vec2} upperBound
+ */
+Box2D.Collision.b2AABB.prototype.SetVV = function(lowerBound, upperBound) {
+    this.lowerBound.SetV(lowerBound);
+    this.upperBound.SetV(upperBound);
+};
+
 Box2D.Collision.b2AABB.prototype.SetZero = function() {
     this.lowerBound.Set(0, 0);
     this.upperBound.Set(0, 0);
@@ -241,4 +261,32 @@ Box2D.Collision.b2AABB.prototype.Combine = function(aabb1, aabb2) {
     this.lowerBound.y = Math.min(aabb1.lowerBound.y, aabb2.lowerBound.y);
     this.upperBound.x = Math.max(aabb1.upperBound.x, aabb2.upperBound.x);
     this.upperBound.y = Math.max(aabb1.upperBound.y, aabb2.upperBound.y);
+};
+
+/**
+ * @return {number}
+ */
+Box2D.Collision.b2AABB.prototype.GetMinX = function() {
+    return this.lowerBound.x;
+};
+
+/**
+ * @return {number}
+ */
+Box2D.Collision.b2AABB.prototype.GetMaxX = function() {
+    return this.upperBound.x;
+};
+
+/**
+ * @return {number}
+ */
+Box2D.Collision.b2AABB.prototype.GetMinY = function() {
+    return this.lowerBound.y;
+};
+
+/**
+ * @return {number}
+ */
+Box2D.Collision.b2AABB.prototype.GetMaxY = function() {
+    return this.upperBound.y;
 };

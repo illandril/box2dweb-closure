@@ -57,7 +57,7 @@ Box2D.Dynamics.Contacts.b2EdgeAndCircleContact.prototype.Reset = function(fixtur
 Box2D.Dynamics.Contacts.b2EdgeAndCircleContact.prototype.Evaluate = function() {
     var bA = this.m_fixtureA.GetBody();
     var bB = this.m_fixtureB.GetBody();
-    this.b2CollideEdgeAndCircle(this.m_manifold, this.m_fixtureA.GetShape(), this.m_fixtureA.GetBody().m_xf, this.m_fixtureB.GetShape(), this.m_fixtureB.GetBody().m_xf);
+    this.b2CollideEdgeAndCircle(this.m_manifold, this.m_fixtureA.GetShape(), this.m_fixtureA.GetBody().GetTransform(), this.m_fixtureB.GetShape(), this.m_fixtureB.GetBody().GetTransform());
 };
 
 Box2D.Dynamics.Contacts.b2EdgeAndCircleContact.prototype.b2CollideEdgeAndCircle = function(manifold, edge, xf1, circle, xf2) {};

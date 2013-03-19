@@ -136,6 +136,13 @@ Box2D.Collision.Shapes.b2Shape.TestOverlap = function(shape1, transform1, shape2
 };
 
 /**
+ * @return {number}
+ */
+Box2D.Collision.Shapes.b2Shape.prototype.GetRadius = function() {
+    return this.m_radius;
+};
+
+/**
  * @const
  * @type {number}
  */

@@ -81,23 +81,23 @@ Box2D.Collision.b2Collision.ClipSegmentToLine = function(vOut, vIn, normal, offs
  * @return {number}
  */
 Box2D.Collision.b2Collision.EdgeSeparation = function(poly1, xf1, edge1, poly2, xf2) {
-    var normal1WorldX = (xf1.R.col1.x * poly1.m_normals[edge1].x + xf1.R.col2.x * poly1.m_normals[edge1].y);
-    var normal1WorldY = (xf1.R.col1.y * poly1.m_normals[edge1].x + xf1.R.col2.y * poly1.m_normals[edge1].y);
+    var normal1WorldX = (xf1.R.col1.x * poly1.GetNormal(edge1).x + xf1.R.col2.x * poly1.GetNormal(edge1).y);
+    var normal1WorldY = (xf1.R.col1.y * poly1.GetNormal(edge1).x + xf1.R.col2.y * poly1.GetNormal(edge1).y);
     var normal1X = (xf2.R.col1.x * normal1WorldX + xf2.R.col1.y * normal1WorldY);
     var normal1Y = (xf2.R.col2.x * normal1WorldX + xf2.R.col2.y * normal1WorldY);
     var index = 0;
     var minDot = Number.MAX_VALUE;
     for (var i = 0; i < poly2.m_vertexCount; i++) {
-        var dot = poly2.m_vertices[i].x * normal1X + poly2.m_vertices[i].y * normal1Y;
+        var dot = poly2.GetVertex(i).x * normal1X + poly2.GetVertex(i).y * normal1Y;
         if (dot < minDot) {
             minDot = dot;
             index = i;
         }
     }
-    var v1X = xf1.position.x + (xf1.R.col1.x * poly1.m_vertices[edge1].x + xf1.R.col2.x * poly1.m_vertices[edge1].y);
-    var v1Y = xf1.position.y + (xf1.R.col1.y * poly1.m_vertices[edge1].x + xf1.R.col2.y * poly1.m_vertices[edge1].y);
-    var v2X = xf2.position.x + (xf2.R.col1.x * poly2.m_vertices[index].x + xf2.R.col2.x * poly2.m_vertices[index].y);
-    var v2Y = xf2.position.y + (xf2.R.col1.y * poly2.m_vertices[index].x + xf2.R.col2.y * poly2.m_vertices[index].y);
+    var v1X = xf1.position.x + (xf1.R.col1.x * poly1.GetVertex(edge1).x + xf1.R.col2.x * poly1.GetVertex(edge1).y);
+    var v1Y = xf1.position.y + (xf1.R.col1.y * poly1.GetVertex(edge1).x + xf1.R.col2.y * poly1.GetVertex(edge1).y);
+    var v2X = xf2.position.x + (xf2.R.col1.x * poly2.GetVertex(index).x + xf2.R.col2.x * poly2.GetVertex(index).y);
+    var v2Y = xf2.position.y + (xf2.R.col1.y * poly2.GetVertex(index).x + xf2.R.col2.y * poly2.GetVertex(index).y);
     var separation = (v2X - v1X) * normal1WorldX + (v2Y - v1Y) * normal1WorldY;
     return separation;
 };
@@ -110,16 +110,16 @@ Box2D.Collision.b2Collision.EdgeSeparation = function(poly1, xf1, edge1, poly2, 
  * @return {{bestEdge: number, separation: number}}
  */
 Box2D.Collision.b2Collision.FindMaxSeparation = function(poly1, xf1, poly2, xf2) {
-    var dX = xf2.position.x + (xf2.R.col1.x * poly2.m_centroid.x + xf2.R.col2.x * poly2.m_centroid.y);
-    var dY = xf2.position.y + (xf2.R.col1.y * poly2.m_centroid.x + xf2.R.col2.y * poly2.m_centroid.y);
-    dX -= xf1.position.x + (xf1.R.col1.x * poly1.m_centroid.x + xf1.R.col2.x * poly1.m_centroid.y);
-    dY -= xf1.position.y + (xf1.R.col1.y * poly1.m_centroid.x + xf1.R.col2.y * poly1.m_centroid.y);
+    var dX = xf2.position.x + (xf2.R.col1.x * poly2.GetCentroid().x + xf2.R.col2.x * poly2.GetCentroid().y);
+    var dY = xf2.position.y + (xf2.R.col1.y * poly2.GetCentroid().x + xf2.R.col2.y * poly2.GetCentroid().y);
+    dX -= xf1.position.x + (xf1.R.col1.x * poly1.GetCentroid().x + xf1.R.col2.x * poly1.GetCentroid().y);
+    dY -= xf1.position.y + (xf1.R.col1.y * poly1.GetCentroid().x + xf1.R.col2.y * poly1.GetCentroid().y);
     var dLocal1X = (dX * xf1.R.col1.x + dY * xf1.R.col1.y);
     var dLocal1Y = (dX * xf1.R.col2.x + dY * xf1.R.col2.y);
     var edge = 0;
     var maxDot = (-Number.MAX_VALUE);
     for (var i = 0; i < poly1.m_vertexCount; ++i) {
-        var dot = (poly1.m_normals[i].x * dLocal1X + poly1.m_normals[i].y * dLocal1Y);
+        var dot = (poly1.GetNormal(i).x * dLocal1X + poly1.GetNormal(i).y * dLocal1Y);
         if (dot > maxDot) {
             maxDot = dot;
             edge = i;
@@ -186,15 +186,15 @@ Box2D.Collision.b2Collision.FindMaxSeparation = function(poly1, xf1, poly2, xf2)
  * @param {!Box2D.Common.Math.b2Transform} xf2
  */
 Box2D.Collision.b2Collision.FindIncidentEdge = function(c, poly1, xf1, edge1, poly2, xf2) {
-    var normal1X = (xf1.R.col1.x * poly1.m_normals[edge1].x + xf1.R.col2.x * poly1.m_normals[edge1].y);
-    var normal1Y = (xf1.R.col1.y * poly1.m_normals[edge1].x + xf1.R.col2.y * poly1.m_normals[edge1].y);
+    var normal1X = (xf1.R.col1.x * poly1.GetNormal(edge1).x + xf1.R.col2.x * poly1.GetNormal(edge1).y);
+    var normal1Y = (xf1.R.col1.y * poly1.GetNormal(edge1).x + xf1.R.col2.y * poly1.GetNormal(edge1).y);
     var tX = (xf2.R.col1.x * normal1X + xf2.R.col1.y * normal1Y);
     normal1Y = (xf2.R.col2.x * normal1X + xf2.R.col2.y * normal1Y);
     normal1X = tX;
     var i1 = 0;
     var minDot = Number.MAX_VALUE;
     for (var i = 0; i < poly2.m_vertexCount; i++) {
-        var dot = (normal1X * poly2.m_normals[i].x + normal1Y * poly2.m_normals[i].y);
+        var dot = (normal1X * poly2.GetNormal(i).x + normal1Y * poly2.GetNormal(i).y);
         if (dot < minDot) {
             minDot = dot;
             i1 = i;
@@ -204,13 +204,13 @@ Box2D.Collision.b2Collision.FindIncidentEdge = function(c, poly1, xf1, edge1, po
     if (i2 >= poly2.m_vertexCount) {
         i2 = 0;
     }
-    c[0].v.x = xf2.position.x + (xf2.R.col1.x * poly2.m_vertices[i1].x + xf2.R.col2.x * poly2.m_vertices[i1].y);
-    c[0].v.y = xf2.position.y + (xf2.R.col1.y * poly2.m_vertices[i1].x + xf2.R.col2.y * poly2.m_vertices[i1].y);
+    c[0].v.x = xf2.position.x + (xf2.R.col1.x * poly2.GetVertex(i1).x + xf2.R.col2.x * poly2.GetVertex(i1).y);
+    c[0].v.y = xf2.position.y + (xf2.R.col1.y * poly2.GetVertex(i1).x + xf2.R.col2.y * poly2.GetVertex(i1).y);
     c[0].id.SetReferenceEdge(edge1);
     c[0].id.SetIncidentEdge(i1);
     c[0].id.SetIncidentVertex(0);
-    c[1].v.x = xf2.position.x + (xf2.R.col1.x * poly2.m_vertices[i2].x + xf2.R.col2.x * poly2.m_vertices[i2].y);
-    c[1].v.y = xf2.position.y + (xf2.R.col1.y * poly2.m_vertices[i2].x + xf2.R.col2.y * poly2.m_vertices[i2].y);
+    c[1].v.x = xf2.position.x + (xf2.R.col1.x * poly2.GetVertex(i2).x + xf2.R.col2.x * poly2.GetVertex(i2).y);
+    c[1].v.y = xf2.position.y + (xf2.R.col1.y * poly2.GetVertex(i2).x + xf2.R.col2.y * poly2.GetVertex(i2).y);
     c[1].id.SetReferenceEdge(edge1);
     c[1].id.SetIncidentEdge(i2);
     c[1].id.SetIncidentVertex(1);
@@ -231,8 +231,8 @@ Box2D.Collision.b2Collision.MakeClipPointVector = function() {
  * @param {!Box2D.Common.Math.b2Transform} xfB
  */
 Box2D.Collision.b2Collision.CollidePolygons = function(manifold, polyA, xfA, polyB, xfB) {
-    manifold.m_pointCount = 0;
-    var totalRadius = polyA.m_radius + polyB.m_radius;
+    manifold.SetPointCount(0);
+    var totalRadius = polyA.GetRadius() + polyB.GetRadius();
     
     var separationEdgeA = Box2D.Collision.b2Collision.FindMaxSeparation(polyA, xfA, polyB, xfB);
     if (separationEdgeA.separation > totalRadius) {
@@ -251,24 +251,24 @@ Box2D.Collision.b2Collision.CollidePolygons = function(manifold, polyA, xfA, pol
     var flip = 0;
     var edge1 = separationEdgeA.bestEdge;
     
-    manifold.m_type = Box2D.Collision.b2Manifold.e_faceA;
+    manifold.SetType(Box2D.Collision.b2Manifold.e_faceA);
     if (separationEdgeB.separation > 0.98 /* k_relativeTol */ * separationEdgeA.separation + 0.001 /* k_absoluteTol */ ) {
         poly1 = polyB;
         poly2 = polyA;
         xf1 = xfB;
         xf2 = xfA;
         edge1 = separationEdgeB.bestEdge;
-        manifold.m_type = Box2D.Collision.b2Manifold.e_faceB;
+        manifold.SetType(Box2D.Collision.b2Manifold.e_faceB);
         flip = 1;
     }
     var incidentEdge = Box2D.Collision.b2Collision.s_incidentEdge;
     Box2D.Collision.b2Collision.FindIncidentEdge(incidentEdge, poly1, xf1, edge1, poly2, xf2);
-    var local_v11 = poly1.m_vertices[edge1];
+    var local_v11 = poly1.GetVertex(edge1);
     var local_v12;
     if (edge1 + 1 < poly1.m_vertexCount) {
-        local_v12 = poly1.m_vertices[edge1 + 1];
+        local_v12 = poly1.GetVertex(edge1 + 1);
     } else {
-        local_v12 = poly1.m_vertices[0];
+        local_v12 = poly1.GetVertex(0);
     }
     Box2D.Collision.b2Collision.s_localTangent.Set(local_v12.x - local_v11.x, local_v12.y - local_v11.y);
     Box2D.Collision.b2Collision.s_localTangent.Normalize();
@@ -309,7 +309,7 @@ Box2D.Collision.b2Collision.CollidePolygons = function(manifold, polyA, xfA, pol
             pointCount++;
         }
     }
-    manifold.m_pointCount = pointCount;
+    manifold.SetPointCount(pointCount);
 };
 
 /**
@@ -320,23 +320,23 @@ Box2D.Collision.b2Collision.CollidePolygons = function(manifold, polyA, xfA, pol
  * @param {!Box2D.Common.Math.b2Transform} xf2
  */
 Box2D.Collision.b2Collision.CollideCircles = function(manifold, circle1, xf1, circle2, xf2) {
-    manifold.m_pointCount = 0;
-    var p1X = xf1.position.x + (xf1.R.col1.x * circle1.m_p.x + xf1.R.col2.x * circle1.m_p.y);
-    var p1Y = xf1.position.y + (xf1.R.col1.y * circle1.m_p.x + xf1.R.col2.y * circle1.m_p.y);
-    var p2X = xf2.position.x + (xf2.R.col1.x * circle2.m_p.x + xf2.R.col2.x * circle2.m_p.y);
-    var p2Y = xf2.position.y + (xf2.R.col1.y * circle2.m_p.x + xf2.R.col2.y * circle2.m_p.y);
+    manifold.SetPointCount(0);
+    var p1X = xf1.position.x + (xf1.R.col1.x * circle1.GetLocalPosition().x + xf1.R.col2.x * circle1.GetLocalPosition().y);
+    var p1Y = xf1.position.y + (xf1.R.col1.y * circle1.GetLocalPosition().x + xf1.R.col2.y * circle1.GetLocalPosition().y);
+    var p2X = xf2.position.x + (xf2.R.col1.x * circle2.GetLocalPosition().x + xf2.R.col2.x * circle2.GetLocalPosition().y);
+    var p2Y = xf2.position.y + (xf2.R.col1.y * circle2.GetLocalPosition().x + xf2.R.col2.y * circle2.GetLocalPosition().y);
     var dX = p2X - p1X;
     var dY = p2Y - p1Y;
     var distSqr = dX * dX + dY * dY;
-    var radius = circle1.m_radius + circle2.m_radius;
+    var radius = circle1.GetRadius() + circle2.GetRadius();
     if (distSqr > radius * radius) {
         return;
     }
-    manifold.m_type = Box2D.Collision.b2Manifold.e_circles;
-    manifold.m_localPoint.SetV(circle1.m_p);
+    manifold.SetType(Box2D.Collision.b2Manifold.e_circles);
+    manifold.m_localPoint.SetV(circle1.GetLocalPosition());
     manifold.m_localPlaneNormal.SetZero();
-    manifold.m_pointCount = 1;
-    manifold.m_points[0].m_localPoint.SetV(circle2.m_p);
+    manifold.SetPointCount(1);
+    manifold.m_points[0].m_localPoint.SetV(circle2.GetLocalPosition());
     manifold.m_points[0].m_id.SetKey(0);
 };
 
@@ -348,16 +348,16 @@ Box2D.Collision.b2Collision.CollideCircles = function(manifold, circle1, xf1, ci
  * @param {!Box2D.Common.Math.b2Transform} xf2
  */
 Box2D.Collision.b2Collision.CollidePolygonAndCircle = function(manifold, polygon, xf1, circle, xf2) {
-    manifold.m_pointCount = 0;
-    var dX = xf2.position.x + (xf2.R.col1.x * circle.m_p.x + xf2.R.col2.x * circle.m_p.y) - xf1.position.x;
-    var dY = xf2.position.y + (xf2.R.col1.y * circle.m_p.x + xf2.R.col2.y * circle.m_p.y) - xf1.position.y;
+    manifold.SetPointCount(0);
+    var dX = xf2.position.x + (xf2.R.col1.x * circle.GetLocalPosition().x + xf2.R.col2.x * circle.GetLocalPosition().y) - xf1.position.x;
+    var dY = xf2.position.y + (xf2.R.col1.y * circle.GetLocalPosition().x + xf2.R.col2.y * circle.GetLocalPosition().y) - xf1.position.y;
     var cLocalX = (dX * xf1.R.col1.x + dY * xf1.R.col1.y);
     var cLocalY = (dX * xf1.R.col2.x + dY * xf1.R.col2.y);
     var normalIndex = 0;
     var separation = (-Number.MAX_VALUE);
-    var radius = polygon.m_radius + circle.m_radius;
+    var radius = polygon.GetRadius() + circle.GetRadius();
     for (var i = 0; i < polygon.m_vertexCount; ++i) {
-        var s = polygon.m_normals[i].x * (cLocalX - polygon.m_vertices[i].x) + polygon.m_normals[i].y * (cLocalY - polygon.m_vertices[i].y);
+        var s = polygon.GetNormal(i).x * (cLocalX - polygon.GetVertex(i).x) + polygon.GetNormal(i).y * (cLocalY - polygon.GetVertex(i).y);
         if (s > radius) {
             return;
         }
@@ -370,52 +370,52 @@ Box2D.Collision.b2Collision.CollidePolygonAndCircle = function(manifold, polygon
     if (vertIndex2 >= polygon.m_vertexCount) {
         vertIndex2 = 0;
     }
-    var v1 = polygon.m_vertices[normalIndex];
-    var v2 = polygon.m_vertices[vertIndex2];
+    var v1 = polygon.GetVertex(normalIndex);
+    var v2 = polygon.GetVertex(vertIndex2);
     if (separation < Number.MIN_VALUE) {
-        manifold.m_pointCount = 1;
-        manifold.m_type = Box2D.Collision.b2Manifold.e_faceA;
-        manifold.m_localPlaneNormal.SetV(polygon.m_normals[normalIndex]);
+        manifold.SetPointCount(1);
+        manifold.SetType(Box2D.Collision.b2Manifold.e_faceA);
+        manifold.m_localPlaneNormal.SetV(polygon.GetNormal(normalIndex));
         manifold.m_localPoint.x = 0.5 * (v1.x + v2.x);
         manifold.m_localPoint.y = 0.5 * (v1.y + v2.y);
-        manifold.m_points[0].m_localPoint.SetV(circle.m_p);
+        manifold.m_points[0].m_localPoint.SetV(circle.GetLocalPosition());
         manifold.m_points[0].m_id.SetKey(0);
     } else {
         var u1 = (cLocalX - v1.x) * (v2.x - v1.x) + (cLocalY - v1.y) * (v2.y - v1.y);
         if (u1 <= 0.0) {
             if ((cLocalX - v1.x) * (cLocalX - v1.x) + (cLocalY - v1.y) * (cLocalY - v1.y) > radius * radius) return;
-            manifold.m_pointCount = 1;
-            manifold.m_type = Box2D.Collision.b2Manifold.e_faceA;
+            manifold.SetPointCount(1);
+            manifold.SetType(Box2D.Collision.b2Manifold.e_faceA);
             manifold.m_localPlaneNormal.x = cLocalX - v1.x;
             manifold.m_localPlaneNormal.y = cLocalY - v1.y;
             manifold.m_localPlaneNormal.Normalize();
             manifold.m_localPoint.SetV(v1);
-            manifold.m_points[0].m_localPoint.SetV(circle.m_p);
+            manifold.m_points[0].m_localPoint.SetV(circle.GetLocalPosition());
             manifold.m_points[0].m_id.SetKey(0);
         } else {
             var u2 = (cLocalX - v2.x) * (v1.x - v2.x) + (cLocalY - v2.y) * (v1.y - v2.y);
             if (u2 <= 0) {
                 if ((cLocalX - v2.x) * (cLocalX - v2.x) + (cLocalY - v2.y) * (cLocalY - v2.y) > radius * radius) return;
-                manifold.m_pointCount = 1;
-                manifold.m_type = Box2D.Collision.b2Manifold.e_faceA;
+                manifold.SetPointCount(1);
+                manifold.SetType(Box2D.Collision.b2Manifold.e_faceA);
                 manifold.m_localPlaneNormal.x = cLocalX - v2.x;
                 manifold.m_localPlaneNormal.y = cLocalY - v2.y;
                 manifold.m_localPlaneNormal.Normalize();
                 manifold.m_localPoint.SetV(v2);
-                manifold.m_points[0].m_localPoint.SetV(circle.m_p);
+                manifold.m_points[0].m_localPoint.SetV(circle.GetLocalPosition());
                 manifold.m_points[0].m_id.SetKey(0);
             } else {
                 var faceCenterX = 0.5 * (v1.x + v2.x);
                 var faceCenterY = 0.5 * (v1.y + v2.y);
-                separation = (cLocalX - faceCenterX) * polygon.m_normals[normalIndex].x + (cLocalY - faceCenterY) * polygon.m_normals[normalIndex].y;
+                separation = (cLocalX - faceCenterX) * polygon.GetNormal(normalIndex).x + (cLocalY - faceCenterY) * polygon.GetNormal(normalIndex).y;
                 if (separation > radius) return;
-                manifold.m_pointCount = 1;
-                manifold.m_type = Box2D.Collision.b2Manifold.e_faceA;
-                manifold.m_localPlaneNormal.x = polygon.m_normals[normalIndex].x;
-                manifold.m_localPlaneNormal.y = polygon.m_normals[normalIndex].y;
+                manifold.SetPointCount(1);
+                manifold.SetType(Box2D.Collision.b2Manifold.e_faceA);
+                manifold.m_localPlaneNormal.x = polygon.GetNormal(normalIndex).x;
+                manifold.m_localPlaneNormal.y = polygon.GetNormal(normalIndex).y;
                 manifold.m_localPlaneNormal.Normalize();
                 manifold.m_localPoint.Set(faceCenterX, faceCenterY);
-                manifold.m_points[0].m_localPoint.SetV(circle.m_p);
+                manifold.m_points[0].m_localPoint.SetV(circle.GetLocalPosition());
                 manifold.m_points[0].m_id.SetKey(0);
             }
         }

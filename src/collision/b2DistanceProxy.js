@@ -104,3 +104,7 @@ Box2D.Collision.b2DistanceProxy.prototype.GetVertex = function (index) {
     Box2D.Common.b2Settings.b2Assert(0 <= index && index < this.m_count);
     return this.m_vertices[index];
 };
+
+Box2D.Collision.b2DistanceProxy.prototype.GetRadius = function() {
+    return this.m_radius;
+};

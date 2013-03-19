@@ -108,8 +108,8 @@ Box2D.Collision.b2Distance.Distance = function(output, cache, input) {
     s_simplex.WriteCache(cache);
     Box2D.Collision.b2Simplex.Free(s_simplex);
     if (input.useRadii) {
-        var rA = input.proxyA.m_radius;
-        var rB = input.proxyB.m_radius;
+        var rA = input.proxyA.GetRadius();
+        var rB = input.proxyB.GetRadius();
         if (output.distance > rA + rB && output.distance > Number.MIN_VALUE) {
             output.distance -= rA + rB;
             var normal = Box2D.Common.Math.b2Math.SubtractVV(output.pointB, output.pointA);

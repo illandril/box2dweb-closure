@@ -47,7 +47,7 @@ Box2D.Dynamics.Joints.b2FrictionJoint = function(def) {
     Box2D.Dynamics.Joints.b2Joint.call(this, def);
     this.m_localAnchorA = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_localAnchorB = Box2D.Common.Math.b2Vec2.Get(0, 0);
-    this.m_linearMass = new Box2D.Common.Math.b2Mat22();
+    this.m_linearMass = Box2D.Common.Math.b2Mat22.Get();
     this.m_linearImpulse = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_localAnchorA.SetV(def.localAnchorA);
     this.m_localAnchorB.SetV(def.localAnchorB);

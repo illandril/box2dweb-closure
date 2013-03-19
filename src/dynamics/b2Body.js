@@ -354,6 +354,13 @@ Box2D.Dynamics.b2Body.prototype.GetAngle = function() {
 /**
  * @param {number} angle
  */
+Box2D.Dynamics.b2Body.prototype.SetCalculatedAngle = function(angle) {
+    this.m_sweep.a = angle;
+};
+
+/**
+ * @param {number} angle
+ */
 Box2D.Dynamics.b2Body.prototype.SetAngle = function(angle) {
     this.SetPositionAndAngle(this.GetPosition(), angle);
 };
@@ -532,12 +539,25 @@ Box2D.Dynamics.b2Body.prototype.GetMass = function() {
     return this.m_mass;
 };
 
+/**
+ * @return {number}
+ */
+Box2D.Dynamics.b2Body.prototype.GetInverseMass = function() {
+    return this.m_invMass;
+};
 
 /**
  * @return {number}
  */
 Box2D.Dynamics.b2Body.prototype.GetInertia = function() {
     return this.m_I;
+};
+
+/**
+ * @return {number}
+ */
+Box2D.Dynamics.b2Body.prototype.GetInverseInertia = function() {
+    return this.m_invI;
 };
 
 /**

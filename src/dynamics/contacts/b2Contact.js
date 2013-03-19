@@ -56,7 +56,7 @@ Box2D.Dynamics.Contacts.b2Contact = function(fixtureA, fixtureB) {
     this.ID = "Contact" + Box2D.Dynamics.Contacts.b2Contact.NEXT_ID++;
     
     /**
-     * @private
+     * @protected
      * @type {!Box2D.Collision.b2Manifold}
      */
     this.m_manifold = new Box2D.Collision.b2Manifold();
@@ -98,13 +98,13 @@ Box2D.Dynamics.Contacts.b2Contact = function(fixtureA, fixtureB) {
     this.filtering = false;
     
     /**
-     * @private
+     * @protected
      * @type {!Box2D.Dynamics.b2Fixture}
      */
     this.m_fixtureA = fixtureA;
     
     /**
-     * @private
+     * @protected
      * @type {!Box2D.Dynamics.b2Fixture}
      */
     this.m_fixtureB = fixtureB;

@@ -51,7 +51,7 @@ Box2D.Dynamics.Joints.b2LineJoint = function(def) {
     this.m_localYAxis1 = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_axis = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.m_perp = Box2D.Common.Math.b2Vec2.Get(0, 0);
-    this.m_K = new Box2D.Common.Math.b2Mat22();
+    this.m_K = Box2D.Common.Math.b2Mat22.Get();
     this.m_impulse = Box2D.Common.Math.b2Vec2.Get(0, 0);
     var tMat;
     var tX = 0;

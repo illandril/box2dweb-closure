@@ -62,7 +62,7 @@ Box2D.Dynamics.Contacts.b2PolyAndEdgeContact.prototype.Reset = function(fixtureA
 };
 
 Box2D.Dynamics.Contacts.b2PolyAndEdgeContact.prototype.Evaluate = function() {
-    this.b2CollidePolyAndEdge(this.m_manifold, this.m_fixtureA.GetShape(), this.m_fixtureA.GetBody().m_xf, this.m_fixtureB.GetShape(), this.m_fixtureB.GetBody().m_xf);
+    this.b2CollidePolyAndEdge(this.m_manifold, this.m_fixtureA.GetShape(), this.m_fixtureA.GetBody().GetTransform(), this.m_fixtureB.GetShape(), this.m_fixtureB.GetBody().GetTransform());
 };
 
 Box2D.Dynamics.Contacts.b2PolyAndEdgeContact.prototype.b2CollidePolyAndEdge = function (manifold, polygon, xf1, edge, xf2) {};

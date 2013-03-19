@@ -111,6 +111,20 @@ Box2D.Collision.b2Manifold.prototype.Copy = function() {
 };
 
 /**
+ * @param {number} count
+ */
+Box2D.Collision.b2Manifold.prototype.SetPointCount = function(count) {
+    this.m_pointCount = count;
+};
+
+/**
+ * @param {number} type
+ */
+Box2D.Collision.b2Manifold.prototype.SetType = function(type) {
+    this.m_type = type;
+};
+
+/**
  * @const
  * @type {number}
  */

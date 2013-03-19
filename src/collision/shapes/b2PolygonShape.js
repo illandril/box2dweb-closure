@@ -202,7 +202,7 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.SetAsOrientedBox = function(hx, 
     this.m_normals[2].Set(0.0, 1.0);
     this.m_normals[3].Set((-1.0), 0.0);
     this.m_centroid = center;
-    var mat = new Box2D.Common.Math.b2Mat22();
+    var mat = Box2D.Common.Math.b2Mat22.Get();
     mat.Set(angle);
     var xf = new Box2D.Common.Math.b2Transform(center, mat);
     for (var i = 0; i < this.m_vertexCount; ++i) {
@@ -525,10 +525,33 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.GetVertices = function() {
 };
 
 /**
+ * @param {number}
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
+Box2D.Collision.Shapes.b2PolygonShape.prototype.GetVertex = function(edge) {
+    return this.m_vertices[edge];
+};
+
+/**
  * @return {Array.<!Box2D.Common.Math.b2Vec2>}
  */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.GetNormals = function() {
     return this.m_normals;
+};
+
+/**
+ * @param {number} edge
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
+Box2D.Collision.Shapes.b2PolygonShape.prototype.GetNormal = function(edge) {
+    return this.m_normals[edge];
+};
+
+/**
+ * @return {!Box2D.Common.Math.b2Vec2}
+ */
+Box2D.Collision.Shapes.b2PolygonShape.prototype.GetCentroid = function() {
+    return this.m_centroid;
 };
 
 /**
@@ -611,7 +634,7 @@ Box2D.Collision.Shapes.b2PolygonShape.ComputeCentroid = function(vs, count) {
 };
 
 /** @type {!Box2D.Common.Math.b2Mat22} */
-Box2D.Collision.Shapes.b2PolygonShape.s_mat = new Box2D.Common.Math.b2Mat22();
+Box2D.Collision.Shapes.b2PolygonShape.s_mat = Box2D.Common.Math.b2Mat22.Get();
 
 /**
  * @const

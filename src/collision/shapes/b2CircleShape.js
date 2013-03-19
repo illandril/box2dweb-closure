@@ -47,10 +47,6 @@ Box2D.Collision.Shapes.b2CircleShape = function(radius) {
     
     Box2D.Collision.Shapes.b2Shape.call(this);
     
-    /**
-     * @private
-     * @type {number}
-     */
     this.m_radius = radius;
     
     /**

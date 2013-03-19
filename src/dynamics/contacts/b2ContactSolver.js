@@ -81,7 +81,7 @@ Box2D.Dynamics.Contacts.b2ContactSolver.prototype.Initialize = function(step, co
         var wA = bodyA.m_angularVelocity;
         var wB = bodyB.m_angularVelocity;
         Box2D.Common.b2Settings.b2Assert(manifold.m_pointCount > 0);
-        Box2D.Dynamics.Contacts.b2ContactSolver.s_worldManifold.Initialize(manifold, bodyA.m_xf, radiusA, bodyB.m_xf, radiusB);
+        Box2D.Dynamics.Contacts.b2ContactSolver.s_worldManifold.Initialize(manifold, bodyA.GetTransform(), radiusA, bodyB.GetTransform(), radiusB);
         var normalX = Box2D.Dynamics.Contacts.b2ContactSolver.s_worldManifold.m_normal.x;
         var normalY = Box2D.Dynamics.Contacts.b2ContactSolver.s_worldManifold.m_normal.y;
         var cc = this.m_constraints[i];
@@ -105,18 +105,18 @@ Box2D.Dynamics.Contacts.b2ContactSolver.prototype.Initialize = function(step, co
             ccp.normalImpulse = cp.m_normalImpulse;
             ccp.tangentImpulse = cp.m_tangentImpulse;
             ccp.localPoint.SetV(cp.m_localPoint);
-            var rAX = ccp.rA.x = Box2D.Dynamics.Contacts.b2ContactSolver.s_worldManifold.m_points[k].x - bodyA.m_sweep.c.x;
-            var rAY = ccp.rA.y = Box2D.Dynamics.Contacts.b2ContactSolver.s_worldManifold.m_points[k].y - bodyA.m_sweep.c.y;
-            var rBX = ccp.rB.x = Box2D.Dynamics.Contacts.b2ContactSolver.s_worldManifold.m_points[k].x - bodyB.m_sweep.c.x;
-            var rBY = ccp.rB.y = Box2D.Dynamics.Contacts.b2ContactSolver.s_worldManifold.m_points[k].y - bodyB.m_sweep.c.y;
+            var rAX = ccp.rA.x = Box2D.Dynamics.Contacts.b2ContactSolver.s_worldManifold.m_points[k].x - bodyA.GetWorldCenter().x;
+            var rAY = ccp.rA.y = Box2D.Dynamics.Contacts.b2ContactSolver.s_worldManifold.m_points[k].y - bodyA.GetWorldCenter().y;
+            var rBX = ccp.rB.x = Box2D.Dynamics.Contacts.b2ContactSolver.s_worldManifold.m_points[k].x - bodyB.GetWorldCenter().x;
+            var rBY = ccp.rB.y = Box2D.Dynamics.Contacts.b2ContactSolver.s_worldManifold.m_points[k].y - bodyB.GetWorldCenter().y;
             var rnA = rAX * normalY - rAY * normalX;
             var rnB = rBX * normalY - rBY * normalX;
             rnA *= rnA;
             rnB *= rnB;
-            var kNormal = bodyA.m_invMass + bodyB.m_invMass + bodyA.m_invI * rnA + bodyB.m_invI * rnB;
+            var kNormal = bodyA.GetInverseMass() + bodyB.GetInverseMass() + bodyA.GetInverseInertia() * rnA + bodyB.GetInverseInertia() * rnB;
             ccp.normalMass = 1.0 / kNormal;
-            var kEqualized = bodyA.m_mass * bodyA.m_invMass + bodyB.m_mass * bodyB.m_invMass;
-            kEqualized += bodyA.m_mass * bodyA.m_invI * rnA + bodyB.m_mass * bodyB.m_invI * rnB;
+            var kEqualized = bodyA.m_mass * bodyA.GetInverseMass() + bodyB.m_mass * bodyB.GetInverseMass();
+            kEqualized += bodyA.m_mass * bodyA.GetInverseInertia() * rnA + bodyB.m_mass * bodyB.GetInverseInertia() * rnB;
             ccp.equalizedMass = 1.0 / kEqualized;
             var tangentX = normalY;
             var tangentY = (-normalX);
@@ -124,7 +124,7 @@ Box2D.Dynamics.Contacts.b2ContactSolver.prototype.Initialize = function(step, co
             var rtB = rBX * tangentY - rBY * tangentX;
             rtA *= rtA;
             rtB *= rtB;
-            var kTangent = bodyA.m_invMass + bodyB.m_invMass + bodyA.m_invI * rtA + bodyB.m_invI * rtB;
+            var kTangent = bodyA.GetInverseMass() + bodyB.GetInverseMass() + bodyA.GetInverseInertia() * rtA + bodyB.GetInverseInertia() * rtB;
             ccp.tangentMass = 1.0 / kTangent;
             ccp.velocityBias = 0.0;
             var tX = vBX + ((-wB * rBY)) - vAX - ((-wA * rAY));
@@ -137,10 +137,10 @@ Box2D.Dynamics.Contacts.b2ContactSolver.prototype.Initialize = function(step, co
         if (cc.pointCount == 2) {
             var ccp1 = cc.points[0];
             var ccp2 = cc.points[1];
-            var invMassA = bodyA.m_invMass;
-            var invIA = bodyA.m_invI;
-            var invMassB = bodyB.m_invMass;
-            var invIB = bodyB.m_invI;
+            var invMassA = bodyA.GetInverseMass();
+            var invIA = bodyA.GetInverseInertia();
+            var invMassB = bodyB.GetInverseMass();
+            var invIB = bodyB.GetInverseInertia();
             var rn1A = ccp1.rA.x * normalY - ccp1.rA.y * normalX;
             var rn1B = ccp1.rB.x * normalY - ccp1.rB.y * normalX;
             var rn2A = ccp2.rA.x * normalY - ccp2.rA.y * normalX;
@@ -168,10 +168,10 @@ Box2D.Dynamics.Contacts.b2ContactSolver.prototype.InitVelocityConstraints = func
         var c = this.m_constraints[i];
         var bodyA = c.bodyA;
         var bodyB = c.bodyB;
-        var invMassA = bodyA.m_invMass;
-        var invIA = bodyA.m_invI;
-        var invMassB = bodyB.m_invMass;
-        var invIB = bodyB.m_invI;
+        var invMassA = bodyA.GetInverseMass();
+        var invIA = bodyA.GetInverseInertia();
+        var invMassB = bodyB.GetInverseMass();
+        var invIB = bodyB.GetInverseInertia();
         var normalX = c.normal.x;
         var normalY = c.normal.y;
         var tangentX = normalY;
@@ -230,12 +230,12 @@ Box2D.Dynamics.Contacts.b2ContactSolver.prototype.SolveVelocityConstraints_Const
         var impulseLambda = newImpulse - ccp.normalImpulse;
         var PX = impulseLambda * normalX;
         var PY = impulseLambda * normalY;
-        c.bodyA.m_linearVelocity.x -= c.bodyA.m_invMass * PX;
-        c.bodyA.m_linearVelocity.y -= c.bodyA.m_invMass * PY;
-        c.bodyA.m_angularVelocity -= c.bodyA.m_invI * (ccp.rA.x * PY - ccp.rA.y * PX);
-        c.bodyB.m_linearVelocity.x += c.bodyB.m_invMass * PX;
-        c.bodyB.m_linearVelocity.y += c.bodyB.m_invMass * PY;
-        c.bodyB.m_angularVelocity += c.bodyB.m_invI * (ccp.rB.x * PY - ccp.rB.y * PX);
+        c.bodyA.m_linearVelocity.x -= c.bodyA.GetInverseMass() * PX;
+        c.bodyA.m_linearVelocity.y -= c.bodyA.GetInverseMass() * PY;
+        c.bodyA.m_angularVelocity -= c.bodyA.GetInverseInertia() * (ccp.rA.x * PY - ccp.rA.y * PX);
+        c.bodyB.m_linearVelocity.x += c.bodyB.GetInverseMass() * PX;
+        c.bodyB.m_linearVelocity.y += c.bodyB.GetInverseMass() * PY;
+        c.bodyB.m_angularVelocity += c.bodyB.GetInverseInertia() * (ccp.rB.x * PY - ccp.rB.y * PX);
         ccp.normalImpulse = newImpulse;
     } else {
         var cp1 = c.points[0];
@@ -309,12 +309,12 @@ Box2D.Dynamics.Contacts.b2ContactSolver.prototype.SolveVelocityConstraints_Const
     var impulseLambda = newImpulse - ccp.tangentImpulse;
     var PX = impulseLambda * tangentX;
     var PY = impulseLambda * tangentY;
-    c.bodyA.m_linearVelocity.x -= c.bodyA.m_invMass * PX;
-    c.bodyA.m_linearVelocity.y -= c.bodyA.m_invMass * PY;
-    c.bodyA.m_angularVelocity -= c.bodyA.m_invI * (ccp.rA.x * PY - ccp.rA.y * PX);
-    c.bodyB.m_linearVelocity.x += c.bodyB.m_invMass * PX;
-    c.bodyB.m_linearVelocity.y += c.bodyB.m_invMass * PY;
-    c.bodyB.m_angularVelocity += c.bodyB.m_invI * (ccp.rB.x * PY - ccp.rB.y * PX);
+    c.bodyA.m_linearVelocity.x -= c.bodyA.GetInverseMass() * PX;
+    c.bodyA.m_linearVelocity.y -= c.bodyA.GetInverseMass() * PY;
+    c.bodyA.m_angularVelocity -= c.bodyA.GetInverseInertia() * (ccp.rA.x * PY - ccp.rA.y * PX);
+    c.bodyB.m_linearVelocity.x += c.bodyB.GetInverseMass() * PX;
+    c.bodyB.m_linearVelocity.y += c.bodyB.GetInverseMass() * PY;
+    c.bodyB.m_angularVelocity += c.bodyB.GetInverseInertia() * (ccp.rB.x * PY - ccp.rB.y * PX);
     ccp.tangentImpulse = newImpulse;
 };
 
@@ -330,12 +330,12 @@ Box2D.Dynamics.Contacts.b2ContactSolver.prototype.SolveVelocityConstraints_Const
     var P1Y = dX * c.normal.y;
     var P2X = dY * c.normal.x;
     var P2Y = dY * c.normal.y;
-    c.bodyA.m_linearVelocity.x -= c.bodyA.m_invMass * (P1X + P2X);
-    c.bodyA.m_linearVelocity.y -= c.bodyA.m_invMass * (P1Y + P2Y);
-    c.bodyA.m_angularVelocity -= c.bodyA.m_invI * (cp1.rA.x * P1Y - cp1.rA.y * P1X + cp2.rA.x * P2Y - cp2.rA.y * P2X);
-    c.bodyB.m_linearVelocity.x += c.bodyB.m_invMass * (P1X + P2X);
-    c.bodyB.m_linearVelocity.y += c.bodyB.m_invMass * (P1Y + P2Y);
-    c.bodyB.m_angularVelocity += c.bodyB.m_invI * (cp1.rB.x * P1Y - cp1.rB.y * P1X + cp2.rB.x * P2Y - cp2.rB.y * P2X);
+    c.bodyA.m_linearVelocity.x -= c.bodyA.GetInverseMass() * (P1X + P2X);
+    c.bodyA.m_linearVelocity.y -= c.bodyA.GetInverseMass() * (P1Y + P2Y);
+    c.bodyA.m_angularVelocity -= c.bodyA.GetInverseInertia() * (cp1.rA.x * P1Y - cp1.rA.y * P1X + cp2.rA.x * P2Y - cp2.rA.y * P2X);
+    c.bodyB.m_linearVelocity.x += c.bodyB.GetInverseMass() * (P1X + P2X);
+    c.bodyB.m_linearVelocity.y += c.bodyB.GetInverseMass() * (P1Y + P2Y);
+    c.bodyB.m_angularVelocity += c.bodyB.GetInverseInertia() * (cp1.rB.x * P1Y - cp1.rB.y * P1X + cp2.rB.x * P2Y - cp2.rB.y * P2X);
     cp1.normalImpulse = 0;
     cp2.normalImpulse = 0;
 };
@@ -361,32 +361,32 @@ Box2D.Dynamics.Contacts.b2ContactSolver.prototype.SolvePositionConstraints = fun
         var c = this.m_constraints[i];
         var bodyA = c.bodyA;
         var bodyB = c.bodyB;
-        var invMassA = bodyA.m_mass * bodyA.m_invMass;
-        var invIA = bodyA.m_mass * bodyA.m_invI;
-        var invMassB = bodyB.m_mass * bodyB.m_invMass;
-        var invIB = bodyB.m_mass * bodyB.m_invI;
+        var invMassA = bodyA.m_mass * bodyA.GetInverseMass();
+        var invIA = bodyA.m_mass * bodyA.GetInverseInertia();
+        var invMassB = bodyB.m_mass * bodyB.GetInverseMass();
+        var invIB = bodyB.m_mass * bodyB.GetInverseInertia();
         Box2D.Dynamics.Contacts.b2ContactSolver.s_psm.Initialize(c);
         var normal = Box2D.Dynamics.Contacts.b2ContactSolver.s_psm.m_normal;
         for (var j = 0; j < c.pointCount; j++) {
             var ccp = c.points[j];
             var point = Box2D.Dynamics.Contacts.b2ContactSolver.s_psm.m_points[j];
             var separation = Box2D.Dynamics.Contacts.b2ContactSolver.s_psm.m_separations[j];
-            var rAX = point.x - bodyA.m_sweep.c.x;
-            var rAY = point.y - bodyA.m_sweep.c.y;
-            var rBX = point.x - bodyB.m_sweep.c.x;
-            var rBY = point.y - bodyB.m_sweep.c.y;
+            var rAX = point.x - bodyA.GetWorldCenter().x;
+            var rAY = point.y - bodyA.GetWorldCenter().y;
+            var rBX = point.x - bodyB.GetWorldCenter().x;
+            var rBY = point.y - bodyB.GetWorldCenter().y;
             minSeparation = minSeparation < separation ? minSeparation : separation;
             var C = Box2D.Common.Math.b2Math.Clamp(baumgarte * (separation + Box2D.Common.b2Settings.b2_linearSlop), (-Box2D.Common.b2Settings.b2_maxLinearCorrection), 0.0);
             var impulse = (-ccp.equalizedMass * C);
             var PX = impulse * normal.x;
             var PY = impulse * normal.y;
-            bodyA.m_sweep.c.x -= invMassA * PX;
-            bodyA.m_sweep.c.y -= invMassA * PY;
-            bodyA.m_sweep.a -= invIA * (rAX * PY - rAY * PX);
+            bodyA.GetWorldCenter().x -= invMassA * PX;
+            bodyA.GetWorldCenter().y -= invMassA * PY;
+            bodyA.SetCalculatedAngle(bodyA.GetAngle() - invIA * (rAX * PY - rAY * PX));
             bodyA.SynchronizeTransform();
-            bodyB.m_sweep.c.x += invMassB * PX;
-            bodyB.m_sweep.c.y += invMassB * PY;
-            bodyB.m_sweep.a += invIB * (rBX * PY - rBY * PX);
+            bodyB.GetWorldCenter().x += invMassB * PX;
+            bodyB.GetWorldCenter().y += invMassB * PY;
+            bodyB.SetCalculatedAngle(bodyB.GetAngle() + invIB * (rBX * PY - rBY * PX));
             bodyB.SynchronizeTransform();
         }
     }
@@ -400,20 +400,20 @@ Box2D.Dynamics.Contacts.b2ContactSolver.prototype.SolvePositionConstraints_NEW =
         var c = this.m_constraints[i];
         var bodyA = c.bodyA;
         var bodyB = c.bodyB;
-        var invMassA = bodyA.m_mass * bodyA.m_invMass;
-        var invIA = bodyA.m_mass * bodyA.m_invI;
-        var invMassB = bodyB.m_mass * bodyB.m_invMass;
-        var invIB = bodyB.m_mass * bodyB.m_invI;
+        var invMassA = bodyA.m_mass * bodyA.GetInverseMass();
+        var invIA = bodyA.m_mass * bodyA.GetInverseInertia();
+        var invMassB = bodyB.m_mass * bodyB.GetInverseMass();
+        var invIB = bodyB.m_mass * bodyB.GetInverseInertia();
         Box2D.Dynamics.Contacts.b2ContactSolver.s_psm.Initialize(c);
         var normal = Box2D.Dynamics.Contacts.b2ContactSolver.s_psm.m_normal;
         for (var j = 0; j < c.pointCount; j++) {
             var ccp = c.points[j];
             var point = Box2D.Dynamics.Contacts.b2ContactSolver.s_psm.m_points[j];
             var separation = Box2D.Dynamics.Contacts.b2ContactSolver.s_psm.m_separations[j];
-            var rAX = point.x - bodyA.m_sweep.c.x;
-            var rAY = point.y - bodyA.m_sweep.c.y;
-            var rBX = point.x - bodyB.m_sweep.c.x;
-            var rBY = point.y - bodyB.m_sweep.c.y;
+            var rAX = point.x - bodyA.GetWorldCenter().x;
+            var rAY = point.y - bodyA.GetWorldCenter().y;
+            var rBX = point.x - bodyB.GetWorldCenter().x;
+            var rBY = point.y - bodyB.GetWorldCenter().y;
             if (separation < minSeparation) {
                 minSeparation = separation;
             }
@@ -424,13 +424,13 @@ Box2D.Dynamics.Contacts.b2ContactSolver.prototype.SolvePositionConstraints_NEW =
             var impulse = (-ccp.equalizedMass * C);
             var PX = impulse * normal.x;
             var PY = impulse * normal.y;
-            bodyA.m_sweep.c.x -= invMassA * PX;
-            bodyA.m_sweep.c.y -= invMassA * PY;
-            bodyA.m_sweep.a -= invIA * (rAX * PY - rAY * PX);
+            bodyA.GetWorldCenter().x -= invMassA * PX;
+            bodyA.GetWorldCenter().y -= invMassA * PY;
+            bodyA.SetAngle(bodyA.GetAngle() - invIA * (rAX * PY - rAY * PX));
             bodyA.SynchronizeTransform();
-            bodyB.m_sweep.c.x += invMassB * PX;
-            bodyB.m_sweep.c.y += invMassB * PY;
-            bodyB.m_sweep.a += invIB * (rBX * PY - rBY * PX);
+            bodyB.GetWorldCenter().x += invMassB * PX;
+            bodyB.GetWorldCenter().y += invMassB * PY;
+            bodyB.SetAngle(bodyB.GetAngle() + invIB * (rBX * PY - rBY * PX));
             bodyB.SynchronizeTransform();
         }
     }

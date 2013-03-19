@@ -111,3 +111,59 @@ Box2D.Collision.b2DynamicTreeNode.prototype.Destroy = function() {
 Box2D.Collision.b2DynamicTreeNode.prototype.IsLeaf = function () {
     return this.child1 === null;
 };
+
+/**
+ * @param {Box2D.Collision.b2DynamicTreeNode} child
+ */
+Box2D.Collision.b2DynamicTreeNode.prototype.SetChild1 = function(child) {
+    this.child1 = child;
+};
+
+/**
+ * @return {Box2D.Collision.b2DynamicTreeNode}
+ */
+Box2D.Collision.b2DynamicTreeNode.prototype.GetChild1 = function() {
+    return this.child1;
+};
+
+/**
+ * @param {Box2D.Collision.b2DynamicTreeNode} child
+ */
+Box2D.Collision.b2DynamicTreeNode.prototype.SetChild2 = function(child) {
+    this.child2 = child;
+};
+
+/**
+ * @return {Box2D.Collision.b2DynamicTreeNode}
+ */
+Box2D.Collision.b2DynamicTreeNode.prototype.GetChild2 = function() {
+    return this.child2;
+};
+
+/**
+ * @param {Box2D.Collision.b2DynamicTreeNode} parent
+ */
+Box2D.Collision.b2DynamicTreeNode.prototype.SetParent = function(parent) {
+    this.parent = parent;
+};
+
+/**
+ * @return {Box2D.Collision.b2DynamicTreeNode}
+ */
+Box2D.Collision.b2DynamicTreeNode.prototype.GetParent = function() {
+    return this.parent;
+};
+
+/**
+ * @return {!Box2D.Collision.b2AABB}
+ */
+Box2D.Collision.b2DynamicTreeNode.prototype.GetAABB = function() {
+    return this.aabb;
+};
+
+/**
+ * @return {Box2D.Dynamics.b2Fixture}
+ */
+Box2D.Collision.b2DynamicTreeNode.prototype.GetFixture = function() {
+    return this.fixture;
+};

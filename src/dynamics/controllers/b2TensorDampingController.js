@@ -43,7 +43,7 @@ goog.require('Box2D.Common.Math.b2Vec2');
  */
 Box2D.Dynamics.Controllers.b2TensorDampingController = function() {
     Box2D.Dynamics.Controllers.b2Controller.call(this);
-    this.T = new Box2D.Common.Math.b2Mat22();
+    this.T = Box2D.Common.Math.b2Mat22.Get();
     this.maxTimestep = 0;
 };
 goog.inherits(Box2D.Dynamics.Controllers.b2TensorDampingController, Box2D.Dynamics.Controllers.b2Controller);

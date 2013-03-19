@@ -47,10 +47,10 @@ goog.require('Box2D.Common.Math.b2Math');
  */
 Box2D.Dynamics.Joints.b2RevoluteJoint = function(def) {
     Box2D.Dynamics.Joints.b2Joint.call(this, def);
-    this.K = new Box2D.Common.Math.b2Mat22();
-    this.K1 = new Box2D.Common.Math.b2Mat22();
-    this.K2 = new Box2D.Common.Math.b2Mat22();
-    this.K3 = new Box2D.Common.Math.b2Mat22();
+    this.K = Box2D.Common.Math.b2Mat22.Get();
+    this.K1 = Box2D.Common.Math.b2Mat22.Get();
+    this.K2 = Box2D.Common.Math.b2Mat22.Get();
+    this.K3 = Box2D.Common.Math.b2Mat22.Get();
     this.impulse3 = Box2D.Common.Math.b2Vec3.Get(0, 0, 0);
     this.impulse2 = Box2D.Common.Math.b2Vec2.Get(0, 0);
     this.reduced = Box2D.Common.Math.b2Vec2.Get(0, 0);

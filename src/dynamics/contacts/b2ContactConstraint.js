@@ -61,12 +61,12 @@ Box2D.Dynamics.Contacts.b2ContactConstraint = function() {
     /**
      * @type {!Box2D.Common.Math.b2Mat22}
      */
-    this.normalMass = new Box2D.Common.Math.b2Mat22();
+    this.normalMass = Box2D.Common.Math.b2Mat22.Get();
     
     /**
      * @type {!Box2D.Common.Math.b2Mat22}
      */
-    this.K = new Box2D.Common.Math.b2Mat22();
+    this.K = Box2D.Common.Math.b2Mat22.Get();
     
     /**
      * @type {!Array.<!Box2D.Dynamics.Contacts.b2ContactConstraintPoint>}

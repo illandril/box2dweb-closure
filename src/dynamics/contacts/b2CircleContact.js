@@ -57,5 +57,5 @@ Box2D.Dynamics.Contacts.b2CircleContact.prototype.Reset = function(fixtureA, fix
 Box2D.Dynamics.Contacts.b2CircleContact.prototype.Evaluate = function() {
     var shapeA = /** @type {!Box2D.Collision.Shapes.b2CircleShape} */ (this.m_fixtureA.GetShape());
     var shapeB = /** @type {!Box2D.Collision.Shapes.b2CircleShape} */ (this.m_fixtureB.GetShape());
-    Box2D.Collision.b2Collision.CollideCircles(this.m_manifold, shapeA, this.m_fixtureA.GetBody().m_xf, shapeB, this.m_fixtureB.GetBody().m_xf);
+    Box2D.Collision.b2Collision.CollideCircles(this.m_manifold, shapeA, this.m_fixtureA.GetBody().GetTransform(), shapeB, this.m_fixtureB.GetBody().GetTransform());
 };

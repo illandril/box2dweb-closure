@@ -852,7 +852,7 @@ Box2D.Dynamics.b2World.prototype.SolveTOI = function(step) {
         seed.m_islandFlag = true;
         while (queue.size > 0) {
             
-            var b = /** @type {!Box2D.Dynamics.b2Body} */queue.dequeue();
+            var b = /** @type {!Box2D.Dynamics.b2Body} */(queue.dequeue());
             m_island.AddBody(b);
             if (!b.IsAwake()) {
                 b.SetAwake(true);

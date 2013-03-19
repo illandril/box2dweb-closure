@@ -44,7 +44,7 @@ goog.require('UsageTracker');
 Box2D.Common.Math.b2Transform = function(pos, r) {
     UsageTracker.get('Box2D.Common.Math.b2Transform').trackCreate();
     this.position = Box2D.Common.Math.b2Vec2.Get(0, 0);
-    this.R = new Box2D.Common.Math.b2Mat22();
+    this.R = Box2D.Common.Math.b2Mat22.Get();
     if (pos) {
         this.position.SetV(pos);
     }
