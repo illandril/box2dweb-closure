@@ -70,8 +70,6 @@ Box2D.Dynamics.Contacts.b2ContactListNode.freeNodes = [];
 Box2D.Dynamics.Contacts.b2ContactListNode.GetNode = function(contact) {
     if (Box2D.Dynamics.Contacts.b2ContactListNode.freeNodes.length > 0) {
         var node = Box2D.Dynamics.Contacts.b2ContactListNode.freeNodes.pop();
-        node.next = null;
-        node.previous = null;
         node.contact = contact;
         return node;
     } else {
@@ -83,6 +81,9 @@ Box2D.Dynamics.Contacts.b2ContactListNode.GetNode = function(contact) {
  * @param {!Box2D.Dynamics.Contacts.b2ContactListNode} node
  */
 Box2D.Dynamics.Contacts.b2ContactListNode.FreeNode = function(node) {
+    node.next = null;
+    node.previous = null;
+    node.contact = null;
     Box2D.Dynamics.Contacts.b2ContactListNode.freeNodes.push(node);
 };
 
