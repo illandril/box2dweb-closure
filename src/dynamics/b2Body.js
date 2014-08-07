@@ -279,11 +279,12 @@ Box2D.Dynamics.b2Body.prototype.Destroy = function() {
 Box2D.Dynamics.b2Body.prototype.DestroyFixture = function(fixture) {
     Box2D.Common.b2Settings.b2Assert(!this.m_world.IsLocked());
     this.fixtureList.RemoveFixture(fixture);
-    for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
-        if (fixture == contactNode.contact.GetFixtureA() || fixture == contactNode.contact.GetFixtureB()) {
-            this.m_world.m_contactManager.Destroy(contactNode.contact);
+    var thisBody = this;
+    this.contactList.ForEachContact(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts, function(contact){
+        if (fixture == contact.GetFixtureA() || fixture == contact.GetFixtureB()) {
+            thisBody.m_world.m_contactManager.Destroy(contact);
         }
-    }
+    });
     if (this.m_active) {
         var broadPhase = this.m_world.m_contactManager.m_broadPhase;
         fixture.DestroyProxy(broadPhase);
@@ -753,9 +754,9 @@ Box2D.Dynamics.b2Body.prototype.SetType = function(type) {
     this.SetAwake(true);
     this.m_force.SetZero();
     this.m_torque = 0.0;
-    for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
-        contactNode.contact.FlagForFiltering();
-    }
+    this.contactList.ForEachContact(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts, function(contact){
+        contact.FlagForFiltering();
+    });
     for (var i = 0; i < this.m_lists.length; i++) {
         this.m_lists[i].UpdateBody(this);
     }
@@ -852,9 +853,10 @@ Box2D.Dynamics.b2Body.prototype.SetActive = function(flag) {
         for (var node = this.fixtureList.GetFirstNode(); node; node = node.GetNextNode()) {
             node.fixture.DestroyProxy(broadPhase);
         }
-        for (var contactNode = this.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
-            this.m_world.m_contactManager.Destroy(contactNode.contact);
-        }
+        var thisBody = this;
+        this.contactList.ForEachContact(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts, function(contact){
+            thisBody.m_world.m_contactManager.Destroy(contact);
+        });
     }
     for (var i = 0; i < this.m_lists.length; i++) {
         this.m_lists[i].UpdateBody(this);

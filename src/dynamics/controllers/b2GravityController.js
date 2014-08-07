@@ -47,74 +47,71 @@ Box2D.Dynamics.Controllers.b2GravityController = function() {
 goog.inherits(Box2D.Dynamics.Controllers.b2GravityController, Box2D.Dynamics.Controllers.b2Controller);
 
 Box2D.Dynamics.Controllers.b2GravityController.prototype.Step = function(step) {
-    var i = null;
-    var body1 = null;
-    var p1 = null;
-    var mass1 = 0;
-    var j = null;
-    var body2 = null;
-    var p2 = null;
-    var dx = 0;
-    var dy = 0;
-    var r2 = 0;
-    var f = null;
     if (this.invSqr) {
-        for (var body1Node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); body1Node; body1Node = body1Node.GetNextNode()) {
-            var body1 = body1Node.body;
-            var p1 = body1.GetWorldCenter();
-            var mass1 = body1.GetMass();
-            for (var body2Node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); body2Node; body2Node = body2Node.GetNextNode()) {
-                var body2 = body2Node.body;
-                if ( !body1.IsAwake() && !body2.IsAwake() ) {
-                    continue;
-                }
-                var p2 = body2.GetWorldCenter();
-                var dx = p2.x - p1.x;
-                var dy = p2.y - p1.y;
-                var r2 = dx * dx + dy * dy;
-                if (r2 < Number.MIN_VALUE) {
-                    continue;
-                }
-                var f = Box2D.Common.Math.b2Vec2.Get(dx, dy);
-                f.Multiply(this.G / r2 / Math.sqrt(r2) * mass1 * body2.GetMass());
-                if (body1.IsAwake()) {
-                    body1.ApplyForce(f, p1);
-                }
-                f.Multiply(-1);
-                if (body2.IsAwake()) {
-                    body2.ApplyForce(f, p2);
-                }
-                Box2D.Common.Math.b2Vec2.Free(f);
-            }
-        }
+        this._StepInvSq();
     } else {
-        for (var body1Node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); body1Node; body1Node = body1Node.GetNextNode()) {
-            var body1 = bodyNode.body;
-            var p1 = body1.GetWorldCenter();
-            var mass1 = body1.GetMass();
-            for (var body2Node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); body2Node; body2Node = body2Node.GetNextNode()) {
-                var body2 = bodyNode.body;
-                if ( !body1.IsAwake() && !body2.IsAwake() ) {
-                    continue;
-                }
-                var p2 = body2.GetWorldCenter();
-                var dx = p2.x - p1.x;
-                var dy = p2.y - p1.y;
-                var r2 = dx * dx + dy * dy;
-                if (r2 < Number.MIN_VALUE) {
-                    continue;
-                }
-                var f = Box2D.Common.Math.b2Vec2.Get(dx, dy);
-                f.Multiply(this.G / r2 * mass1 * body2.GetMass());
-                if (body1.IsAwake()) {
-                    body1.ApplyForce(f, p1);
-                }
-                f.Multiply(-1);
-                if (body2.IsAwake()) {
-                    body2.ApplyForce(f, p2);
-                }
-                Box2D.Common.Math.b2Vec2.Free(f);
+        this._Step();
+    }
+};
+
+Box2D.Dynamics.Controllers.b2GravityController.prototype._StepInvSq = function() {
+    for (var body1Node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); body1Node; body1Node = body1Node.GetNextNode()) {
+        var body1 = body1Node.body;
+        var p1 = body1.GetWorldCenter();
+        var mass1 = body1.GetMass();
+        for (var body2Node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); body2Node; body2Node = body2Node.GetNextNode()) {
+            var body2 = body2Node.body;
+            if ( !body1.IsAwake() && !body2.IsAwake() ) {
+                continue;
             }
+            var p2 = body2.GetWorldCenter();
+            var dx = p2.x - p1.x;
+            var dy = p2.y - p1.y;
+            var r2 = dx * dx + dy * dy;
+            if (r2 < Number.MIN_VALUE) {
+                continue;
+            }
+            var f = Box2D.Common.Math.b2Vec2.Get(dx, dy);
+            f.Multiply(this.G / r2 / Math.sqrt(r2) * mass1 * body2.GetMass());
+            if (body1.IsAwake()) {
+                body1.ApplyForce(f, p1);
+            }
+            f.Multiply(-1);
+            if (body2.IsAwake()) {
+                body2.ApplyForce(f, p2);
+            }
+            Box2D.Common.Math.b2Vec2.Free(f);
+        }
+    }
+};
+
+Box2D.Dynamics.Controllers.b2GravityController.prototype._Step = function() {
+    for (var body1Node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); body1Node; body1Node = body1Node.GetNextNode()) {
+        var body1 = body1Node.body;
+        var p1 = body1.GetWorldCenter();
+        var mass1 = body1.GetMass();
+        for (var body2Node = this.bodyList.GetFirstNode(Box2D.Dynamics.b2BodyList.TYPES.allBodies); body2Node; body2Node = body2Node.GetNextNode()) {
+            var body2 = body2Node.body;
+            if ( !body1.IsAwake() && !body2.IsAwake() ) {
+                continue;
+            }
+            var p2 = body2.GetWorldCenter();
+            var dx = p2.x - p1.x;
+            var dy = p2.y - p1.y;
+            var r2 = dx * dx + dy * dy;
+            if (r2 < Number.MIN_VALUE) {
+                continue;
+            }
+            var f = Box2D.Common.Math.b2Vec2.Get(dx, dy);
+            f.Multiply(this.G / r2 * mass1 * body2.GetMass());
+            if (body1.IsAwake()) {
+                body1.ApplyForce(f, p1);
+            }
+            f.Multiply(-1);
+            if (body2.IsAwake()) {
+                body2.ApplyForce(f, p2);
+            }
+            Box2D.Common.Math.b2Vec2.Free(f);
         }
     }
 };

@@ -40,7 +40,7 @@ Box2D.Dynamics.Contacts.b2ContactListNode = function(contact) {
     
     /**
      * @private
-     * @type {!Box2D.Dynamics.Contacts.b2Contact}
+     * @type {Box2D.Dynamics.Contacts.b2Contact}
      */
     this.contact = contact;
     

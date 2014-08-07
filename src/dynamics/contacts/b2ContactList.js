@@ -74,10 +74,18 @@ Box2D.Dynamics.Contacts.b2ContactList = function() {
 
 /**
  * @param {number} type
- * @return {Box2D.Dynamics.Contacts.b2ContactListNode}
+ * @param {function(!Box2D.Dynamics.Contacts.b2Contact)} fn
  */
-Box2D.Dynamics.Contacts.b2ContactList.prototype.GetFirstNode = function(type) {
-    return this.contactFirstNodes[type];
+Box2D.Dynamics.Contacts.b2ContactList.prototype.ForEachContact = function(type, fn) {
+    var nextNode = this.contactFirstNodes[type];
+    var thisNode;
+    while(nextNode !== null) {
+        thisNode = nextNode;
+        nextNode = thisNode.GetNextNode();
+        if(fn(thisNode.contact)===true){
+            break;
+        }
+    }
 };
 
 /**

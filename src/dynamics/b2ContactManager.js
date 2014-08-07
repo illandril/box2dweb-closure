@@ -95,19 +95,25 @@ Box2D.Dynamics.b2ContactManager.prototype.AddPair = function (fixtureA, fixtureB
   if (!this.m_contactFilter.ShouldCollide(fixtureA, fixtureB)) {
      return;
   }
-  for (var contactNode = bodyB.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
-    var fA = contactNode.contact.GetFixtureA();
+  var hasContact = false;
+  bodyB.contactList.ForEachContact(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts, function(contact){
+    var fA = contact.GetFixtureA();
     if (fA == fixtureA) {
-        var fB = contactNode.contact.GetFixtureB();
+        var fB = contact.GetFixtureB();
         if (fB == fixtureB) {
-            return;
+            hasContact = true;
+            return true;
         }
     } else if (fA == fixtureB) {
-        var fB = contactNode.contact.GetFixtureB();
+        var fB = contact.GetFixtureB();
         if (fB == fixtureA) {
-            return;
+            hasContact = true;
+            return true;
         }
     }
+  });
+  if(hasContact){
+      return;
   }
   var c = this.m_contactFactory.Create(fixtureA, fixtureB);
 };
@@ -141,35 +147,35 @@ Box2D.Dynamics.b2ContactManager.prototype.Destroy = function (c) {
 };
 
 Box2D.Dynamics.b2ContactManager.prototype.Collide = function() {
-    for (var contactNode = this.m_world.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
-        var c = contactNode.contact;
+    var thisCM = this;
+    this.m_world.contactList.ForEachContact(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts, function(c){
         var fixtureA = c.GetFixtureA();
         var fixtureB = c.GetFixtureB();
         var bodyA = fixtureA.GetBody();
         var bodyB = fixtureB.GetBody();
         if (!bodyA.IsAwake() && !bodyB.IsAwake()) {
-            continue;
+            return;
         }
         if (c.IsFiltering()) {
             if (!bodyB.ShouldCollide(bodyA)) {
-                this.Destroy(c);
-                continue;
+                thisCM.Destroy(c);
+                return;
             }
-            if (!this.m_contactFilter.ShouldCollide(fixtureA, fixtureB)) {
-                this.Destroy(c);
-                continue;
+            if (!thisCM.m_contactFilter.ShouldCollide(fixtureA, fixtureB)) {
+                thisCM.Destroy(c);
+                return;
             }
             c.ClearFiltering();
         }
         var proxyA = fixtureA.m_proxy;
         var proxyB = fixtureB.m_proxy;
-        var overlap = this.m_broadPhase.TestOverlap(proxyA, proxyB);
+        var overlap = thisCM.m_broadPhase.TestOverlap(proxyA, proxyB);
         if (!overlap) {
-            this.Destroy(c);
-            continue;
+            thisCM.Destroy(c);
+            return;
         }
-        c.Update(this.m_contactListener);
-    }
+        c.Update(thisCM.m_contactListener);
+    });
 };
 
 /**

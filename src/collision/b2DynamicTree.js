@@ -56,12 +56,6 @@ Box2D.Collision.b2DynamicTree = function() {
      * @type {number}
      */
     this.m_path = 0;
-    
-    /**
-     * @private
-     * @type {number}
-     */
-    this.m_insertionCount = 0;
 };
 
 /**
@@ -222,7 +216,6 @@ Box2D.Collision.b2DynamicTree.prototype.RayCast = function(callback, input) {
  * @param {!Box2D.Collision.b2DynamicTreeNode} leaf
  */
 Box2D.Collision.b2DynamicTree.prototype.InsertLeaf = function(leaf) {
-    this.m_insertionCount++;
     if (this.m_root === null) {
         this.m_root = leaf;
         this.m_root.SetParent(null);

@@ -525,7 +525,7 @@ Box2D.Collision.Shapes.b2PolygonShape.prototype.GetVertices = function() {
 };
 
 /**
- * @param {number}
+ * @param {number} edge
  * @return {!Box2D.Common.Math.b2Vec2}
  */
 Box2D.Collision.Shapes.b2PolygonShape.prototype.GetVertex = function(edge) {

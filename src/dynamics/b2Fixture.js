@@ -107,6 +107,11 @@ Box2D.Dynamics.b2Fixture = function(body, xf, def) {
      * @type {boolean}
      */
     this.m_isSensor = def.isSensor;
+    
+    /**
+     * @type {Box2D.Collision.b2DynamicTreeNode}
+     */
+     this.m_proxy = null;
 };
 
 /**
@@ -127,13 +132,14 @@ Box2D.Dynamics.b2Fixture.prototype.SetSensor = function(sensor) {
     if (this.m_body == null) {
         return;
     }
-    for (var contactNode = this.m_body.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
-        var fixtureA = contactNode.contact.GetFixtureA();
-        var fixtureB = contactNode.contact.GetFixtureB();
-        if (fixtureA == this || fixtureB == this) {
-            contactNode.contact.SetSensor(fixtureA.IsSensor() || fixtureB.IsSensor());
+    var thisFixture = this;
+    this.m_body.contactList.ForEachContact(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts, function(contact){
+        var fixtureA = contact.GetFixtureA();
+        var fixtureB = contact.GetFixtureB();
+        if (fixtureA == thisFixture || fixtureB == thisFixture) {
+            contact.SetSensor(fixtureA.IsSensor() || fixtureB.IsSensor());
         }
-    }
+    });
 };
 
 /**
@@ -151,11 +157,12 @@ Box2D.Dynamics.b2Fixture.prototype.SetFilterData = function(filter) {
     if (this.m_body == null) {
         return;
     }
-    for (var contactNode = this.m_body.contactList.GetFirstNode(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts); contactNode; contactNode = contactNode.GetNextNode()) {
-        if (contactNode.contact.GetFixtureA() == this || contactNode.contact.GetFixtureB() == this) {
-            contactNode.contact.FlagForFiltering();
+    var thisFixture = this;
+    this.m_body.contactList.ForEachContact(Box2D.Dynamics.Contacts.b2ContactList.TYPES.allContacts, function(contact){
+        if (contact.GetFixtureA() == thisFixture || contact.GetFixtureB() == thisFixture) {
+            contact.FlagForFiltering();
         }
-    }
+    });
 };
 
 /**

@@ -40,7 +40,7 @@ UsageTracker.trackersByID = {};
  * @const
  * @private
  */
-UsageTracker.ENABLED = true;
+UsageTracker.ENABLED = false;
 
 if ( !UsageTracker.ENABLED ) {
     UsageTracker.dummyTracker = new UsageTracker("NotTracking");

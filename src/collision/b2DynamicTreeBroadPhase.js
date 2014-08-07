@@ -134,13 +134,6 @@ Box2D.Collision.b2DynamicTreeBroadPhase.prototype.GetFatAABB = function(proxy) {
 };
 
 /**
- * @return {number}
- */
-Box2D.Collision.b2DynamicTreeBroadPhase.prototype.GetProxyCount = function() {
-    return this.m_tree.length;
-};
-
-/**
  * @param {function(!Box2D.Dynamics.b2Fixture, !Box2D.Dynamics.b2Fixture)} callback
  */
 Box2D.Collision.b2DynamicTreeBroadPhase.prototype.UpdatePairs = function(callback) {

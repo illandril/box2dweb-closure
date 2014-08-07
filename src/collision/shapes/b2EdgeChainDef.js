@@ -54,7 +54,7 @@ Box2D.Collision.Shapes.b2EdgeChainDef = function() {
     
     /**
     * @private
-    * @type {Array.<!Box2D.Common.Math.b2Vec2}
+    * @type {Array.<!Box2D.Common.Math.b2Vec2>}
     */
     this.vertices = [];
 };
